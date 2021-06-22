@@ -5,15 +5,17 @@ import 'package:clean_architecture/app/domain/usecases/authentication.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:faker/faker.dart';
-import 'package:mockito/mockito.dart';
+
+// import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
 class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
-  RemoteAuthetication sut;
-  HttpClient httpClient;
-  String url;
-  AuthenticationParams params;
+  late RemoteAuthetication sut;
+  late HttpClient httpClient;
+  late String url;
+  late AuthenticationParams params;
 
   setUp(() {
     httpClient = HttpClientSpy();
@@ -24,17 +26,17 @@ void main() {
   });
 
   test('Should call HttpClient with correct values', () async {
-    when(httpClient.request(
-            url: anyNamed('url'),
-            method: anyNamed('method'),
-            body: anyNamed('body')))
+    when(() => httpClient.request(
+            url: any(named: 'url'),
+            method: any(named: 'method'),
+            body: any(named: 'body')))
         .thenAnswer((_) async =>
             {'accessToken': faker.guid.guid(), 'name': faker.person.name()});
 
     await sut.auth(params);
 
     verify(
-      httpClient.request(
+      () => httpClient.request(
           url: url,
           method: 'post',
           body: {'email': params.email, 'password': params.secret}),
@@ -42,31 +44,28 @@ void main() {
   });
 
   test('Should throw UnexpectedError if HttpClient returns 400', () async {
-    when(httpClient.request(
-            url: anyNamed('url'),
-            method: anyNamed('method'),
-            body: anyNamed('body')))
-        .thenThrow(HttpError.badRequest);
+    when(() => httpClient.request(
+        url: any(named: 'url'),
+        method: any(named: 'method'),
+        body: any(named: 'body'))).thenThrow(HttpError.badRequest);
     final future = sut.auth(params);
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test('Should throw UnexpectedError if HttpClient returns 404', () async {
-    when(httpClient.request(
-            url: anyNamed('url'),
-            method: anyNamed('method'),
-            body: anyNamed('body')))
-        .thenThrow(HttpError.notFound);
+    when(() => httpClient.request(
+        url: any(named: 'url'),
+        method: any(named: 'method'),
+        body: any(named: 'body'))).thenThrow(HttpError.notFound);
     final future = sut.auth(params);
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test('Should throw UnexpectedError if HttpClient returns 500', () async {
-    when(httpClient.request(
-            url: anyNamed('url'),
-            method: anyNamed('method'),
-            body: anyNamed('body')))
-        .thenThrow(HttpError.serverError);
+    when(() => httpClient.request(
+        url: any(named: 'url'),
+        method: any(named: 'method'),
+        body: any(named: 'body'))).thenThrow(HttpError.serverError);
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.unexpected));
@@ -74,11 +73,10 @@ void main() {
 
   test('Should throw InvalidCredentialsError if HttpClient returns 401',
       () async {
-    when(httpClient.request(
-            url: anyNamed('url'),
-            method: anyNamed('method'),
-            body: anyNamed('body')))
-        .thenThrow(HttpError.unauthorized);
+    when(() => httpClient.request(
+        url: any(named: 'url'),
+        method: any(named: 'method'),
+        body: any(named: 'body'))).thenThrow(HttpError.unauthorized);
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.invalidCredentials));
@@ -87,12 +85,12 @@ void main() {
   test('Should return an Account if HttpClient returns 200', () async {
     final accessToken = faker.guid.guid();
 
-    when(httpClient.request(
-            url: anyNamed('url'),
-            method: anyNamed('method'),
-            body: anyNamed('body')))
-        .thenAnswer((_) async =>
-            {'accessToken': accessToken, 'name': faker.person.name()});
+    when(() =>
+        httpClient.request(
+            url: any(named: 'url'),
+            method: any(named: 'method'),
+            body: any(named: 'body'))).thenAnswer(
+        (_) async => {'accessToken': accessToken, 'name': faker.person.name()});
 
     final account = await sut.auth(params);
 

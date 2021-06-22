@@ -10,7 +10,7 @@ class RemoteAuthetication {
   final HttpClient httpClient;
   final String url;
 
-  RemoteAuthetication({@required this.httpClient, @required this.url});
+  RemoteAuthetication({required this.httpClient, required this.url});
 
   Future<AccountEntity> auth(AuthenticationParams params) async {
     try {
@@ -32,8 +32,8 @@ class RemoteAuthenticationParams {
   final String password;
 
   RemoteAuthenticationParams({
-    @required this.email,
-    @required this.password,
+    required this.email,
+    required this.password,
   });
 
   factory RemoteAuthenticationParams.fromDomain(AuthenticationParams entity) =>
