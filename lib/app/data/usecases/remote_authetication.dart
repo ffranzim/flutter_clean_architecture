@@ -8,12 +8,13 @@ class RemoteAuthetication {
 
   RemoteAuthetication({required this.httpClient, required this.url});
 
-  Future<void>? auth(AuthenticationParams params) async {
+  Future? auth(AuthenticationParams params) async {
     try {
-      await httpClient.request(
+      var abc = await httpClient.request(
           url: url,
           method: 'post',
           body: RemoteAuthenticationParams.fromDomain(params).toJson());
+      print(abc.toString());
     } on HttpError {
       throw DomainError.unexpected;
     }

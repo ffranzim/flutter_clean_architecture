@@ -40,8 +40,9 @@ dev_dependencies:
   triple_test: ^0.0.6
 
   ### Franzim ###
-  mockito: ^5.0.10
+#  mockito: ^5.0.10
   faker: ^2.0.0
+  mocktail: ^0.1.4
 
 flutter:
 
