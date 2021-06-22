@@ -6,7 +6,6 @@ import 'package:clean_architecture/app/domain/usecases/authentication.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:faker/faker.dart';
 
-// import 'package:mockito/mockito.dart';
 import 'package:mocktail/mocktail.dart';
 
 class HttpClientSpy extends Mock implements HttpClient {}
@@ -87,7 +86,7 @@ void main() {
 
     when(() =>
         httpClient.request(
-            url: any(named: 'url'),
+            url: any(named: 'url') ,
             method: any(named: 'method'),
             body: any(named: 'body'))).thenAnswer(
         (_) async => {'accessToken': accessToken, 'name': faker.person.name()});
