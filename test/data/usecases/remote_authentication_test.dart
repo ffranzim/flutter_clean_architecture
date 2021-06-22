@@ -11,9 +11,9 @@ import 'package:mocktail/mocktail.dart' as mocktail;
 class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
-  late RemoteAuthetication sut;
-  late HttpClient httpClient;
-  late String url;
+  RemoteAuthetication sut;
+  HttpClient httpClient;
+  String url;
 
   setUp(() {
     httpClient = HttpClientSpy();
@@ -34,9 +34,7 @@ void main() {
   });
 
   test('Should throw UnexpectedError if HttpClien returns 400', () async {
-    //TODO arrumar os testtes com anyNamed
-    // when(httpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: any('body')))
-    when(httpClient.request(url: 'url', method: 'method', body: {'email': 'email', 'password': 'password'}))
+    when(httpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body')))
         .thenThrow(HttpError.badRequest);
 
     final params = AuthenticationParams(
