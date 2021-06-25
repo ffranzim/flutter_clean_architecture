@@ -1,3 +1,5 @@
+import '../../domain/usecases/usecases.dart';
+
 import '../../data/models/models.dart';
 
 import '../../domain/usecases/authentication.dart';
@@ -5,13 +7,13 @@ import '../../domain/helpers/domain_error.dart';
 import '../../domain/entities/entities.dart';
 import '../http/http.dart';
 
-class RemoteAuthetication {
+class RemoteAuthetication implements Authetication {
   final HttpClient httpClient;
   final String url;
 
   RemoteAuthetication({required this.httpClient, required this.url});
 
-  Future<AccountEntity> auth(AuthenticationParams params) async {
+  Future<AccountEntity> auth({required AuthenticationParams params}) async {
     try {
       final httpResponse = await httpClient.request(
           url: url,
