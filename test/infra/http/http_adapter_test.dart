@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:clean_architecture/app/data/http/http.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
@@ -8,7 +9,7 @@ import 'package:faker/faker.dart';
 
 class ClientSpy extends Mock implements Client {}
 
-class HttpAdapter {
+class HttpAdapter implements HttpClient {
   final Client client;
 
   HttpAdapter(this.client);
@@ -18,11 +19,9 @@ class HttpAdapter {
     'accept': 'application/json',
   };
 
-  Future<Map> request({
-    @required Uri url,
-    @required String method,
-    Map body,
-  }) async {
+  @override
+  Future<Map> request(
+      {@required Uri url, @required String method, Map body}) async {
     final jsonBody = body != null ? jsonEncode(body) : null;
     final response = await client.post(url, headers: headers, body: jsonBody);
 
@@ -99,28 +98,28 @@ void main() {
       expect(response, {'any_key': 'any_value'});
     });
 
-    // test('Should return null if post returns 200 with no data', () async {
-    //   mockResponse(200, body: '');
-    //
-    //   final response = await sut.request(url: url, method: 'post');
-    //
-    //   expect(response, null);
-    // });
-    //
-    // test('Should return null if post returns 204', () async {
-    //   mockResponse(204, body: '');
-    //
-    //   final response = await sut.request(url: url, method: 'post');
-    //
-    //   expect(response, null);
-    // });
-    //
-    // test('Should return null if post returns 204 with data', () async {
-    //   mockResponse(204);
-    //
-    //   final response = await sut.request(url: url, method: 'post');
-    //
-    //   expect(response, null);
-    // });
+    test('Should return null if post returns 200 with no data', () async {
+      mockResponse(200, body: '');
+
+      final response = await sut.request(url: url, method: 'post');
+
+      expect(response, null);
+    });
+
+    test('Should return null if post returns 204', () async {
+      mockResponse(204, body: '');
+
+      final response = await sut.request(url: url, method: 'post');
+
+      expect(response, null);
+    });
+
+    test('Should return null if post returns 204 with data', () async {
+      mockResponse(204);
+
+      final response = await sut.request(url: url, method: 'post');
+
+      expect(response, null);
+    });
   });
 }

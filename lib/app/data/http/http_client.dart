@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 abstract class HttpClient {
   Future<Map> request({
-    @required String url,
+    @required Uri url,
     @required String method,
     Map body,
   });

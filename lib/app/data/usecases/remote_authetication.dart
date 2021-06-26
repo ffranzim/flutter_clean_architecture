@@ -11,7 +11,7 @@ import '../http/http.dart';
 
 class RemoteAuthetication implements Authetication {
   final HttpClient httpClient;
-  final String url;
+  final Uri url;
 
   RemoteAuthetication({@required this.httpClient, @required this.url});
 
