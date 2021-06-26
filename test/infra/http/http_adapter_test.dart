@@ -9,8 +9,6 @@ import 'package:mockito/mockito.dart';
 
 class ClientSpy extends Mock implements Client {}
 
-
-
 void main() {
   Client client;
   HttpAdapter sut;
@@ -22,6 +20,14 @@ void main() {
     sut = HttpAdapter(client);
     url = Uri.parse(faker.internet.httpUrl());
     body = {'any_key': 'any_value'};
+  });
+
+  group('shared', () {
+    test('Should throw ServerError if invalid method is provided', () async {
+      final future = sut.request(url: url, method: 'invalid_method');
+
+      expect(future, throwsA(HttpError.serverError));
+    });
   });
 
   group('post', () {
@@ -100,6 +106,15 @@ void main() {
       expect(response, null);
     });
 
+    test('Should return BadRequestError if post returns 400 without body',
+        () async {
+      mockResponse(400, body: '');
+
+      final future = sut.request(url: url, method: 'post');
+
+      expect(future, throwsA(HttpError.badRequest));
+    });
+
     test('Should return BadRequestError if post returns 400', () async {
       mockResponse(400);
 
@@ -108,7 +123,36 @@ void main() {
       expect(future, throwsA(HttpError.badRequest));
     });
 
+    test('Should return BadRequestError if post returns 401', () async {
+      mockResponse(401);
 
+      final future = sut.request(url: url, method: 'post');
 
+      expect(future, throwsA(HttpError.unauthorized));
+    });
+
+    test('Should return BadRequestError if post returns 403', () async {
+      mockResponse(403);
+
+      final future = sut.request(url: url, method: 'post');
+
+      expect(future, throwsA(HttpError.forbidden));
+    });
+
+    test('Should return BadRequestError if post returns 404', () async {
+      mockResponse(404);
+
+      final future = sut.request(url: url, method: 'post');
+
+      expect(future, throwsA(HttpError.notFound));
+    });
+
+    test('Should return BadRequestError if post returns 500', () async {
+      mockResponse(500);
+
+      final future = sut.request(url: url, method: 'post');
+
+      expect(future, throwsA(HttpError.serverError));
+    });
   });
 }
