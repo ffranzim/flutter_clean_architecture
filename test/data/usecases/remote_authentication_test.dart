@@ -11,10 +11,10 @@ import 'package:mocktail/mocktail.dart';
 class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
-  late RemoteAuthetication sut;
-  late HttpClient httpClient;
-  late String url;
-  late AuthenticationParams params;
+  RemoteAuthetication sut;
+  HttpClient httpClient;
+  String url;
+  AuthenticationParams params;
 
   When<Future<Map<dynamic, dynamic>>> mockRequest() =>
       when(() => httpClient.request(

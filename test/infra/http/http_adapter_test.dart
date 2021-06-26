@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
@@ -17,28 +18,21 @@ class HttpAdapter {
     'accept': 'application/json',
   };
 
-  Future<Map?> request({
-    required Uri url,
-    required String method,
-    Map? body,
+  Future<void> request({
+    @required Uri url,
+    @required String method,
+    Map body,
   }) async {
     final jsonBody = body != null ? jsonEncode(body) : null;
-
-    try {
-      await client.post(url, headers: headers, body: jsonBody);
-    } on Exception catch (e) {
-      print(e);
-    } finally {
-      return Future.value({});
-    }
+    await client.post(url, headers: headers, body: jsonBody);
   }
 }
 
 void main() {
-  late Client client;
-  late HttpAdapter sut;
-  late Uri url;
-  late Map body;
+  Client client;
+  HttpAdapter sut;
+  Uri url;
+  Map body;
 
   setUp(() {
     client = ClientSpy();
@@ -80,5 +74,7 @@ void main() {
         ),
       );
     });
+
+
   });
 }

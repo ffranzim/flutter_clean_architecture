@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../domain/usecases/usecases.dart';
 
 import '../../data/models/models.dart';
@@ -11,9 +13,9 @@ class RemoteAuthetication implements Authetication {
   final HttpClient httpClient;
   final String url;
 
-  RemoteAuthetication({required this.httpClient, required this.url});
+  RemoteAuthetication({@required this.httpClient, @required this.url});
 
-  Future<AccountEntity> auth({required AuthenticationParams params}) async {
+  Future<AccountEntity> auth({@required AuthenticationParams params}) async {
     try {
       final httpResponse = await httpClient.request(
           url: url,
@@ -33,8 +35,8 @@ class RemoteAuthenticationParams {
   final String password;
 
   RemoteAuthenticationParams({
-    required this.email,
-    required this.password,
+    @required this.email,
+    @required this.password,
   });
 
   factory RemoteAuthenticationParams.fromDomain(AuthenticationParams entity) =>
