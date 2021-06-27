@@ -17,17 +17,17 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Counter'),
+        title: const Text('Counter'),
       ),
       body: ScopedBuilder<HomeStore, Exception, int>(
         store: store,
         onState: (_, counter) {
           return Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Text('$counter'),
           );
         },
-        onError: (context, error) => Center(
+        onError: (context, error) => const Center(
           child: Text(
             'Too many clicks',
             style: TextStyle(color: Colors.red),
@@ -38,7 +38,7 @@ class _HomePageState extends ModularState<HomePage, HomeStore> {
         onPressed: () {
           store.increment();
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

@@ -14,7 +14,7 @@ class HttpAdapter implements HttpClient {
     'accept': 'application/json',
   };
 
-  String jsonBody(body) => body != null ? jsonEncode(body) : null;
+  String jsonBody(Map body) => body != null ? jsonEncode(body) : null;
 
   @override
   Future<Map> request(
@@ -36,7 +36,7 @@ class HttpAdapter implements HttpClient {
 
   Map _handleResponse(Response response) {
     if (response.statusCode == 200) {
-      return response.body.isEmpty ? null : jsonDecode(response.body);
+      return response.body.isEmpty ? null : jsonDecode(response.body) as Map;
     } else if (response.statusCode == 204) {
       return null;
     } else if (response.statusCode == 400) {
