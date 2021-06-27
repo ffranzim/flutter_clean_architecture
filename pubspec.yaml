@@ -39,6 +39,7 @@ dependencies:
 dev_dependencies:
   faker: ^2.0.0
 
+  flutter_launcher_icons: ^0.9.0
   flutter_modular_test: ^1.0.1
   flutter_test:
     sdk: flutter
@@ -49,11 +50,30 @@ dev_dependencies:
   triple_test: ^0.0.6
 
 
-
 flutter:
   uses-material-design: true
 
   assets:
     - lib/app/ui/assets/
+
+flutter_icons:
+  ios: true
+  android: true
+  image_path_android: lib/app/ui/assets/icon/android.png
+  image_path_ios: lib/app/ui/assets/icon/ios.png
+  adaptive_icon_background: lib/app/ui/assets/icon/background.png
+  adaptive_icon_foreground: lib/app/ui/assets/icon/foreground.png
+
+## Slidy Scripts
+vars:
+  clean: flutter clean
+  get: flutter pub get
+  runner: flutter pub run build_runner
+scripts:
+  mobx_build: $runner build
+  mobx_watch: $clean & $get & $runner watch
+  mobx_build_clean: $clean & $get & $runner build --delete-conflicting-outputs
+  load_icon: flutter pub run flutter_launcher_icons:main
+
 
 
