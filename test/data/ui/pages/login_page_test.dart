@@ -106,85 +106,99 @@ void main() {
   });
 
   testWidgets('Should present bo error if email is valid - Empty String',
-          (WidgetTester tester) async {
-        await loadPage(tester);
+      (WidgetTester tester) async {
+    await loadPage(tester);
 
-        emailErrorController.add('');
-        // ! Força os componentes que precisam serem renderizados
-        await tester.pump();
+    emailErrorController.add('');
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
 
-        final emailTextChildren = find.descendant(
-            of: find.bySemanticsLabel('Email'), matching: find.byType(Text));
+    final emailTextChildren = find.descendant(
+        of: find.bySemanticsLabel('Email'), matching: find.byType(Text));
 
-        expect(emailTextChildren, findsOneWidget,
-            reason:
+    expect(emailTextChildren, findsOneWidget,
+        reason:
             'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
-      });
+  });
 
   testWidgets('Should present error if password is invalid',
-          (WidgetTester tester) async {
-        await loadPage(tester);
+      (WidgetTester tester) async {
+    await loadPage(tester);
 
-        passwordErrorController.add('any error');
-        // ! Força os componentes que precisam serem renderizados
-        await tester.pump();
+    passwordErrorController.add('any error');
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
 
-        expect(find.text('any error'), findsOneWidget);
-      });
+    expect(find.text('any error'), findsOneWidget);
+  });
 
   testWidgets('Should present bo error if password is valid - Null String',
-          (WidgetTester tester) async {
-        await loadPage(tester);
+      (WidgetTester tester) async {
+    await loadPage(tester);
 
-        passwordErrorController.add(null);
-        // ! Força os componentes que precisam serem renderizados
-        await tester.pump();
+    passwordErrorController.add(null);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
 
-        final passwordTextChildren = find.descendant(
-            of: find.bySemanticsLabel('Senha'), matching: find.byType(Text));
+    final passwordTextChildren = find.descendant(
+        of: find.bySemanticsLabel('Senha'), matching: find.byType(Text));
 
-        expect(passwordTextChildren, findsOneWidget,
-            reason:
+    expect(passwordTextChildren, findsOneWidget,
+        reason:
             'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
-      });
+  });
 
   testWidgets('Should present bo error if password is valid - Empty String',
-          (WidgetTester tester) async {
-        await loadPage(tester);
+      (WidgetTester tester) async {
+    await loadPage(tester);
 
-        passwordErrorController.add('');
-        // ! Força os componentes que precisam serem renderizados
-        await tester.pump();
+    passwordErrorController.add('');
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
 
-        final passwordTextChildren = find.descendant(
-            of: find.bySemanticsLabel('Senha'), matching: find.byType(Text));
+    final passwordTextChildren = find.descendant(
+        of: find.bySemanticsLabel('Senha'), matching: find.byType(Text));
 
-        expect(passwordTextChildren, findsOneWidget,
-            reason:
+    expect(passwordTextChildren, findsOneWidget,
+        reason:
             'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
-      });
+  });
 
   testWidgets('Should enable button if form is valid',
-          (WidgetTester tester) async {
-        await loadPage(tester);
+      (WidgetTester tester) async {
+    await loadPage(tester);
 
-        isFormValidController.add(true);
-        // ! Força os componentes que precisam serem renderizados
-        await tester.pump();
+    isFormValidController.add(true);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
 
-        final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
-        expect(button.onPressed, isNotNull);
-      });
+    final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+    expect(button.onPressed, isNotNull);
+  });
 
-  testWidgets('Should enable button if form is not valid',
-          (WidgetTester tester) async {
-        await loadPage(tester);
+  testWidgets('Should disable button if form is invalid',
+      (WidgetTester tester) async {
+    await loadPage(tester);
 
-        isFormValidController.add(false);
-        // ! Força os componentes que precisam serem renderizados
-        await tester.pump();
+    isFormValidController.add(false);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
 
-        final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
-        expect(button.onPressed, null);
-      });
+    final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+    expect(button.onPressed, null);
+  });
+
+  testWidgets('Should call authentication on form submit',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    isFormValidController.add(true);
+    await tester.pump();
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
+
+    verify(presenter.auth()).called(1);
+    
+
+  });
 }
