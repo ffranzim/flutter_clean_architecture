@@ -59,7 +59,7 @@ class App extends StatelessWidget {
           color: Colors.purple,
         ),
       ),
-      home: LoginPage(),
+      home: LoginPage(presenter: null,),
     );
   }
 }
