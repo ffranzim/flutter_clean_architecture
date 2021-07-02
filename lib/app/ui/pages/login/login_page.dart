@@ -7,7 +7,6 @@ import '../../components/components.dart';
 import 'login_presenter.dart';
 
 class LoginPage extends StatelessWidget {
-
   final LoginPresenter presenter;
   final Logger _log = Logger();
 
@@ -28,42 +27,53 @@ class LoginPage extends StatelessWidget {
                 child: Column(
               children: [
                 StreamBuilder<String>(
-                  stream: presenter.emailErrorStream,
-                  builder: (context, snapshot) {
-                    return TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        //TODO não consegui fazer com o ThemeData
-                        icon: Icon(
-                          Icons.email,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        errorText: snapshot.data
-                      ),
-                      keyboardType: TextInputType.emailAddress,
-                      onChanged: presenter.validateEmail,
-                    );
-                  }
-                ),
+                    stream: presenter.emailErrorStream,
+                    builder: (context, snapshot) {
+                      return TextFormField(
+                        decoration: InputDecoration(
+                            labelText: 'Email',
+                            //TODO não consegui fazer com o ThemeData
+                            icon: Icon(
+                              Icons.email,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            errorText: snapshot.data?.isEmpty == true
+                                ? null
+                                : snapshot.data),
+                        keyboardType: TextInputType.emailAddress,
+                        onChanged: presenter.validateEmail,
+                      );
+                    }),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 32.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Senha',
-                      //TODO não consegui fazer com o ThemeData
-                      icon: Icon(
-                        Icons.lock,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ),
-                    obscureText: true,
-                    onChanged: presenter.validatePassword,
-                    // keyboardType: TextInputType.visiblePassword,
-                  ),
+                  child: StreamBuilder<String>(
+                      stream: presenter.passwordErrorStream,
+                      builder: (context, snapshot) {
+                        return TextFormField(
+                          decoration: InputDecoration(
+                              labelText: 'Senha',
+                              //TODO não consegui fazer com o ThemeData
+                              icon: Icon(
+                                Icons.lock,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              errorText: snapshot.data?.isEmpty == true
+                                  ? null
+                                  : snapshot.data),
+                          obscureText: true,
+                          onChanged: presenter.validatePassword,
+                          // keyboardType: TextInputType.visiblePassword,
+                        );
+                      }),
                 ),
-                ElevatedButton(
-                  onPressed: null,
-                  child: Text('Entrar'.toUpperCase()),
+                StreamBuilder<bool>(
+                  stream: presenter.isFormValidController,
+                  builder: (context, snapshot) {
+                    return ElevatedButton(
+                      onPressed: snapshot.data == true ? () {} : null,
+                      child: Text('Entrar'.toUpperCase()),
+                    );
+                  }
                 ),
                 TextButton.icon(
                   onPressed: () => _log.i('TextButton'),

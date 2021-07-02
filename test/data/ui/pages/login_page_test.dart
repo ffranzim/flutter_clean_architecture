@@ -12,20 +12,30 @@ class LoginPresenterSpy extends Mock implements LoginPresenter {}
 void main() {
   LoginPresenter presenter;
   StreamController<String> emailErrorController;
+  StreamController<String> passwordErrorController;
+  StreamController<bool> isFormValidController;
 
   Future<void> loadPage(WidgetTester tester) async {
-
     presenter = LoginPresenterSpy();
     emailErrorController = StreamController<String>();
-    when(presenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
+    passwordErrorController = StreamController<String>();
+    isFormValidController = StreamController<bool>();
+    when(presenter.emailErrorStream)
+        .thenAnswer((_) => emailErrorController.stream);
+    when(presenter.passwordErrorStream)
+        .thenAnswer((_) => passwordErrorController.stream);
+    when(presenter.isFormValidController)
+        .thenAnswer((_) => isFormValidController.stream);
 
     final loginPage = MaterialApp(home: LoginPage(presenter: presenter));
     // ! Renderiza o componente
     await tester.pumpWidget(loginPage);
   }
 
-  tearDown((){
+  tearDown(() {
     emailErrorController.close();
+    passwordErrorController.close();
+    isFormValidController.close();
   });
 
   testWidgets('Should load with correct initial state',
@@ -70,7 +80,6 @@ void main() {
 
   testWidgets('Should present error if email is invalid',
       (WidgetTester tester) async {
-
     await loadPage(tester);
 
     emailErrorController.add('any error');
@@ -79,4 +88,103 @@ void main() {
 
     expect(find.text('any error'), findsOneWidget);
   });
+
+  testWidgets('Should present bo error if email is valid - Null String',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    emailErrorController.add(null);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
+
+    final emailTextChildren = find.descendant(
+        of: find.bySemanticsLabel('Email'), matching: find.byType(Text));
+
+    expect(emailTextChildren, findsOneWidget,
+        reason:
+            'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
+  });
+
+  testWidgets('Should present bo error if email is valid - Empty String',
+          (WidgetTester tester) async {
+        await loadPage(tester);
+
+        emailErrorController.add('');
+        // ! Força os componentes que precisam serem renderizados
+        await tester.pump();
+
+        final emailTextChildren = find.descendant(
+            of: find.bySemanticsLabel('Email'), matching: find.byType(Text));
+
+        expect(emailTextChildren, findsOneWidget,
+            reason:
+            'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
+      });
+
+  testWidgets('Should present error if password is invalid',
+          (WidgetTester tester) async {
+        await loadPage(tester);
+
+        passwordErrorController.add('any error');
+        // ! Força os componentes que precisam serem renderizados
+        await tester.pump();
+
+        expect(find.text('any error'), findsOneWidget);
+      });
+
+  testWidgets('Should present bo error if password is valid - Null String',
+          (WidgetTester tester) async {
+        await loadPage(tester);
+
+        passwordErrorController.add(null);
+        // ! Força os componentes que precisam serem renderizados
+        await tester.pump();
+
+        final passwordTextChildren = find.descendant(
+            of: find.bySemanticsLabel('Senha'), matching: find.byType(Text));
+
+        expect(passwordTextChildren, findsOneWidget,
+            reason:
+            'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
+      });
+
+  testWidgets('Should present bo error if password is valid - Empty String',
+          (WidgetTester tester) async {
+        await loadPage(tester);
+
+        passwordErrorController.add('');
+        // ! Força os componentes que precisam serem renderizados
+        await tester.pump();
+
+        final passwordTextChildren = find.descendant(
+            of: find.bySemanticsLabel('Senha'), matching: find.byType(Text));
+
+        expect(passwordTextChildren, findsOneWidget,
+            reason:
+            'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
+      });
+
+  testWidgets('Should enable button if form is valid',
+          (WidgetTester tester) async {
+        await loadPage(tester);
+
+        isFormValidController.add(true);
+        // ! Força os componentes que precisam serem renderizados
+        await tester.pump();
+
+        final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+        expect(button.onPressed, isNotNull);
+      });
+
+  testWidgets('Should enable button if form is not valid',
+          (WidgetTester tester) async {
+        await loadPage(tester);
+
+        isFormValidController.add(false);
+        // ! Força os componentes que precisam serem renderizados
+        await tester.pump();
+
+        final button = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+        expect(button.onPressed, null);
+      });
 }
