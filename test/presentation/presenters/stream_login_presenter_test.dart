@@ -11,6 +11,7 @@ void main() {
   Validation validation;
   StreamLoginPresenter sut;
   String email;
+  String password;
 
   PostExpectation mockValidationCall({@required String field}) =>
       when(validation.validate(
@@ -24,6 +25,7 @@ void main() {
     validation = ValidationSpy();
     sut = StreamLoginPresenter(validation: validation);
     email = faker.internet.email();
+    email = faker.internet.password();
 
     // ! Mock sucesso quando passsar null null
     mockValidation(field: null, value: null);
@@ -88,5 +90,22 @@ void main() {
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
     sut.validateEmail(email: email);
     sut.validateEmail(email: email);
+  });
+
+  test('Should call Validation with correct password', () {
+    sut.validatePassword(password: password);
+
+    verify(validation.validate(field: 'password', value: password)).called(1);
+  });
+
+  test('Should emit password error if validation fails', () {
+    mockValidation(field: null, value: 'error');
+
+    sut.passwordErrorStream.listen(expectAsync1((error) => expect(error, 'error')));
+    sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
+
+    // ? Execução pós expectativa! Chama 2x porém emite só um erro
+    sut.validatePassword(password: password);
+    sut.validatePassword(password: password);
   });
 }

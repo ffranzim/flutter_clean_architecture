@@ -7,6 +7,7 @@ import '../protocols/validation.dart';
 
 class LoginState {
   String emailError;
+  String passwordError;
 
   bool get isFormValid => false;
 }
@@ -27,14 +28,27 @@ class StreamLoginPresenter implements LoginPresenter {
       _controller.stream.map((state) => state.emailError).distinct();
 
   @override
+  Stream<String> get passwordErrorStream =>
+      _controller.stream.map((state) => state.passwordError).distinct();
+
+  @override
   Stream<bool> get isFormValidStream =>
       _controller.stream.map((state) => state.isFormValid).distinct();
+
+  //? dispara evento passando o state
+  void _update() => _controller.add(_state);
 
   @override
   void validateEmail({@required String email}) {
     _state.emailError = validation.validate(field: 'email', value: email);
-    //? dispara evento passando o state
-    _controller.add(_state);
+    _update();
+  }
+
+  @override
+  void validatePassword({String password}) {
+    _state.passwordError =
+        validation.validate(field: 'password', value: password);
+    _update();
   }
 
   @override
@@ -55,13 +69,4 @@ class StreamLoginPresenter implements LoginPresenter {
   @override
   // TODO: implement mainErrorStream
   Stream<String> get mainErrorStream => throw UnimplementedError();
-
-  @override
-  // TODO: implement passwordErrorStream
-  Stream<String> get passwordErrorStream => throw UnimplementedError();
-
-  @override
-  void validatePassword({String password}) {
-    // TODO: implement validatePassword
-  }
 }
