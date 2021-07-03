@@ -16,4 +16,6 @@ abstract class LoginPresenter {
 
   void auth();
 
+  void dispose();
+
 }
