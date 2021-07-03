@@ -30,83 +30,59 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(builder: (context) {
-        widget.presenter.isLoadingController.listen((isLoading) {
-          if (isLoading) {
-            showLoading(context: context);
-          } else {
-            hideLoading(context: context);
-          }
-        });
+      body: Builder(
+        builder: (context) {
+          widget.presenter.isLoadingController.listen((isLoading) {
+            if (isLoading) {
+              showLoading(context: context);
+            } else {
+              hideLoading(context: context);
+            }
+          });
 
-        widget.presenter.mainErrorController.listen((error) {
-          if (error.isNotEmpty) {
-            showErrorMessage(context: context, msg: error);
-          }
-        });
+          widget.presenter.mainErrorController.listen((error) {
+            if (error.isNotEmpty) {
+              showErrorMessage(context: context, msg: error);
+            }
+          });
 
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              LoginHeader(),
-              const Headline1(text: 'login'),
-              Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Provider(
-                  create: (_) => widget.presenter,
-                  child: Form(
-                    child: Column(
-                      children: [
-                        EmailInput(),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(top: 8.0, bottom: 32.0),
-                          child: StreamBuilder<String>(
-                            stream: widget.presenter.passwordErrorStream,
-                            builder: (context, snapshot) {
-                              return TextFormField(
-                                decoration: InputDecoration(
-                                    labelText: 'Senha',
-                                    //TODO não consegui fazer com o ThemeData
-                                    icon: Icon(
-                                      Icons.lock,
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                                    errorText: snapshot.data?.isEmpty == true
-                                        ? null
-                                        : snapshot.data),
-                                obscureText: true,
-                                onChanged: widget.presenter.validatePassword,
-                                // keyboardType: TextInputType.visiblePassword,
-                              );
-                            },
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                LoginHeader(),
+                const Headline1(text: 'login'),
+                Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Provider(
+                    create: (_) => widget.presenter,
+                    child: Form(
+                      child: Column(
+                        children: [
+                          EmailInput(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 8.0, bottom: 32.0),
+                            child: PasswordInput(),
                           ),
-                        ),
-                        StreamBuilder<bool>(
-                            stream: widget.presenter.isFormValidController,
-                            builder: (context, snapshot) {
-                              return ElevatedButton(
-                                onPressed: snapshot.data == true
-                                    ? widget.presenter.auth
-                                    : null,
-                                child: Text('Entrar'.toUpperCase()),
-                              );
-                            }),
-                        TextButton.icon(
-                          onPressed: () => _log.i('TextButton'),
-                          icon: const Icon(Icons.person),
-                          label: const Text('Criar Conta'),
-                        )
-                      ],
+                          LoginButton(),
+                          TextButton.icon(
+                            onPressed: () => _log.i('TextButton'),
+                            icon: const Icon(Icons.person),
+                            label: const Text('Criar Conta'),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
-          ),
-        );
-      }),
+                )
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
+
+
