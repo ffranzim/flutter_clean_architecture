@@ -21,7 +21,6 @@ void main() {
   }
 
   setUp(() {
-
     validation = ValidationSpy();
     sut = StreamLoginPresenter(validation: validation);
     email = faker.internet.email();
@@ -43,6 +42,31 @@ void main() {
     expectLater(sut.emailErrorStream, emits('error'));
 
     // ? Execução pós expectativa
+    sut.validateEmail(email: email);
+  });
+
+  test('Should emit error if validation fails - Twice Array', () {
+    mockValidation(field: null, value: 'error');
+
+    // ! Espera até acontecer ou dar timeout
+    expectLater(sut.emailErrorStream, emitsInOrder(['error']));
+
+    // ? Execução pós expectativa! Chama 2x porém emite só um erro
+    sut.validateEmail(email: email);
+    sut.validateEmail(email: email);
+  });
+
+  test('Should emit error if validation fails - Twice Distinct', () {
+    mockValidation(field: null, value: 'error');
+
+    // ! Quando se tem apenas um parametro pode usar direto
+    // sut.emailErrorStream.listen((error) {
+    //   expectAsync1((error) => expect(error, 'error'));
+    // });
+    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, 'error')));
+
+    // ? Execução pós expectativa! Chama 2x porém emite só um erro
+    sut.validateEmail(email: email);
     sut.validateEmail(email: email);
   });
 }
