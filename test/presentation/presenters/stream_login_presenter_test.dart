@@ -108,4 +108,13 @@ void main() {
     sut.validatePassword(password: password);
     sut.validatePassword(password: password);
   });
+
+  test('Should emit password error as null if validation success', () {
+    sut.passwordErrorStream.listen(expectAsync1((error) => expect(error, null)));
+    sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
+
+    // ? Execução pós expectativa! Chama 2x porém emite só um erro
+    sut.validatePassword(password: password);
+    sut.validatePassword(password: password);
+  });
 }
