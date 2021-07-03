@@ -21,7 +21,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final Logger _log = Logger();
 
-
   @override
   void dispose() {
     super.dispose();
@@ -61,33 +60,36 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         EmailInput(),
                         Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 32.0),
+                          padding:
+                              const EdgeInsets.only(top: 8.0, bottom: 32.0),
                           child: StreamBuilder<String>(
-                              stream: widget.presenter.passwordErrorStream,
-                              builder: (context, snapshot) {
-                                return TextFormField(
-                                  decoration: InputDecoration(
-                                      labelText: 'Senha',
-                                      //TODO não consegui fazer com o ThemeData
-                                      icon: Icon(
-                                        Icons.lock,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                      errorText: snapshot.data?.isEmpty == true
-                                          ? null
-                                          : snapshot.data),
-                                  obscureText: true,
-                                  onChanged: widget.presenter.validatePassword,
-                                  // keyboardType: TextInputType.visiblePassword,
-                                );
-                              }),
+                            stream: widget.presenter.passwordErrorStream,
+                            builder: (context, snapshot) {
+                              return TextFormField(
+                                decoration: InputDecoration(
+                                    labelText: 'Senha',
+                                    //TODO não consegui fazer com o ThemeData
+                                    icon: Icon(
+                                      Icons.lock,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    errorText: snapshot.data?.isEmpty == true
+                                        ? null
+                                        : snapshot.data),
+                                obscureText: true,
+                                onChanged: widget.presenter.validatePassword,
+                                // keyboardType: TextInputType.visiblePassword,
+                              );
+                            },
+                          ),
                         ),
                         StreamBuilder<bool>(
                             stream: widget.presenter.isFormValidController,
                             builder: (context, snapshot) {
                               return ElevatedButton(
-                                onPressed:
-                                    snapshot.data == true ? widget.presenter.auth : null,
+                                onPressed: snapshot.data == true
+                                    ? widget.presenter.auth
+                                    : null,
                                 child: Text('Entrar'.toUpperCase()),
                               );
                             }),
@@ -108,5 +110,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-
