@@ -34,7 +34,7 @@ class LoginPage extends StatelessWidget {
                         Text('Aguarde ...', textAlign: TextAlign.center)
                       ],
                     ),
-                   ],
+                  ],
                 );
               },
             );
@@ -42,6 +42,15 @@ class LoginPage extends StatelessWidget {
             if (Navigator.canPop(context)) {
               Navigator.of(context).pop();
             }
+          }
+        });
+
+        presenter.mainErrorController.listen((error) {
+          if (error.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: Colors.red[900],
+              content: Text(error, textAlign: TextAlign.center),
+            ));
           }
         });
 
