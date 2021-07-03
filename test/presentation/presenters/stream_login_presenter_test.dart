@@ -69,4 +69,24 @@ void main() {
     sut.validateEmail(email: email);
     sut.validateEmail(email: email);
   });
+
+  test('Should isFormValid emits false if email is invalid ', () {
+    mockValidation(field: null, value: 'error');
+
+    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, 'error')));
+    sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
+
+    // ? Execução pós expectativa! Chama 2x porém emite só um erro
+    sut.validateEmail(email: email);
+    sut.validateEmail(email: email);
+  });
+
+  test('Should emit null if validation succeeds', () {
+    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
+    sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
+
+    // ? Execução pós expectativa! Chama 2x porém emite só um erro
+    sut.validateEmail(email: email);
+    sut.validateEmail(email: email);
+  });
 }

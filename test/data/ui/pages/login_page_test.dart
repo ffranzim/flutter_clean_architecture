@@ -31,11 +31,11 @@ void main() {
         .thenAnswer((_) => emailErrorController.stream);
     when(presenter.passwordErrorStream)
         .thenAnswer((_) => passwordErrorController.stream);
-    when(presenter.mainErrorController)
+    when(presenter.mainErrorStream)
         .thenAnswer((_) => mainErrorController.stream);
-    when(presenter.isFormValidController)
+    when(presenter.isFormValidStream)
         .thenAnswer((_) => isFormValidController.stream);
-    when(presenter.isLoadingController)
+    when(presenter.isLoadingStream)
         .thenAnswer((_) => isLoadingController.stream);
   }
 
@@ -89,7 +89,7 @@ void main() {
     final email = faker.internet.email();
     await tester.enterText(find.bySemanticsLabel('Email'), email);
 
-    verify(presenter.validateEmail(email));
+    verify(presenter.validateEmail(email: email));
   });
 
   testWidgets('Should call validate password with correct values',
@@ -99,7 +99,7 @@ void main() {
     final password = faker.internet.password();
     await tester.enterText(find.bySemanticsLabel('Senha'), password);
 
-    verify(presenter.validatePassword(password));
+    verify(presenter.validatePassword(password: password));
   });
 
   testWidgets('Should present error if email is invalid',

@@ -20,7 +20,7 @@ class EmailInput extends StatelessWidget {
               ),
               errorText: snapshot.data?.isEmpty == true ? null : snapshot.data),
           keyboardType: TextInputType.emailAddress,
-          onChanged: presenter.validateEmail,
+          onChanged: (email) => presenter.validateEmail(email: email),
         );
       },
     );
