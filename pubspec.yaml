@@ -34,6 +34,7 @@ dependencies:
 
   http: ^0.13.3
   logger: ^1.0.0
+  provider: ^5.0.0
 
 
 dev_dependencies:

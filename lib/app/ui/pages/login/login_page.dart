@@ -1,3 +1,4 @@
+import 'package:clean_architecture/app/ui/components/spinner_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -31,39 +32,15 @@ class _LoginPageState extends State<LoginPage> {
       body: Builder(builder: (context) {
         widget.presenter.isLoadingController.listen((isLoading) {
           if (isLoading) {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) {
-                return SimpleDialog(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        CircularProgressIndicator(),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        Text('Aguarde ...', textAlign: TextAlign.center)
-                      ],
-                    ),
-                  ],
-                );
-              },
-            );
+            showLoading(context: context);
           } else {
-            if (Navigator.canPop(context)) {
-              Navigator.of(context).pop();
-            }
+            hideLoading(context: context);
           }
         });
 
         widget.presenter.mainErrorController.listen((error) {
           if (error.isNotEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: Colors.red[900],
-              content: Text(error, textAlign: TextAlign.center),
-            ));
+            showErrorMessage(context: context, msg: error);
           }
         });
 
@@ -78,24 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Form(
                   child: Column(
                     children: [
-                      StreamBuilder<String>(
-                          stream: widget.presenter.emailErrorStream,
-                          builder: (context, snapshot) {
-                            return TextFormField(
-                              decoration: InputDecoration(
-                                  labelText: 'Email',
-                                  //TODO não consegui fazer com o ThemeData
-                                  icon: Icon(
-                                    Icons.email,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  errorText: snapshot.data?.isEmpty == true
-                                      ? null
-                                      : snapshot.data),
-                              keyboardType: TextInputType.emailAddress,
-                              onChanged: widget.presenter.validateEmail,
-                            );
-                          }),
+                      EmailInput(widget: widget, widget: widget),
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0, bottom: 32.0),
                         child: StreamBuilder<String>(
@@ -143,3 +103,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+

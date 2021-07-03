@@ -11,20 +11,22 @@ class LoginPresenterSpy extends Mock implements LoginPresenter {}
 
 void main() {
   LoginPresenter presenter;
+
   StreamController<String> emailErrorController;
   StreamController<String> passwordErrorController;
   StreamController<String> mainErrorController;
   StreamController<bool> isFormValidController;
   StreamController<bool> isLoadingController;
 
-  Future<void> loadPage(WidgetTester tester) async {
-    presenter = LoginPresenterSpy();
+  void initStreams() {
     emailErrorController = StreamController<String>();
     passwordErrorController = StreamController<String>();
     mainErrorController = StreamController<String>();
     isFormValidController = StreamController<bool>();
     isLoadingController = StreamController<bool>();
+  }
 
+  void mockStreams() {
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
     when(presenter.passwordErrorStream)
@@ -35,6 +37,20 @@ void main() {
         .thenAnswer((_) => isFormValidController.stream);
     when(presenter.isLoadingController)
         .thenAnswer((_) => isLoadingController.stream);
+  }
+
+  void closeStreams() {
+    emailErrorController.close();
+    passwordErrorController.close();
+    mainErrorController.close();
+    isFormValidController.close();
+    isLoadingController.close();
+  }
+
+     Future<void> loadPage(WidgetTester tester) async {
+    presenter = LoginPresenterSpy();
+    initStreams();
+    mockStreams();
 
     final loginPage = MaterialApp(home: LoginPage(presenter: presenter));
     // ! Renderiza o componente
@@ -42,11 +58,7 @@ void main() {
   }
 
   tearDown(() {
-    emailErrorController.close();
-    passwordErrorController.close();
-    mainErrorController.close();
-    isFormValidController.close();
-    isLoadingController.close();
+    closeStreams();
   });
 
   testWidgets('Should load with correct initial state',
@@ -243,14 +255,12 @@ void main() {
     expect(find.text('main error'), findsOneWidget);
   });
 
-  testWidgets('Should close streams on dispose',
-      (WidgetTester tester) async {
+  testWidgets('Should close streams on dispose', (WidgetTester tester) async {
     await loadPage(tester);
 
     // É chamado quando o widget já foi destruido
-    addTearDown((){
+    addTearDown(() {
       verify(presenter.dispose()).called(1);
     });
-
   });
 }
