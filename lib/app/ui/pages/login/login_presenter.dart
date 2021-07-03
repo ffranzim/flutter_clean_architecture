@@ -6,6 +6,8 @@ abstract class LoginPresenter {
 
   Stream<bool> get isFormValidController;
 
+  Stream<bool> get isLoadingController;
+
   void validateEmail(String email);
 
   void validatePassword(String password);
