@@ -3,18 +3,19 @@ import 'package:flutter_test/flutter_test.dart';
 
 abstract class FieldValidation {
   String get field;
+
   String validate({@required String value});
 }
 
 class RequiredFieldValidation implements FieldValidation {
+  @override
   final String field;
 
   RequiredFieldValidation({@required this.field});
 
-  @override
+   @override
   String validate({String value}) {
-
-    return value;
+    return value.isNotEmpty ? null: value;
   }
 }
 
@@ -27,4 +28,3 @@ void main() {
     expect(error, null);
   });
 }
-
