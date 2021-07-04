@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import '../../domain/usecases/authentication.dart';
 import '../../ui/pages/pages.dart';
 import '../protocols/validation.dart';
 
@@ -11,13 +12,21 @@ class LoginState {
   String emailError;
   String passwordError;
 
-  bool get isFormValid => emailError == null && passwordError == null && email != null && password != null;
+  bool isLoading = false;
+
+  bool get isFormValid =>
+      emailError == null &&
+      passwordError == null &&
+      email != null &&
+      password != null;
 }
 
 class StreamLoginPresenter implements LoginPresenter {
   final Validation validation;
+  final Authetication authentication;
 
-  StreamLoginPresenter({@required this.validation});
+  StreamLoginPresenter(
+      {@required this.validation, @required this.authentication});
 
   // ?  broadcast mais de um listener no mesmo stream, sem isso a Stream tem apenas um listener
   final _controller = StreamController<LoginState>.broadcast();
@@ -36,6 +45,9 @@ class StreamLoginPresenter implements LoginPresenter {
   @override
   Stream<bool> get isFormValidStream =>
       _controller.stream.map((state) => state.isFormValid).distinct();
+
+  @override
+  Stream<bool> get isLoadingStream => _controller.stream.map((event) => _state.isLoading).distinct();
 
   //? dispara evento passando o state
   void _update() => _controller.add(_state);
@@ -56,9 +68,14 @@ class StreamLoginPresenter implements LoginPresenter {
   }
 
   @override
-  Future<void> auth() {
-    // TODO: implement auth
-    throw UnimplementedError();
+  Future<void> auth() async {
+    _state.isLoading = true;
+    _update();
+    await authentication.auth(
+        params:
+            AuthenticationParams(email: _state.email, secret: _state.password));
+    _state.isLoading = false;
+    _update();
   }
 
   @override
@@ -66,9 +83,7 @@ class StreamLoginPresenter implements LoginPresenter {
     // TODO: implement dispose
   }
 
-  @override
-  // TODO: implement isLoadingStream
-  Stream<bool> get isLoadingStream => throw UnimplementedError();
+
 
   @override
   // TODO: implement mainErrorStream

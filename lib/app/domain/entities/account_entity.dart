@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
+
 class AccountEntity {
   final String token;
 
-  AccountEntity(this.token);
+  AccountEntity({@required this.token});
 }
