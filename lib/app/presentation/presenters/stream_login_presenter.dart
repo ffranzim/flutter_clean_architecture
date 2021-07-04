@@ -45,15 +45,16 @@ class StreamLoginPresenter implements LoginPresenter {
       _controller?.stream?.map((state) => state.passwordError)?.distinct();
 
   @override
-  Stream<String> get mainErrorStream =>  _controller?.stream?.map((state) => state.mainError)?.distinct();
-
+  Stream<String> get mainErrorStream =>
+      _controller?.stream?.map((state) => state.mainError)?.distinct();
 
   @override
   Stream<bool> get isFormValidStream =>
       _controller?.stream?.map((state) => state.isFormValid)?.distinct();
 
   @override
-  Stream<bool> get isLoadingStream => _controller?.stream?.map((event) => _state.isLoading)?.distinct();
+  Stream<bool> get isLoadingStream =>
+      _controller?.stream?.map((event) => _state.isLoading)?.distinct();
 
   //? dispara evento passando o state
   void _update() => _controller?.add(_state);
@@ -80,8 +81,8 @@ class StreamLoginPresenter implements LoginPresenter {
 
     try {
       await authentication.auth(
-          params:
-          AuthenticationParams(email: _state.email, secret: _state.password));
+          params: AuthenticationParams(
+              email: _state.email, secret: _state.password));
     } on DomainError catch (error) {
       _state.mainError = error.description;
     }
@@ -90,14 +91,9 @@ class StreamLoginPresenter implements LoginPresenter {
     _update();
   }
 
-
   @override
   void dispose() {
     _controller?.close();
     _controller = null;
   }
-
-
-
-
 }
