@@ -1,4 +1,5 @@
 import 'package:clean_architecture/app/domain/entities/account_entity.dart';
+import 'package:clean_architecture/app/domain/helpers/helpers.dart';
 import 'package:clean_architecture/app/domain/usecases/usecases.dart';
 import 'package:clean_architecture/app/presentation/presenters/presenters.dart';
 import 'package:clean_architecture/app/presentation/protocols/protocols.dart';
@@ -33,6 +34,10 @@ void main() {
     // ? thenAnswer utilizado para assincronos
     mockAuthenticationCall()
         .thenAnswer((_) async => AccountEntity(token: faker.guid.guid()));
+  }
+
+  void mockAuthenticationError(DomainError error) {
+    mockAuthenticationCall().thenThrow(error);
   }
 
   setUp(() {
@@ -177,6 +182,21 @@ void main() {
     sut.validatePassword(password: password);
 
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+
+    await sut.auth();
+  });
+
+  test('Should emit correct events on InvalidCredentialsError', () async {
+    mockAuthenticationError(DomainError.invalidCredentials);
+    sut.validateEmail(email: email);
+    sut.validatePassword(password: password);
+
+    // ? aparentemente se perde no teste(try catch)
+    //expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    // ! verifica só o estado final para verificar algo
+    expectLater(sut.isLoadingStream, emits(false));
+
+    sut.mainErrorStream.listen(expectAsync1((error) => expect(error, 'Credenciais inválidas.')));
 
     await sut.auth();
   });

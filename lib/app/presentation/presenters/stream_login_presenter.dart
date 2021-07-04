@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clean_architecture/app/domain/helpers/domain_error.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../domain/usecases/authentication.dart';
@@ -11,6 +12,7 @@ class LoginState {
   String password;
   String emailError;
   String passwordError;
+  String mainError;
 
   bool isLoading = false;
 
@@ -43,6 +45,10 @@ class StreamLoginPresenter implements LoginPresenter {
       _controller.stream.map((state) => state.passwordError).distinct();
 
   @override
+  Stream<String> get mainErrorStream =>  _controller.stream.map((state) => state.mainError).distinct();
+
+
+  @override
   Stream<bool> get isFormValidStream =>
       _controller.stream.map((state) => state.isFormValid).distinct();
 
@@ -71,12 +77,19 @@ class StreamLoginPresenter implements LoginPresenter {
   Future<void> auth() async {
     _state.isLoading = true;
     _update();
-    await authentication.auth(
-        params:
-            AuthenticationParams(email: _state.email, secret: _state.password));
+
+    try {
+      await authentication.auth(
+          params:
+          AuthenticationParams(email: _state.email, secret: _state.password));
+    } on DomainError catch (error) {
+      _state.mainError = error.description;
+    }
+
     _state.isLoading = false;
     _update();
   }
+
 
   @override
   void dispose() {
@@ -85,7 +98,5 @@ class StreamLoginPresenter implements LoginPresenter {
 
 
 
-  @override
-  // TODO: implement mainErrorStream
-  Stream<String> get mainErrorStream => throw UnimplementedError();
+
 }
