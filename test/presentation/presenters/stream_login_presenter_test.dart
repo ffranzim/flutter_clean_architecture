@@ -25,7 +25,7 @@ void main() {
     validation = ValidationSpy();
     sut = StreamLoginPresenter(validation: validation);
     email = faker.internet.email();
-    email = faker.internet.password();
+    password = faker.internet.password();
 
     // ! Mock sucesso quando passsar null null
     mockValidation(field: null, value: null);
@@ -109,12 +109,31 @@ void main() {
     sut.validatePassword(password: password);
   });
 
-  test('Should emit password error as null if validation success', () {
+  test('Should emits form invalid  if any fields is invalid', () {
+    mockValidation(field: 'email', value: 'error');
+
+    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, 'error')));
     sut.passwordErrorStream.listen(expectAsync1((error) => expect(error, null)));
     sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
 
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
-    sut.validatePassword(password: password);
+    sut.validateEmail(email: email);
     sut.validatePassword(password: password);
   });
+
+  test('Should emits form valid event if form is valid', () async {
+
+    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
+    sut.passwordErrorStream.listen(expectAsync1((error) => expect(error, null)));
+
+    expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
+
+    // ? Execução pós expectativa! Chama 2x porém emite só um erro
+    sut.validateEmail(email: email);
+    // ! Delayed espera a tela montar, senao dá erro
+    await Future.delayed(Duration.zero);
+    sut.validatePassword(password: password);
+  });
+
+
 }

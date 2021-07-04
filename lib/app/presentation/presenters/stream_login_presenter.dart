@@ -6,10 +6,12 @@ import '../../ui/pages/pages.dart';
 import '../protocols/validation.dart';
 
 class LoginState {
+  String email;
+  String password;
   String emailError;
   String passwordError;
 
-  bool get isFormValid => false;
+  bool get isFormValid => emailError == null && passwordError == null && email != null && password != null;
 }
 
 class StreamLoginPresenter implements LoginPresenter {
@@ -40,12 +42,14 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   void validateEmail({@required String email}) {
+    _state.email = email;
     _state.emailError = validation.validate(field: 'email', value: email);
     _update();
   }
 
   @override
   void validatePassword({String password}) {
+    _state.password = password;
     _state.passwordError =
         validation.validate(field: 'password', value: password);
     _update();
