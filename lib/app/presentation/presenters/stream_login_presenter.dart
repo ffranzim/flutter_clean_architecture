@@ -31,32 +31,32 @@ class StreamLoginPresenter implements LoginPresenter {
       {@required this.validation, @required this.authentication});
 
   // ?  broadcast mais de um listener no mesmo stream, sem isso a Stream tem apenas um listener
-  final _controller = StreamController<LoginState>.broadcast();
+  var _controller = StreamController<LoginState>.broadcast();
 
   final _state = LoginState();
 
   // ! distinct só emite valor se o valor state for diferente
   @override
   Stream<String> get emailErrorStream =>
-      _controller.stream.map((state) => state.emailError).distinct();
+      _controller?.stream?.map((state) => state.emailError)?.distinct();
 
   @override
   Stream<String> get passwordErrorStream =>
-      _controller.stream.map((state) => state.passwordError).distinct();
+      _controller?.stream?.map((state) => state.passwordError)?.distinct();
 
   @override
-  Stream<String> get mainErrorStream =>  _controller.stream.map((state) => state.mainError).distinct();
+  Stream<String> get mainErrorStream =>  _controller?.stream?.map((state) => state.mainError)?.distinct();
 
 
   @override
   Stream<bool> get isFormValidStream =>
-      _controller.stream.map((state) => state.isFormValid).distinct();
+      _controller?.stream?.map((state) => state.isFormValid)?.distinct();
 
   @override
-  Stream<bool> get isLoadingStream => _controller.stream.map((event) => _state.isLoading).distinct();
+  Stream<bool> get isLoadingStream => _controller?.stream?.map((event) => _state.isLoading)?.distinct();
 
   //? dispara evento passando o state
-  void _update() => _controller.add(_state);
+  void _update() => _controller?.add(_state);
 
   @override
   void validateEmail({@required String email}) {
@@ -93,7 +93,8 @@ class StreamLoginPresenter implements LoginPresenter {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _controller?.close();
+    _controller = null;
   }
 
 
