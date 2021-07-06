@@ -6,7 +6,7 @@ class EmailValidation implements FieldValidation {
   @override
   final String field;
 
-  EmailValidation(this.field);
+  EmailValidation({@required this.field});
 
   @override
   String validate({@required String value}) {
