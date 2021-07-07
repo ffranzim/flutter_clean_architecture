@@ -6,7 +6,7 @@ void main() {
   RequiredFieldValidation sut;
 
   setUp(() {
-    sut = RequiredFieldValidation(field: 'any_field');
+    sut = const RequiredFieldValidation(field: 'any_field');
   });
 
   test('Should return null if value is not empty', () {
