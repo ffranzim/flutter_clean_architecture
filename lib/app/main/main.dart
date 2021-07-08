@@ -8,6 +8,9 @@ import 'factories/factories.dart';
 void main() => runApp(App());
 
 class App extends StatelessWidget {
+
+
+
   @override
   Widget build(BuildContext context) {
     // ! Deixa a statusBar com caracteres brancos

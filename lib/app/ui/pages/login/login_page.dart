@@ -2,44 +2,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 
 import '../../../ui/components/spinner_dialog.dart';
 import '../../components/components.dart';
 import './components/components.dart';
 import 'login_presenter.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   final LoginPresenter presenter;
 
-  const LoginPage({@required this.presenter});
+  LoginPage({@required this.presenter});
 
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
   final Logger _log = Logger();
-
-  void _hideKeyboard() {
-    final currentFocus = FocusScope.of(context);
-    if(!currentFocus.hasPrimaryFocus) {
-      currentFocus.unfocus();
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    widget.presenter.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
+    void _hideKeyboard() {
+      final currentFocus = FocusScope.of(context);
+      if (!currentFocus.hasPrimaryFocus) {
+        currentFocus.unfocus();
+      }
+    }
+
     return Scaffold(
       body: Builder(
         builder: (context) {
-          widget.presenter.isLoadingStream.listen((isLoading) {
+          presenter.isLoading.listen((isLoading) {
             if (isLoading) {
               showLoading(context: context);
             } else {
@@ -47,9 +35,10 @@ class _LoginPageState extends State<LoginPage> {
             }
           });
 
-          widget.presenter.mainErrorStream.listen((error) {
+          presenter.mainError.listen((error) {
             if (error.isNotEmpty) {
               showErrorMessage(context: context, msg: error);
+              // presenter.cleanMainError();
             }
           });
 
@@ -63,25 +52,22 @@ class _LoginPageState extends State<LoginPage> {
                   const Headline1(text: 'login'),
                   Padding(
                     padding: const EdgeInsets.all(32.0),
-                    child: Provider(
-                      create: (_) => widget.presenter,
-                      child: Form(
-                        child: Column(
-                          children: [
-                            EmailInput(),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8.0, bottom: 32.0),
-                              child: PasswordInput(),
-                            ),
-                            LoginButton(),
-                            TextButton.icon(
-                              onPressed: () => _log.i('TextButton'),
-                              icon: const Icon(Icons.person),
-                              label: const Text('Criar Conta'),
-                            )
-                          ],
-                        ),
+                    child: Form(
+                      child: Column(
+                        children: [
+                          EmailInput(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 8.0, bottom: 32.0),
+                            child: PasswordInput(),
+                          ),
+                          LoginButton(),
+                          TextButton.icon(
+                            onPressed: () => _log.i('TextButton'),
+                            icon: const Icon(Icons.person),
+                            label: const Text('Criar Conta'),
+                          )
+                        ],
                       ),
                     ),
                   )
