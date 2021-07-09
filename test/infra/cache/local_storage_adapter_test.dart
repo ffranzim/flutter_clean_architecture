@@ -19,15 +19,34 @@ class LocalStorageAdapater implements SaveSecureCacheStorage {
 
 class FlutterSecureStorageSpy extends Mock implements FlutterSecureStorage {}
 
-void main() {
-  test('Should call save secure with correct values', () async {
-    final secureStorage = FlutterSecureStorageSpy();
-    final sut = LocalStorageAdapater(secureStorage: secureStorage);
-    final key = faker.lorem.word();
-    final value = faker.guid.guid();
+FlutterSecureStorageSpy secureStorage;
+LocalStorageAdapater sut;
+String key;
+String value;
 
+void main() {
+  void mockSaveSecureError() =>
+      when(secureStorage.write(key: anyNamed('key'), value: anyNamed('value')))
+          .thenThrow(Exception());
+
+  setUp(() {
+    secureStorage = FlutterSecureStorageSpy();
+    sut = LocalStorageAdapater(secureStorage: secureStorage);
+    key = faker.lorem.word();
+    value = faker.guid.guid();
+  });
+
+  test('Should call save secure with correct values', () async {
     await sut.saveSecure(key: key, value: value);
 
     verify(secureStorage.write(key: key, value: value));
+  });
+
+  test('Should thow if save secure throw', () async {
+    mockSaveSecureError();
+    final future = sut.saveSecure(key: key, value: value);
+
+    // ! TypeMatcher verifica se a classe é do mesmo tipo
+    expect(future, throwsA(const TypeMatcher<Exception>()));
   });
 }
