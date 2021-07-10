@@ -187,7 +187,7 @@ void main() {
     sut.validateEmail(email: email);
     sut.validatePassword(password: password);
 
-    expectLater(sut.isLoading.stream, emitsInOrder([true, false]));
+    expectLater(sut.isLoading.stream, emits(true));
 
     await sut.auth();
   });
