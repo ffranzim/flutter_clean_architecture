@@ -30,12 +30,13 @@ dependencies:
   # ? Para comparação de objetos
   equatable: ^2.0.3
 
+  
+
   flutter:
     sdk: flutter
-
-  flutter_modular: ^3.2.2+1
-  flutter_triple: ^1.0.6
-
+  
+  flutter_secure_storage: ^4.2.0
+  
   get: ^3.26.0
   http: ^0.13.3
   logger: ^1.0.0

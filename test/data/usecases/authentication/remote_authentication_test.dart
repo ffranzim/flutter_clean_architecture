@@ -1,5 +1,5 @@
 import 'package:clean_architecture/app/data/http/http.dart';
-import 'package:clean_architecture/app/data/usecases/remote_authetication.dart';
+import 'package:clean_architecture/app/data/usecases/usecases.dart';
 import 'package:clean_architecture/app/domain/helpers/helpers.dart';
 import 'package:clean_architecture/app/domain/usecases/authentication.dart';
 

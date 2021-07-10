@@ -16,12 +16,17 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
   GetxLoginPresenter(
       {@required this.validation, @required this.authentication});
 
+  @override
   final RxString emailError = RxString('');
+  @override
   final RxString passwordError = RxString('');
+  @override
   final RxString mainError = RxString('');
 
   // ! Inicia com um observable false do getx
+  @override
   final RxBool isFormValid = false.obs;
+  @override
   final RxBool isLoading = false.obs;
 
   @override
@@ -58,10 +63,5 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
     }
 
     isLoading.value = false;
-  }
-
-  @override
-  Future<void> cleanMainError() {
-    mainError.value = '';
   }
 }
