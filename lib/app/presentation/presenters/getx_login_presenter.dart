@@ -1,27 +1,29 @@
-import 'package:clean_architecture/app/domain/helpers/domain_error.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
+import '../../domain/helpers/domain_error.dart';
 import '../../domain/usecases/authentication.dart';
+import '../../domain/usecases/usecases.dart';
 import '../../ui/pages/pages.dart';
 import '../protocols/validation.dart';
 
 class GetxLoginPresenter extends GetxController implements LoginPresenter {
   final Validation validation;
   final Authetication authentication;
+  final SaveCurrentAccount saveCurrentAccount;
 
   String _email;
   String _password;
 
-  GetxLoginPresenter(
-      {@required this.validation, @required this.authentication});
+  GetxLoginPresenter({
+    @required this.validation,
+    @required this.authentication,
+    @required this.saveCurrentAccount,
+  });
 
-  @override
-  final RxString emailError = RxString('');
-  @override
-  final RxString passwordError = RxString('');
-  @override
-  final RxString mainError = RxString('');
+  @override final RxString emailError = RxString('');
+  @override final RxString passwordError = RxString('');
+  @override final RxString mainError = RxString('');
 
   // ! Inicia com um observable false do getx
   @override
@@ -56,12 +58,13 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
     isLoading.value = true;
 
     try {
-      await authentication.auth(
+      final account = await authentication.auth(
           params: AuthenticationParams(email: _email, secret: _password));
+
+      await saveCurrentAccount.save(account);
     } on DomainError catch (error) {
       mainError.value = error.description;
     }
-
     isLoading.value = false;
   }
 }

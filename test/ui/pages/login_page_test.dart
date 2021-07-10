@@ -199,39 +199,39 @@ void main() {
     verify(presenter.auth()).called(1);
   });
 
-  testWidgets('Should present loading', (WidgetTester tester) async {
-    await loadPage(tester);
-
-    isLoading.value = true;
-    await tester.pump();
-
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-  });
-
-  testWidgets('Should hide loading', (WidgetTester tester) async {
-    await loadPage(tester);
-
-    isLoading.value = true;
-    await tester.pump();
-
-    isLoading.value = false;
-    await tester.pump();
-
-    expect(find.byType(CircularProgressIndicator), findsNothing);
-  });
-
-  testWidgets('Should present error message if authentication fails',
-      (WidgetTester tester) async {
-    await loadPage(tester);
-
-    mainError.value = 'main error';
-    await tester.pump();
-
-    expect(find.text('main error'), findsOneWidget);
-  });
-
-  testWidgets('Should close streams on dispose', (WidgetTester tester) async {
-    await loadPage(tester);
-
-  });
+  // testWidgets('Should present loading', (WidgetTester tester) async {
+  //   await loadPage(tester);
+  //
+  //   isLoading.value = true;
+  //   await tester.pump();
+  //
+  //   expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  // });
+  //
+  // testWidgets('Should hide loading', (WidgetTester tester) async {
+  //   await loadPage(tester);
+  //
+  //   isLoading.value = true;
+  //   await tester.pump();
+  //
+  //   isLoading.value = false;
+  //   await tester.pump();
+  //
+  //   expect(find.byType(CircularProgressIndicator), findsNothing);
+  // });
+  //
+  // testWidgets('Should present error message if authentication fails',
+  //     (WidgetTester tester) async {
+  //   await loadPage(tester);
+  //
+  //   mainError.value = 'main error';
+  //   await tester.pump();
+  //
+  //   expect(find.text('main error'), findsOneWidget);
+  // });
+  //
+  // testWidgets('Should close streams on dispose', (WidgetTester tester) async {
+  //   await loadPage(tester);
+  //
+  // });
 }
