@@ -1,11 +1,8 @@
-
 import 'package:clean_architecture/app/validation/protocols/protocols.dart';
 import 'package:clean_architecture/app/validation/validators/validators.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-
-
 
 class FieldValidationSpy extends Mock implements FieldValidation {}
 
@@ -15,7 +12,8 @@ void main() {
   FieldValidationSpy validaton2;
   FieldValidationSpy validaton3;
 
-  void mockValidation({@required FieldValidation validation, @required String error}) {
+  void mockValidation(
+      {@required FieldValidation validation, @required String error}) {
     when(validation.validate(value: anyNamed('value'))).thenReturn(error);
   }
 
@@ -34,7 +32,8 @@ void main() {
     when(validaton3.field).thenReturn('any_field');
     mockValidation(validation: validaton3, error: null);
 
-    sut = ValidationComposite(validations: [validaton1, validaton2, validaton3]);
+    sut =
+        ValidationComposite(validations: [validaton1, validaton2, validaton3]);
   });
 
   test('Should return null if value all validations return null or empty', () {
