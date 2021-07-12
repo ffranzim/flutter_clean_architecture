@@ -1,20 +1,23 @@
 import 'package:clean_architecture/app/domain/helpers/domain_error.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 import '../../domain/usecases/authentication.dart';
 import '../../ui/pages/pages.dart';
 import '../protocols/validation.dart';
 
 class GetxLoginPresenter extends GetxController implements LoginPresenter {
+  final Logger _log = Logger();
+
   String _email;
   String _password;
 
-  RxString _emailError = RxString('');
-  RxString _passwordError = RxString('');
-  RxString _mainError = RxString('');
-  RxBool _isFormValid = false.obs;
-  RxBool _isLoading = false.obs;
+  final RxString _emailError = RxString('');
+  final RxString _passwordError = RxString('');
+  final RxString _mainError = RxString('');
+  final RxBool _isFormValid = false.obs;
+  final RxBool _isLoading = false.obs;
 
   final Validation validation;
   final Authetication authentication;
@@ -53,7 +56,6 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
     _validateForm();
   }
 
-  @override
   void _validateForm() {
     _isFormValid.value = _emailError.value == null &&
         _passwordError.value == null &&
@@ -77,6 +79,8 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
 
   @override
   void dispose() {
+    super.dispose();
     //? Mantendo o metodo pelo uso na interface
+    _log.i('Call dispose');
   }
 }

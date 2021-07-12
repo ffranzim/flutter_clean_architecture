@@ -47,12 +47,15 @@ void main() {
     isLoadingController.close();
   }
 
-     Future<void> loadPage(WidgetTester tester) async {
+  setUp(() {
     presenter = LoginPresenterSpy();
     initStreams();
     mockStreams();
+  });
 
+  Future<void> loadPage(WidgetTester tester) async {
     final loginPage = MaterialApp(home: LoginPage(presenter: presenter));
+    // final loginPage = GetMaterialApp(home: LoginPage(presenter: presenter));
     // ! Renderiza o componente
     await tester.pumpWidget(loginPage);
   }

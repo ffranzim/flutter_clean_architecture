@@ -1,9 +1,8 @@
-import 'package:clean_architecture/app/presentation/presenters/getx_login_presenter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 
 import '../../../ui/components/spinner_dialog.dart';
 import '../../components/components.dart';
@@ -11,9 +10,7 @@ import './components/components.dart';
 import 'login_presenter.dart';
 
 class LoginPage extends StatefulWidget {
-  // final LoginPresenter presenter;
-  final GetxLoginPresenter presenter;
-
+  final LoginPresenter presenter;
   const LoginPage({@required this.presenter});
 
   @override
@@ -25,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _hideKeyboard() {
     final currentFocus = FocusScope.of(context);
-    if(!currentFocus.hasPrimaryFocus) {
+    if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
   }
@@ -55,6 +52,8 @@ class _LoginPageState extends State<LoginPage> {
             }
           });
 
+          Get.put(widget.presenter);
+
           return GestureDetector(
             onTap: _hideKeyboard,
             child: SingleChildScrollView(
@@ -65,29 +64,29 @@ class _LoginPageState extends State<LoginPage> {
                   const Headline1(text: 'login'),
                   Padding(
                     padding: const EdgeInsets.all(32.0),
-                    child: ListenableProvider(
-                      create: (_) => widget.presenter,
-                      // create: (_) => widget.presenter,
-                      child: Form(
-                        child: Column(
-                          children: [
-                            EmailInput(),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8.0, bottom: 32.0),
-                              child: PasswordInput(),
-                            ),
-                            LoginButton(),
-                            TextButton.icon(
-                              onPressed: () => _log.i('TextButton'),
-                              icon: const Icon(Icons.person),
-                              label: const Text('Criar Conta'),
-                            )
-                          ],
-                        ),
+                    // child: Provider(
+                    //   create: (_) => widget.presenter,
+                    // create: (_) => widget.presenter,
+                    child: Form(
+                      child: Column(
+                        children: [
+                          EmailInput(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 8.0, bottom: 32.0),
+                            child: PasswordInput(),
+                          ),
+                          LoginButton(),
+                          TextButton.icon(
+                            onPressed: () => _log.i('TextButton'),
+                            icon: const Icon(Icons.person),
+                            label: const Text('Criar Conta'),
+                          )
+                        ],
                       ),
                     ),
-                  )
+                  ),
+                  // )
                 ],
               ),
             ),
