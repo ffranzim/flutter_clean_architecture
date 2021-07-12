@@ -1,3 +1,4 @@
+import 'package:clean_architecture/app/presentation/presenters/getx_login_presenter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,7 +11,8 @@ import './components/components.dart';
 import 'login_presenter.dart';
 
 class LoginPage extends StatefulWidget {
-  final LoginPresenter presenter;
+  // final LoginPresenter presenter;
+  final GetxLoginPresenter presenter;
 
   const LoginPage({@required this.presenter});
 
@@ -63,8 +65,9 @@ class _LoginPageState extends State<LoginPage> {
                   const Headline1(text: 'login'),
                   Padding(
                     padding: const EdgeInsets.all(32.0),
-                    child: Provider(
+                    child: ListenableProvider(
                       create: (_) => widget.presenter,
+                      // create: (_) => widget.presenter,
                       child: Form(
                         child: Column(
                           children: [
