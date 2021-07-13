@@ -6,8 +6,7 @@ import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-class SaveSecureCacheStorageSpy extends Mock implements SaveSecureCacheStorage {
-}
+class SaveSecureCacheStorageSpy extends Mock implements SaveSecureCacheStorage {}
 
 void main() {
   SaveSecureCacheStorageSpy cacheStorageSpy;
