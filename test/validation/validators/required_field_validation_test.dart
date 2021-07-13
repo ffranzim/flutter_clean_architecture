@@ -2,6 +2,7 @@ import 'package:clean_architecture/app/validation/validators/required_field_vali
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+
   RequiredFieldValidation sut;
 
   setUp(() {

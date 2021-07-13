@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 import '../../../ui/components/spinner_dialog.dart';
 import '../../components/components.dart';
@@ -11,7 +12,9 @@ import 'login_presenter.dart';
 
 class LoginPage extends StatefulWidget {
   final LoginPresenter presenter;
-  const LoginPage({@required this.presenter});
+  final Logger _log = Logger();
+
+  LoginPage({@required this.presenter});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -64,29 +67,28 @@ class _LoginPageState extends State<LoginPage> {
                   const Headline1(text: 'login'),
                   Padding(
                     padding: const EdgeInsets.all(32.0),
-                    // child: Provider(
-                    //   create: (_) => widget.presenter,
-                    // create: (_) => widget.presenter,
-                    child: Form(
-                      child: Column(
-                        children: [
-                          EmailInput(),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 8.0, bottom: 32.0),
-                            child: PasswordInput(),
-                          ),
-                          LoginButton(),
-                          TextButton.icon(
-                            onPressed: () => _log.i('TextButton'),
-                            icon: const Icon(Icons.person),
-                            label: const Text('Criar Conta'),
-                          )
-                        ],
+                    child: Provider(
+                      create: (_) => widget.presenter,
+                      child: Form(
+                        child: Column(
+                          children: [
+                            EmailInput(),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 32.0),
+                              child: PasswordInput(),
+                            ),
+                            LoginButton(),
+                            TextButton.icon(
+                              onPressed: () => _log.i('TextButton'),
+                              icon: const Icon(Icons.person),
+                              label: const Text('Criar Conta'),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  // )
+                  )
                 ],
               ),
             ),
