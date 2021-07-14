@@ -33,8 +33,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_modular: ^3.2.2+1
-  flutter_triple: ^1.0.6
+  flutter_secure_storage: ^4.2.0
 
   get: ^4.1.4
   http: ^0.13.3
