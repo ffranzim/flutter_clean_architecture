@@ -2,18 +2,15 @@ import 'dart:async';
 
 import 'package:clean_architecture/app/ui/pages/login/login_page.dart';
 import 'package:clean_architecture/app/ui/pages/pages.dart';
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
 
 class LoginPresenterSpy extends Mock implements LoginPresenter {}
 
 void main() {
   LoginPresenter presenter;
-  final Logger _log = Logger();
 
   StreamController<String> emailErrorController;
   StreamController<String> passwordErrorController;

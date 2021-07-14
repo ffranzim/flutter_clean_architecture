@@ -12,7 +12,7 @@ import 'login_presenter.dart';
 
 class LoginPage extends StatefulWidget {
   final LoginPresenter presenter;
-  final Logger _log = Logger();
+  final Logger log = Logger();
 
   LoginPage({@required this.presenter});
 
@@ -21,7 +21,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final Logger _log = Logger();
 
   void _hideKeyboard() {
     final currentFocus = FocusScope.of(context);
@@ -80,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             LoginButton(),
                             TextButton.icon(
-                              onPressed: () => _log.i('TextButton'),
+                              onPressed: () => widget.log.i('TextButton'),
                               icon: const Icon(Icons.person),
                               label: const Text('Criar Conta'),
                             )
