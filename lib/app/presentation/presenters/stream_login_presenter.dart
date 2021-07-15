@@ -11,6 +11,7 @@ class LoginState {
   String email;
   String password;
   String emailError;
+  String navigate;
   String passwordError;
   String mainError;
 
@@ -47,6 +48,10 @@ class StreamLoginPresenter implements LoginPresenter {
   @override
   Stream<String> get mainErrorStream =>
       _controller?.stream?.map((state) => state.mainError)?.distinct();
+
+  @override
+  Stream<String> get navigateToStream =>
+      _controller?.stream?.map((state) => state.navigate)?.distinct();
 
   @override
   Stream<bool> get isFormValidStream =>

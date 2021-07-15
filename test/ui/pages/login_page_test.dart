@@ -15,6 +15,7 @@ void main() {
   StreamController<String> emailErrorController;
   StreamController<String> passwordErrorController;
   StreamController<String> mainErrorController;
+  StreamController<String> navigateToController;
   StreamController<bool> isFormValidController;
   StreamController<bool> isLoadingController;
 
@@ -22,6 +23,7 @@ void main() {
     emailErrorController = StreamController<String>();
     passwordErrorController = StreamController<String>();
     mainErrorController = StreamController<String>();
+    navigateToController = StreamController<String>();
     isFormValidController = StreamController<bool>();
     isLoadingController = StreamController<bool>();
   }
@@ -33,6 +35,8 @@ void main() {
         .thenAnswer((_) => passwordErrorController.stream);
     when(presenter.mainErrorStream)
         .thenAnswer((_) => mainErrorController.stream);
+    when(presenter.navigateToStream)
+        .thenAnswer((_) => navigateToController.stream);
     when(presenter.isFormValidStream)
         .thenAnswer((_) => isFormValidController.stream);
     when(presenter.isLoadingStream)
@@ -43,18 +47,22 @@ void main() {
     emailErrorController.close();
     passwordErrorController.close();
     mainErrorController.close();
+    navigateToController.close();
     isFormValidController.close();
     isLoadingController.close();
   }
 
   Future<void> loadPage(WidgetTester tester) async {
-
     presenter = LoginPresenterSpy();
     initStreams();
     mockStreams();
 
     // final loginPage = MaterialApp(home: LoginPage(presenter: presenter));
-    final loginPage = GetMaterialApp(home: LoginPage(presenter: presenter));
+    final loginPage = GetMaterialApp(initialRoute: '/login', getPages: [
+      GetPage(name: '/login', page: () => LoginPage(presenter: presenter)),
+      GetPage(
+          name: '/any_route', page: () => const Scaffold(body: Text('fake_page'))),
+    ]);
     // ! Renderiza o componente
     await tester.pumpWidget(loginPage);
   }
@@ -263,12 +271,23 @@ void main() {
     expect(find.text('main error'), findsOneWidget);
   });
 
-  testWidgets('Should close streams on dispose', (WidgetTester tester) async {
+  // testWidgets('Should close streams on dispose', (WidgetTester tester) async {
+  //   await loadPage(tester);
+  //
+  //   // É chamado quando o widget já foi destruido
+  //   addTearDown(() {
+  //     verify(presenter.dispose()).called(1);
+  //   });
+  // });
+
+  testWidgets('Should change page', (WidgetTester tester) async {
     await loadPage(tester);
 
-    // É chamado quando o widget já foi destruido
-    addTearDown(() {
-      verify(presenter.dispose()).called(1);
-    });
+    navigateToController.add('/any_route');
+    //! pumpAndSettle espera a animação acontecer e tudo mais
+    await tester.pumpAndSettle();
+
+    expect(Get.currentRoute, '/any_route');
+    expect(find.text('fake_page'), findsOneWidget);
   });
 }

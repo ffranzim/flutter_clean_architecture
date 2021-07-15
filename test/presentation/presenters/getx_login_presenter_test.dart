@@ -197,7 +197,7 @@ void main() {
     sut.validatePassword(password: password);
 
     // expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-    expectLater(sut.isLoadingStream, emits(true));
+    expectLater(sut.isLoadingStream, emits(true)) ;
 
     await sut.auth();
   });
@@ -257,5 +257,16 @@ void main() {
         expect(error, 'Algo errado aconteceu. Tente novamente em breve.')));
 
     await sut.auth();
+  });
+
+  test('Should change page on success', () async {
+    sut.validateEmail(email: email);
+    sut.validatePassword(password: password);
+    
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/surveys')));
+
+    await sut.auth();
+
+    verify(saveCurrentAccount.save(account: AccountEntity(token: token))).called(1);
   });
 }

@@ -10,37 +10,25 @@ import '../../components/components.dart';
 import './components/components.dart';
 import 'login_presenter.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends StatelessWidget {
   final LoginPresenter presenter;
   final Logger log = Logger();
 
   LoginPage({@required this.presenter});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-
-  void _hideKeyboard() {
-    final currentFocus = FocusScope.of(context);
-    if (!currentFocus.hasPrimaryFocus) {
-      currentFocus.unfocus();
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    widget.presenter.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    void _hideKeyboard() {
+      final currentFocus = FocusScope.of(context);
+      if (!currentFocus.hasPrimaryFocus) {
+        currentFocus.unfocus();
+      }
+    }
+
     return Scaffold(
       body: Builder(
         builder: (context) {
-          widget.presenter.isLoadingStream.listen((isLoading) {
+          presenter.isLoadingStream.listen((isLoading) {
             if (isLoading) {
               showLoading(context: context);
             } else {
@@ -48,14 +36,20 @@ class _LoginPageState extends State<LoginPage> {
             }
           });
 
-          widget.presenter.mainErrorStream.listen((error) {
+          presenter.mainErrorStream.listen((error) {
             if (error.isNotEmpty) {
               showErrorMessage(context: context, msg: error);
             }
           });
 
-          Get.put(widget.presenter);
+          presenter.navigateToStream.listen((page) {
+            if (page?.isNotEmpty == true) {
+              //! offAllNamed remove rodas as rotas e inclui uma nova
+              Get.offAllNamed(page);
+            }
+          });
 
+          Get.put(presenter);
           return GestureDetector(
             onTap: _hideKeyboard,
             child: SingleChildScrollView(
@@ -67,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.all(32.0),
                     child: Provider(
-                      create: (_) => widget.presenter,
+                      create: (_) => presenter,
                       child: Form(
                         child: Column(
                           children: [
@@ -79,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             LoginButton(),
                             TextButton.icon(
-                              onPressed: () => widget.log.i('TextButton'),
+                              onPressed: () => log.i('TextButton'),
                               icon: const Icon(Icons.person),
                               label: const Text('Criar Conta'),
                             )
