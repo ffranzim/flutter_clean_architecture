@@ -1,7 +1,13 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-class AccountEntity {
+class AccountEntity extends Equatable {
   final String token;
 
-  AccountEntity({@required this.token});
+  const AccountEntity({@required this.token});
+
+  @override
+  List<Object> get props => [token];
+
+
 }

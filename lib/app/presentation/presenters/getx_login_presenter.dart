@@ -1,9 +1,10 @@
-import 'package:clean_architecture/app/domain/helpers/domain_error.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
+import '../../domain/helpers/domain_error.dart';
 import '../../domain/usecases/authentication.dart';
+import '../../domain/usecases/usecases.dart';
 import '../../ui/pages/pages.dart';
 import '../protocols/validation.dart';
 
@@ -21,9 +22,13 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
 
   final Validation validation;
   final Authetication authentication;
+  final SaveCurrentAccount saveCurrentAccount;
 
-  GetxLoginPresenter(
-      {@required this.validation, @required this.authentication});
+  GetxLoginPresenter({
+    @required this.validation,
+    @required this.authentication,
+    @required this.saveCurrentAccount,
+  });
 
   // ! distinct só emite valor se o valor state for diferente
   @override
@@ -68,8 +73,9 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
     _isLoading.value = true;
 
     try {
-      await authentication.auth(
+      final account = await authentication.auth(
           params: AuthenticationParams(email: _email, secret: _password));
+      await saveCurrentAccount.save(account: account);
     } on DomainError catch (error) {
       _mainError.value = error.description;
     }

@@ -12,12 +12,16 @@ class ValidationSpy extends Mock implements Validation {}
 
 class AuthenticationImplSpy extends Mock implements Authetication {}
 
+class SaveCurrentAccountImplSpy extends Mock implements SaveCurrentAccount {}
+
 void main() {
   Validation validation;
   Authetication authentication;
+  SaveCurrentAccount saveCurrentAccount;
   GetxLoginPresenter sut;
   String email;
   String password;
+  String token;
 
   PostExpectation mockValidationCall({@required String field}) =>
       when(validation.validate(
@@ -33,7 +37,7 @@ void main() {
   void mockAuthentication() {
     // ? thenAnswer utilizado para assincronos
     mockAuthenticationCall()
-        .thenAnswer((_) async => AccountEntity(token: faker.guid.guid()));
+        .thenAnswer((_) async => AccountEntity(token: token));
   }
 
   void mockAuthenticationError(DomainError error) {
@@ -43,10 +47,14 @@ void main() {
   setUp(() {
     validation = ValidationSpy();
     authentication = AuthenticationImplSpy();
+    saveCurrentAccount = SaveCurrentAccountImplSpy();
     sut = GetxLoginPresenter(
-        validation: validation, authentication: authentication);
+        validation: validation,
+        authentication: authentication,
+        saveCurrentAccount: saveCurrentAccount);
     email = faker.internet.email();
     password = faker.internet.password();
+    password = faker.guid.guid();
 
     // ! Mock sucesso quando passsar null null
     mockValidation(field: null, value: null);
@@ -196,7 +204,8 @@ void main() {
     // ! verifica só o estado final para verificar algo
     // expectLater(sut.isLoadingStream, emits(false));
 
-    sut.mainErrorStream.listen(expectAsync1((error) => expect(error, 'Credenciais inválidas.')));
+    sut.mainErrorStream.listen(
+        expectAsync1((error) => expect(error, 'Credenciais inválidas.')));
 
     await sut.auth();
   });
@@ -211,8 +220,18 @@ void main() {
     // ! verifica só o estado final para verificar algo
     // expectLater(sut.isLoadingStream, emits(false));
 
-    sut.mainErrorStream.listen(expectAsync1((error) => expect(error, 'Algo errado aconteceu. Tente novamente em breve.')));
+    sut.mainErrorStream.listen(expectAsync1((error) =>
+        expect(error, 'Algo errado aconteceu. Tente novamente em breve.')));
 
     await sut.auth();
+  });
+
+  test('Should call SaveCurrentAccount with correct value', () async {
+    sut.validateEmail(email: email);
+    sut.validatePassword(password: password);
+
+    await sut.auth();
+
+    verify(saveCurrentAccount.save(account: AccountEntity(token: token))).called(1);
   });
 }
