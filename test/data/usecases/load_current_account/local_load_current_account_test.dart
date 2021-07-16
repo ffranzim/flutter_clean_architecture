@@ -1,30 +1,10 @@
-import 'package:clean_architecture/app/domain/entities/account_entity.dart';
-import 'package:clean_architecture/app/domain/helpers/domain_error.dart';
-import 'package:clean_architecture/app/domain/usecases/load_current_account.dart';
+import 'package:clean_architecture/app/data/cache/cache.dart';
+import 'package:clean_architecture/app/data/usecases/usecases.dart';
+import 'package:clean_architecture/app/domain/entities/entities.dart';
+import 'package:clean_architecture/app/domain/helpers/helpers.dart';
 import 'package:faker/faker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-
-class LocalLoadCurrentAccount implements LoadCurrentAccount {
-  final FetchSecureCacheStorage fetchSecureCacheStorageSpy;
-
-  LocalLoadCurrentAccount({@required this.fetchSecureCacheStorageSpy});
-
-  @override
-  Future<AccountEntity> load({@required String key}) async {
-    try {
-      final token = await fetchSecureCacheStorageSpy.fetchSecure(key: key);
-      return AccountEntity(token: token);
-    } catch (error) {
-      throw DomainError.unexpected;
-    }
-  }
-}
-
-abstract class FetchSecureCacheStorage {
-  Future<String> fetchSecure({@required String key});
-}
 
 class FetchSecureCacheStorageSpy extends Mock
     implements FetchSecureCacheStorage {}
