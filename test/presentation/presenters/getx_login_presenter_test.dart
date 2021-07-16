@@ -45,7 +45,7 @@ void main() {
   }
 
   PostExpectation mockSaveCurrentAccountCall() =>
-      when(saveCurrentAccount.save(account: anyNamed('account')));
+      when(saveCurrentAccount.saveSecure(account: anyNamed('account')));
 
   void mockSaveCurrentAccountError() {
     mockSaveCurrentAccountCall().thenThrow(DomainError.unexpected);
@@ -240,7 +240,7 @@ void main() {
 
     await sut.auth();
 
-    verify(saveCurrentAccount.save(account: AccountEntity(token: token))).called(1);
+    verify(saveCurrentAccount.saveSecure(account: AccountEntity(token: token))).called(1);
   });
 
   test('Should emit UnexpectedError if SaveCurrentAccount fails', () async {
@@ -267,6 +267,6 @@ void main() {
 
     await sut.auth();
 
-    verify(saveCurrentAccount.save(account: AccountEntity(token: token))).called(1);
+    verify(saveCurrentAccount.saveSecure(account: AccountEntity(token: token))).called(1);
   });
 }

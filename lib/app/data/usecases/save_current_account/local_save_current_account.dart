@@ -11,7 +11,7 @@ class LocalSaveCurrentAccount implements SaveCurrentAccount {
   LocalSaveCurrentAccount({@required this.saveSecureCacheStorageSpy});
 
   @override
-  Future<void> save({@required AccountEntity account}) async {
+  Future<void> saveSecure({@required AccountEntity account}) async {
     try {
       await saveSecureCacheStorageSpy.save(key: 'token', value: account.token);
     } catch (error) {

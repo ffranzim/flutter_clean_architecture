@@ -25,7 +25,7 @@ void main() {
   }
 
   test('Should call SaveSecureCacheStorage with correct values', () async {
-    await sut.save(account: account);
+    await sut.saveSecure(account: account);
 
     verify(cacheStorageSpy.save(key: 'token', value: account.token));
   });
@@ -34,7 +34,7 @@ void main() {
       () async {
     mockError();
 
-    final future = sut.save(account: account);
+    final future = sut.saveSecure(account: account);
 
     expect(future, throwsA(DomainError.unexpected));
   });

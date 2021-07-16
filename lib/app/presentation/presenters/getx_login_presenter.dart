@@ -79,7 +79,7 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
     try {
       final account = await authentication.auth(
           params: AuthenticationParams(email: _email, secret: _password));
-      await saveCurrentAccount.save(account: account);
+      await saveCurrentAccount.saveSecure(account: account);
       _navigateTo.value = '/surveys';
     } on DomainError catch (error) {
       _mainError.value = error.description;
