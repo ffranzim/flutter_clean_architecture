@@ -20,14 +20,14 @@ void main() {
   });
 
   void mockError() {
-    when(cacheStorageSpy.save(key: anyNamed('key'), value: anyNamed('value')))
+    when(cacheStorageSpy.saveSecure(key: anyNamed('key'), value: anyNamed('value')))
         .thenThrow(Exception());
   }
 
   test('Should call SaveSecureCacheStorage with correct values', () async {
     await sut.saveSecure(account: account);
 
-    verify(cacheStorageSpy.save(key: 'token', value: account.token));
+    verify(cacheStorageSpy.saveSecure(key: 'token', value: account.token));
   });
 
   test('Should throw UnexpetcedError if SaveSecureCacheStorage throws',
