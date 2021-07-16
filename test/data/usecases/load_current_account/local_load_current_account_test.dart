@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 class LocalLoadCurrentAccount {
-  final FetchSecureCacheStorageSpy fetchSecureCacheStorageSpy;
+  final FetchSecureCacheStorage fetchSecureCacheStorageSpy;
 
   LocalLoadCurrentAccount({@required this.fetchSecureCacheStorageSpy});
 
@@ -16,13 +16,20 @@ abstract class FetchSecureCacheStorage {
   Future<void> fetchSecure({@required String key});
 }
 
-class FetchSecureCacheStorageSpy extends Mock implements FetchSecureCacheStorage {
-}
+class FetchSecureCacheStorageSpy extends Mock
+    implements FetchSecureCacheStorage {}
 
 void main() {
+  FetchSecureCacheStorage fetchSecureCacheStorage;
+  LocalLoadCurrentAccount sut;
+
+  setUp(() {
+    fetchSecureCacheStorage = FetchSecureCacheStorageSpy();
+    sut = LocalLoadCurrentAccount(
+        fetchSecureCacheStorageSpy: fetchSecureCacheStorage);
+  });
+
   test('Sould call FetchSecureCacheStorage with correct value', () async {
-    final fetchSecureCacheStorage = FetchSecureCacheStorageSpy();
-    final sut = LocalLoadCurrentAccount(fetchSecureCacheStorageSpy: fetchSecureCacheStorage);
     await sut.load(key: 'token');
 
     verify(fetchSecureCacheStorage.fetchSecure(key: 'token'));
