@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
 
 class GetxSplashPresenter implements SplashPresenter {
-  final _navigateTo = RxString('');
+  RxString _navigateTo = RxString('');
   final LoadCurrentAccount loadCurrentAccount;
 
   GetxSplashPresenter({@required this.loadCurrentAccount});
@@ -14,6 +14,7 @@ class GetxSplashPresenter implements SplashPresenter {
   @override
   Future<void> checkAccount({@required String key}) async {
     await loadCurrentAccount.load(key: key);
+    _navigateTo.value = '/surveys';
   }
 
   @override
@@ -32,6 +33,15 @@ void main() {
   });
 
   test('Should call LoadCurrentAccount', () async {
+    sut.checkAccount();
+
+    verify(loadCurrentAccount.load(key: anyNamed('key'))).called(1);
+  });
+
+  test('Should go to surveys page on success', () async {
+
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/surveys')));
+
     sut.checkAccount();
 
     verify(loadCurrentAccount.load(key: anyNamed('key'))).called(1);
