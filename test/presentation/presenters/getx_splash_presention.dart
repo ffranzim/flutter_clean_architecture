@@ -20,14 +20,18 @@ class GetxSplashPresenter implements SplashPresenter {
   Stream<String> get navigateToStream => _navigateTo.stream;
 }
 
-class LoadCurrentAccountSpy extends Mock implements LoadCurrentAccount {
-}
+class LoadCurrentAccountSpy extends Mock implements LoadCurrentAccount {}
 
 void main() {
-  test('Should call LoadCurrentAccount', () async {
-    final loadCurrentAccount = LoadCurrentAccountSpy();
-    final sut = GetxSplashPresenter(loadCurrentAccount: loadCurrentAccount);
+  LoadCurrentAccountSpy loadCurrentAccount;
+  GetxSplashPresenter sut;
 
+  setUp(() {
+    loadCurrentAccount = LoadCurrentAccountSpy();
+    sut = GetxSplashPresenter(loadCurrentAccount: loadCurrentAccount);
+  });
+
+  test('Should call LoadCurrentAccount', () async {
     sut.checkAccount();
 
     verify(loadCurrentAccount.load(key: anyNamed('key'))).called(1);
