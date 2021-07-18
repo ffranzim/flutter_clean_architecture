@@ -15,9 +15,12 @@ class GetxSplashPresenter implements SplashPresenter {
 
   @override
   Future<void> checkAccount({@required String key}) async {
-    final account = await loadCurrentAccount.load(key: key);
-    _navigateTo.value = account.isNull ? '/login' : '/surveys';
-
+    try {
+      final account = await loadCurrentAccount.load(key: key);
+      _navigateTo.value = account.isNull ? '/login' : '/surveys';
+    } catch (error) {
+      _navigateTo.value = '/login';
+    }
   }
 
   @override
@@ -30,8 +33,15 @@ void main() {
   LoadCurrentAccountSpy loadCurrentAccount;
   GetxSplashPresenter sut;
 
+  PostExpectation mockLoadCurrentAccountCall() =>
+      when(loadCurrentAccount.load(key: anyNamed('key')));
+
   void mockLoadCurrentAccount({@required AccountEntity account}) {
-    when(loadCurrentAccount.load(key: anyNamed('key'))).thenAnswer((_) async => account);
+    mockLoadCurrentAccountCall().thenAnswer((_) async => account);
+  }
+
+  void mockLoadCurrentError() {
+    mockLoadCurrentAccountCall().thenThrow(Exception());
   }
 
   setUp(() {
@@ -47,11 +57,10 @@ void main() {
   });
 
   test('Should go to surveys page on success', () async {
-
-    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/surveys')));
+    sut.navigateToStream
+        .listen(expectAsync1((page) => expect(page, '/surveys')));
 
     sut.checkAccount();
-
   });
 
   test('Should go to login page on null result', () async {
@@ -60,5 +69,13 @@ void main() {
     sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/login')));
 
     sut.checkAccount();
-   });
+  });
+
+  test('Should go to login page on error', () async {
+    mockLoadCurrentError();
+
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/login')));
+
+    sut.checkAccount();
+  });
 }
