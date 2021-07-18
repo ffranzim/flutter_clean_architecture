@@ -13,7 +13,7 @@ void main() {
   GetxSplashPresenter sut;
 
   PostExpectation mockLoadCurrentAccountCall() =>
-      when(loadCurrentAccount.load(key: anyNamed('key')));
+      when(loadCurrentAccount.load());
 
   void mockLoadCurrentAccount({@required AccountEntity account}) {
     mockLoadCurrentAccountCall().thenAnswer((_) async => account);
@@ -32,7 +32,7 @@ void main() {
   test('Should call LoadCurrentAccount', () async {
     sut.checkAccount();
 
-    verify(loadCurrentAccount.load(key: anyNamed('key'))).called(1);
+    verify(loadCurrentAccount.load()).called(1);
   });
 
   test('Should go to surveys page on success', () async {

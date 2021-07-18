@@ -3,5 +3,5 @@ import 'package:flutter/cupertino.dart';
 abstract class SplashPresenter {
   Stream<String> get navigateToStream;
 
-  Future<void> checkAccount({@required String key});
+  Future<void> checkAccount();
 }
