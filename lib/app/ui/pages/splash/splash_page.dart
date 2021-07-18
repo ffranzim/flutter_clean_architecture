@@ -14,6 +14,7 @@ class SplashPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Clean Architeture'),
+        centerTitle: true,
       ),
       body: Builder(
         builder: (context) {
