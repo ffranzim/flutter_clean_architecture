@@ -1,3 +1,4 @@
+import 'package:clean_architecture/app/utils/i18n/i18n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -75,7 +76,7 @@ class LoginPage extends StatelessWidget {
                             TextButton.icon(
                               onPressed: () => log.i('TextButton'),
                               icon: const Icon(Icons.person),
-                              label: const Text('Criar Conta'),
+                              label: Text(R.strings.addAccount),
                             )
                           ],
                         ),

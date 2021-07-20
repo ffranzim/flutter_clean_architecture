@@ -1,3 +1,4 @@
+import 'package:clean_architecture/app/utils/i18n/i18n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -5,13 +6,18 @@ import 'package:get/get.dart';
 import '../ui/components/components.dart';
 import 'factories/factories.dart';
 
-void main() => runApp(App());
+void main() {
+  // R.load(locale: const Locale('en', 'US'));
+  runApp(App());
+}
 
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ! Deixa a statusBar com caracteres brancos
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
+
 
     return GetMaterialApp(
       title: 'Clean Architecture',
