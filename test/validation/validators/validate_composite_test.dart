@@ -1,3 +1,4 @@
+import 'package:clean_architecture/app/presentation/protocols/protocols.dart';
 import 'package:clean_architecture/app/validation/protocols/protocols.dart';
 import 'package:clean_architecture/app/validation/validators/validators.dart';
 import 'package:flutter/foundation.dart';
@@ -14,7 +15,7 @@ void main() {
   FieldValidationSpy validaton2;
   FieldValidationSpy validaton3;
 
-  void mockValidation({@required FieldValidation validation, @required String error}) {
+  void mockValidation({@required FieldValidation validation, @required ValidationError error}) {
     when(validation.validate(value: anyNamed('value'))).thenReturn(error);
   }
 
@@ -43,22 +44,22 @@ void main() {
   });
 
   test('Should return error if value all validations return is not empty', () {
-    mockValidation(validation: validaton1, error: 'error1');
-    mockValidation(validation: validaton2, error: 'error2');
-    mockValidation(validation: validaton3, error: 'error3');
+    mockValidation(validation: validaton1, error: ValidationError.requiredField);
+    mockValidation(validation: validaton2, error: ValidationError.requiredField);
+    mockValidation(validation: validaton3, error: ValidationError.invalidField);
 
     final error = sut.validate(field: 'any_field', value: 'any_value');
 
-    expect(error, 'error1');
+    expect(error, ValidationError.requiredField);
   });
 
   test('Should return the first error', () {
-    mockValidation(validation: validaton1, error: 'error1');
-    mockValidation(validation: validaton2, error: 'error2');
-    mockValidation(validation: validaton3, error: 'error3');
+    mockValidation(validation: validaton1, error: ValidationError.requiredField);
+    mockValidation(validation: validaton2, error: ValidationError.invalidField);
+    mockValidation(validation: validaton3, error: ValidationError.invalidField);
 
     final error = sut.validate(field: 'other_field', value: 'any_value');
 
-    expect(error, 'error2');
+    expect(error, ValidationError.invalidField);
   });
 }

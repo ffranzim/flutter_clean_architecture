@@ -6,9 +6,10 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
+import './components/components.dart';
 import '../../../ui/components/spinner_dialog.dart';
 import '../../components/components.dart';
-import './components/components.dart';
+import '../../helpers/helpers.dart';
 import 'login_presenter.dart';
 
 class LoginPage extends StatelessWidget {
@@ -38,8 +39,8 @@ class LoginPage extends StatelessWidget {
           });
 
           presenter.mainErrorStream.listen((error) {
-            if (error.isNotEmpty) {
-              showErrorMessage(context: context, msg: error);
+            if (error != null) {
+              showErrorMessage(context: context, msg: error.description);
             }
           });
 

@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 
+import '../../presentation/protocols/protocols.dart';
+
 abstract class FieldValidation {
   String get field;
 
-  String validate({@required String value});
+  ValidationError validate({@required String value});
 
 }

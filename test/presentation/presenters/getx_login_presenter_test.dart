@@ -3,6 +3,7 @@ import 'package:clean_architecture/app/domain/helpers/helpers.dart';
 import 'package:clean_architecture/app/domain/usecases/usecases.dart';
 import 'package:clean_architecture/app/presentation/presenters/presenters.dart';
 import 'package:clean_architecture/app/presentation/protocols/protocols.dart';
+import 'package:clean_architecture/app/ui/helpers/errors/errors.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,7 +28,7 @@ void main() {
       when(validation.validate(
           field: field ?? anyNamed('field'), value: anyNamed('value')));
 
-  void mockValidation({@required String field, @required String value}) {
+  void mockValidation({@required String field, @required ValidationError value}) {
     mockValidationCall(field: field).thenReturn(value);
   }
 
@@ -74,21 +75,31 @@ void main() {
     verify(validation.validate(field: 'email', value: email)).called(1);
   });
 
-  test('Should emit error if validation fails', () {
-    mockValidation(field: null, value: 'error');
+  test('Should emit invalidFieldError if email validation fails', () {
+    mockValidation(field: null, value: ValidationError.invalidField);
 
     // ! Espera até acontecer ou dar timeout
-    expectLater(sut.emailErrorStream, emits('error'));
+    expectLater(sut.emailErrorStream, emits(UIError.invalidField));
+
+    // ? Execução pós expectativa
+    sut.validateEmail(email: email);
+  });
+
+  test('Should emit invalidFieldError if email validation fails', () {
+    mockValidation(field: null, value: ValidationError.requiredField);
+
+    // ! Espera até acontecer ou dar timeout
+    expectLater(sut.emailErrorStream, emits(UIError.requiredField));
 
     // ? Execução pós expectativa
     sut.validateEmail(email: email);
   });
 
   test('Should emit error if validation fails - Twice Array', () {
-    mockValidation(field: null, value: 'error');
+    mockValidation(field: null, value: ValidationError.invalidField);
 
     // ! Espera até acontecer ou dar timeout
-    expectLater(sut.emailErrorStream, emitsInOrder(['error']));
+    expectLater(sut.emailErrorStream, emitsInOrder([UIError.invalidField]));
 
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
     sut.validateEmail(email: email);
@@ -96,14 +107,14 @@ void main() {
   });
 
   test('Should emit error if validation fails - Twice Distinct', () {
-    mockValidation(field: null, value: 'error');
+    mockValidation(field: null, value: ValidationError.invalidField);
 
     // ! Quando se tem apenas um parametro pode usar direto
     // sut.emailErrorStream.listen((error) {
     //   expectAsync1((error) => expect(error, 'error'));
     // });
     sut.emailErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
 
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
     sut.validateEmail(email: email);
@@ -111,10 +122,10 @@ void main() {
   });
 
   test('Should isFormValid emits false if email is invalid ', () {
-    mockValidation(field: null, value: 'error');
+    mockValidation(field: null, value: ValidationError.invalidField);
 
     sut.emailErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
@@ -140,10 +151,10 @@ void main() {
   });
 
   test('Should emit password error if validation fails', () {
-    mockValidation(field: null, value: 'error');
+    mockValidation(field: null, value: ValidationError.invalidField);
 
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
@@ -153,12 +164,12 @@ void main() {
   });
 
   test('Should emits form invalid  if any fields is invalid', () {
-    mockValidation(field: 'email', value: 'error');
+    mockValidation(field: 'email', value: ValidationError.invalidField);
 
     sut.emailErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
+        .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, null)));
+        .listen(expectAsync1((error) => expect(null, null)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
@@ -213,7 +224,7 @@ void main() {
     // expectLater(sut.isLoadingStream, emits(false));
 
     sut.mainErrorStream.listen(
-        expectAsync1((error) => expect(error, 'Credenciais inválidas.')));
+        expectAsync1((error) => expect(error, UIError.invalidCredentials)));
 
     await sut.auth();
   });
@@ -229,7 +240,7 @@ void main() {
     // expectLater(sut.isLoadingStream, emits(false));
 
     sut.mainErrorStream.listen(expectAsync1((error) =>
-        expect(error, 'Algo errado aconteceu. Tente novamente em breve.')));
+        expect(error, UIError.unexpected)));
 
     await sut.auth();
   });
@@ -254,7 +265,7 @@ void main() {
     // expectLater(sut.isLoadingStream, emits(false));
 
     sut.mainErrorStream.listen(expectAsync1((error) =>
-        expect(error, 'Algo errado aconteceu. Tente novamente em breve.')));
+        expect(error, UIError.unexpected)));
 
     await sut.auth();
   });
@@ -262,7 +273,7 @@ void main() {
   test('Should change page on success', () async {
     sut.validateEmail(email: email);
     sut.validatePassword(password: password);
-    
+
     sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/surveys')));
 
     await sut.auth();

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../presentation/protocols/protocols.dart';
 import '../protocols/protocols.dart';
 
 class RequiredFieldValidation extends Equatable implements FieldValidation {
@@ -10,8 +11,8 @@ class RequiredFieldValidation extends Equatable implements FieldValidation {
   const RequiredFieldValidation({@required this.field});
 
   @override
-  String validate({@required String value}) {
-    return value?.isNotEmpty == true ? null : 'Campo Obrigatório.';
+  ValidationError validate({@required String value}) {
+    return value?.isNotEmpty == true ? null : ValidationError.requiredField;
   }
 
   @override

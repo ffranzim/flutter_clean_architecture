@@ -1,3 +1,4 @@
+import 'package:clean_architecture/app/presentation/protocols/protocols.dart';
 import 'package:clean_architecture/app/validation/validators/required_field_validation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,12 +19,12 @@ void main() {
   test('Should return error if value is empty', () {
     final error = sut.validate(value: '');
 
-    expect(error, 'Campo Obrigatório.');
+    expect(error, ValidationError.requiredField);
   });
 
   test('Should return error if value is null', () {
     final error = sut.validate(value: null);
 
-    expect(error, 'Campo Obrigatório.');
+    expect(error, ValidationError.requiredField);
   });
 }

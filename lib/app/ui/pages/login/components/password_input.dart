@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../helpers/errors/ui_error.dart';
 import '../login_presenter.dart';
 
 class PasswordInput extends StatelessWidget {
@@ -10,7 +11,7 @@ class PasswordInput extends StatelessWidget {
     // final presenter = Provider.of<GetxLoginPresenter>(context);
     final presenter = Get.find<LoginPresenter>();
 
-    return StreamBuilder<String>(
+    return StreamBuilder<UIError>(
       stream: presenter.passwordErrorStream,
       builder: (context, snapshot) {
         return TextFormField(
@@ -21,7 +22,7 @@ class PasswordInput extends StatelessWidget {
                 Icons.lock,
                 color: Theme.of(context).primaryColor,
               ),
-              errorText: snapshot.data?.isEmpty == true ? null : snapshot.data),
+              errorText: snapshot.hasData ? snapshot.data.description : null),
           obscureText: true,
           onChanged: (password) => presenter.validatePassword(password: password),
           // keyboardType: TextInputType.visiblePassword,

@@ -1,3 +1,4 @@
+import 'package:clean_architecture/app/presentation/protocols/protocols.dart';
 import 'package:clean_architecture/app/validation/validators/validators.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -29,6 +30,6 @@ void main() {
   test('Should return null if email is invalid', () {
     final error = sut.validate(value: 'fernando.franzim');
 
-    expect(error, 'Campo inválido.');
+    expect(error, ValidationError.invalidField);
   });
 }
