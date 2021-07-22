@@ -159,6 +159,7 @@ void main() {
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
+
     sut.validatePassword(password: password);
     sut.validatePassword(password: password);
   });

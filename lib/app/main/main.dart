@@ -1,4 +1,4 @@
-import 'package:clean_architecture/app/utils/i18n/i18n.dart';
+import 'package:clean_architecture/app/ui/helpers/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -27,7 +27,7 @@ class App extends StatelessWidget {
       getPages: [
         GetPage(name: '/', page: makeSplashPage, transition: Transition.fade),
         GetPage(name: '/login', page: makeLoginPage, transition: Transition.fadeIn),
-        GetPage(name: '/surveys', transition: Transition.fadeIn, page: () => const Scaffold(body: Center(child: Text('Enquetes')),))
+        GetPage(name: '/surveys', transition: Transition.fadeIn, page: () => Scaffold(body: Center(child: Text(R.strings.survey)),))
       ],
     );
   }

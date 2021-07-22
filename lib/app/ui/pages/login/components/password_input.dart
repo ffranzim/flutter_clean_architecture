@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../helpers/errors/ui_error.dart';
+import '../../../helpers/helpers.dart';
 import '../login_presenter.dart';
 
 class PasswordInput extends StatelessWidget {
@@ -16,7 +15,7 @@ class PasswordInput extends StatelessWidget {
       builder: (context, snapshot) {
         return TextFormField(
           decoration: InputDecoration(
-              labelText: 'Senha',
+              labelText: R.strings.password,
               //TODO não consegui fazer com o ThemeData
               icon: Icon(
                 Icons.lock,

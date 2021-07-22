@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../helpers/errors/errors.dart';
+import '../../../helpers/helpers.dart';
 import '../login_presenter.dart';
 
 class EmailInput extends StatelessWidget {
@@ -17,7 +17,7 @@ class EmailInput extends StatelessWidget {
       builder: (context, snapshot) {
         return TextFormField(
           decoration: InputDecoration(
-              labelText: 'Email',
+              labelText: R.strings.email,
               //TODO não consegui fazer com o ThemeData
               icon: Icon(
                 Icons.email,
