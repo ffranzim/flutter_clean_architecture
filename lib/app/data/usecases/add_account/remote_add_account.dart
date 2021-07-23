@@ -1,3 +1,4 @@
+import 'package:clean_architecture/app/domain/helpers/helpers.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../domain/entities/entities.dart';
@@ -13,10 +14,17 @@ class RemoteAddAccount {
 
   @override
   Future<void> add({@required RemoteAddAccountParams params}) async {
-    await httpClient.request(
-        url: url,
-        method: 'post',
-        body: RemoteAddAccountParams.fromDomain(params).toJson());
+    try {
+      final httpResponse = await httpClient.request(
+          url: url,
+          method: 'post',
+          body: RemoteAddAccountParams.fromDomain(params).toJson());
+    } on HttpError catch (error) {
+      // error == HttpError.unauthorized
+      //     ? throw DomainError.invalidCredentials
+      //     : throw DomainError.unexpected;
+      throw DomainError.unexpected;
+    }
   }
 }
 
