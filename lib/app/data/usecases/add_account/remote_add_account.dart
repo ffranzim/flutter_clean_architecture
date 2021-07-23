@@ -20,10 +20,9 @@ class RemoteAddAccount {
           method: 'post',
           body: RemoteAddAccountParams.fromDomain(params).toJson());
     } on HttpError catch (error) {
-      // error == HttpError.unauthorized
-      //     ? throw DomainError.invalidCredentials
-      //     : throw DomainError.unexpected;
-      throw DomainError.unexpected;
+      error == HttpError.forbidden
+          ? throw DomainError.emailInUse
+          : throw DomainError.unexpected;
     }
   }
 }
