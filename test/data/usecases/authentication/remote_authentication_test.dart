@@ -81,7 +81,7 @@ void main() {
 
   test('Should return an Account if HttpClient returns 200', () async {
     final validData = mockValidData();
-    mockRequest().thenAnswer((_) async => validData);
+    mockHttpData(validData);
     final account = await sut.auth(params: params);
     expect(account.token, validData['accessToken']);
   });

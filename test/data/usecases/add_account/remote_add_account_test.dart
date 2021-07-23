@@ -1,6 +1,7 @@
 import 'package:clean_architecture/app/data/http/http.dart';
 import 'package:clean_architecture/app/data/usecases/usecases.dart';
 import 'package:clean_architecture/app/domain/helpers/helpers.dart';
+import 'package:clean_architecture/app/domain/usecases/usecases.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -11,7 +12,7 @@ void main() {
   RemoteAddAccount sut;
   HttpClient httpClient;
   Uri url;
-  RemoteAddAccountParams params;
+  AddAccountParams params;
 
   PostExpectation mockRequest() =>
       when( httpClient.request(
@@ -19,24 +20,28 @@ void main() {
           method: anyNamed('method'),
           body: anyNamed('body')));
 
-  // void mockHttpData(Map data) {
-  //   mockRequest().thenAnswer((_) async => data);
-  // }
+  void mockHttpData(Map data) {
+    mockRequest().thenAnswer((_) async => data);
+  }
 
   void mockHttpError(HttpError error) {
     mockRequest().thenThrow(error);
   }
 
+  Map mockValidData() =>
+      {'accessToken': faker.guid.guid(), 'name': faker.person.name()};
+
   setUp(() {
     httpClient = HttpClientSpy();
     url = Uri.parse(faker.internet.httpsUrl());
     sut = RemoteAddAccount(httpClient: httpClient, url: url);
-    params = RemoteAddAccountParams(
+    params = AddAccountParams(
       name: faker.person.name(),
       email: faker.internet.email(),
       password: faker.internet.password(),
       passwordConfirmation: faker.internet.password(),
     );
+    mockHttpData(mockValidData());
   });
 
   test('Should call HttpClient with correct values', () async {
@@ -75,4 +80,13 @@ void main() {
         final future = sut.add(params: params);
         expect(future, throwsA(DomainError.emailInUse));
       });
+
+  test('Should return an Account if HttpClient returns 200', () async {
+    final validData = mockValidData();
+    mockHttpData(validData);
+
+    final account = await sut.add(params: params);
+
+    expect(account.token, validData['accessToken']);
+  });
 }

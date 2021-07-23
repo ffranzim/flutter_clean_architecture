@@ -1,3 +1,4 @@
+import 'package:clean_architecture/app/data/models/models.dart';
 import 'package:clean_architecture/app/domain/helpers/helpers.dart';
 import 'package:flutter/foundation.dart';
 
@@ -5,20 +6,20 @@ import '../../../domain/entities/entities.dart';
 import '../../../domain/usecases/usecases.dart';
 import '../../http/http.dart';
 
-class RemoteAddAccount {
-  //implements Authetication {
+class RemoteAddAccount implements AddAccount {
   final HttpClient httpClient;
   final Uri url;
 
   RemoteAddAccount({@required this.httpClient, @required this.url});
 
   @override
-  Future<void> add({@required RemoteAddAccountParams params}) async {
+  Future<AccountEntity> add({@required AddAccountParams params}) async {
     try {
       final httpResponse = await httpClient.request(
           url: url,
           method: 'post',
           body: RemoteAddAccountParams.fromDomain(params).toJson());
+      return RemoteAccountModel.fromJson(httpResponse).toEntity();
     } on HttpError catch (error) {
       error == HttpError.forbidden
           ? throw DomainError.emailInUse
@@ -27,7 +28,7 @@ class RemoteAddAccount {
   }
 }
 
-class RemoteAddAccountParams {
+class RemoteAddAccountParams{
   final String name;
   final String email;
   final String password;
@@ -40,7 +41,7 @@ class RemoteAddAccountParams {
     @required this.passwordConfirmation,
   });
 
-  factory RemoteAddAccountParams.fromDomain(RemoteAddAccountParams entity) =>
+  factory RemoteAddAccountParams.fromDomain(AddAccountParams entity) =>
       RemoteAddAccountParams(
         name: entity.name,
         email: entity.email,
