@@ -14,11 +14,10 @@ void main() {
   Uri url;
   AddAccountParams params;
 
-  PostExpectation mockRequest() =>
-      when( httpClient.request(
-          url: anyNamed('url'),
-          method: anyNamed('method'),
-          body: anyNamed('body')));
+  PostExpectation mockRequest() => when(httpClient.request(
+      url: anyNamed('url'),
+      method: anyNamed('method'),
+      body: anyNamed('body')));
 
   void mockHttpData(Map data) {
     mockRequest().thenAnswer((_) async => data);
@@ -75,11 +74,12 @@ void main() {
     expect(future, throwsA(DomainError.unexpected));
   });
 
-  test('Should throw InvalidCredentialsError if HttpClient returns 403', () async {
-        mockHttpError(HttpError.forbidden);
-        final future = sut.add(params: params);
-        expect(future, throwsA(DomainError.emailInUse));
-      });
+  test('Should throw InvalidCredentialsError if HttpClient returns 403',
+      () async {
+    mockHttpError(HttpError.forbidden);
+    final future = sut.add(params: params);
+    expect(future, throwsA(DomainError.emailInUse));
+  });
 
   test('Should return an Account if HttpClient returns 200', () async {
     final validData = mockValidData();
@@ -88,5 +88,12 @@ void main() {
     final account = await sut.add(params: params);
 
     expect(account.token, validData['accessToken']);
+  });
+
+  test('Should throw Unexpected if HttpClient returns 200 with invalid data',
+      () async {
+    mockRequest().thenAnswer((_) async => {'invalid_key': 'invalid_value'});
+    final future = sut.add(params: params);
+    expect(future, throwsA(DomainError.unexpected));
   });
 }
