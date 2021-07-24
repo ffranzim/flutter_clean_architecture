@@ -5,6 +5,9 @@ class PtBr implements Translations {
   String get addAccount => 'Criar Conta';
 
   @override
+  String get confirmPassword => 'Confirmar Senha';
+
+  @override
   String get email => 'Email';
 
   @override
@@ -12,6 +15,9 @@ class PtBr implements Translations {
 
   @override
   String get login => 'Login';
+
+  @override
+  String get name => 'Nome';
 
   @override
   String get password => 'Senha';
@@ -30,5 +36,8 @@ class PtBr implements Translations {
 
   @override
   String get msgUnexpected => 'Algo errado aconteceu. Tente novamente em breve.';
+
+  @override
+  String get msgLoading => 'Carregando ...';
 
 }

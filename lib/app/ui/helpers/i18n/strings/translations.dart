@@ -1,5 +1,7 @@
 abstract class Translations {
   String get addAccount;
+  String get confirmPassword;
+  String get name;
   String get email;
   String get enter;
   String get login;
@@ -10,5 +12,7 @@ abstract class Translations {
   String get msgInvalidFields;
   String get msgInvalidCredentials;
   String get msgUnexpected;
+
+  String get msgLoading;
 
 }
