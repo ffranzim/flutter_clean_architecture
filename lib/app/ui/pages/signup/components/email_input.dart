@@ -20,7 +20,7 @@ class EmailInput extends StatelessWidget {
               Icons.email,
               color: Theme.of(context).primaryColor,
             ),
-            // errorText: snapshot.hasData ? snapshot.data.description : null,
+            errorText: snapshot.hasData ? snapshot.data.description : null,
           ),
           keyboardType: TextInputType.emailAddress,
           onChanged: (email) => presenter.validateEmail(email: email),
