@@ -120,6 +120,29 @@ void main() {
         presenter.validatePasswordConfirmation(passwordConfirmation: password));
   });
 
+  testWidgets('Should present error name error', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    nameErrorController.add(UIError.invalidField);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
+    expect(find.text('Campo inválido.'), findsOneWidget);
+
+    nameErrorController.add(UIError.requiredField);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
+    expect(find.text('Campo Obrigatório.'), findsOneWidget);
+
+    nameErrorController.add(null);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
+    final nameTextChildren = find.descendant(
+        of: find.bySemanticsLabel('Nome'), matching: find.byType(Text));
+    expect(nameTextChildren, findsOneWidget,
+        reason:
+            'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
+  });
+
   testWidgets('Should present error email error', (WidgetTester tester) async {
     await loadPage(tester);
 
