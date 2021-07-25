@@ -165,4 +165,50 @@ void main() {
         reason:
             'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
   });
+
+  testWidgets('Should present error password error', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    passwordErrorController.add(UIError.invalidField);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
+    expect(find.text('Campo inválido.'), findsOneWidget);
+
+    passwordErrorController.add(UIError.requiredField);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
+    expect(find.text('Campo Obrigatório.'), findsOneWidget);
+
+    passwordErrorController.add(null);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
+    final passwordTextChildren = find.descendant(
+        of: find.bySemanticsLabel('Senha'), matching: find.byType(Text));
+    expect(passwordTextChildren, findsOneWidget,
+        reason:
+            'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
+  });
+
+  testWidgets('Should present error passwordConfirmation error', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    passwordConfirmationErrorController.add(UIError.invalidField);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
+    expect(find.text('Campo inválido.'), findsOneWidget);
+
+    passwordConfirmationErrorController.add(UIError.requiredField);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
+    expect(find.text('Campo Obrigatório.'), findsOneWidget);
+
+    passwordConfirmationErrorController.add(null);
+    // ! Força os componentes que precisam serem renderizados
+    await tester.pump();
+    final passwordConfirmationTextChildren = find.descendant(
+        of: find.bySemanticsLabel('Confirmar Senha'), matching: find.byType(Text));
+    expect(passwordConfirmationTextChildren, findsOneWidget,
+        reason:
+            'when a TextFormField has only one text child, means it has no errors, since one of the childs is always the label text');
+  });
 }

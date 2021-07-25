@@ -21,7 +21,7 @@ class PasswordInput extends StatelessWidget {
                   .of(context)
                   .primaryColor,
             ),
-            // errorText: snapshot.hasData ? snapshot.data.description : null,
+            errorText: snapshot.hasData ? snapshot.data.description : null,
           ),
           obscureText: true,
           onChanged: (password) {
