@@ -45,6 +45,13 @@ class SignUpPage extends StatelessWidget {
             }
           });
 
+          presenter.navigateToStream.listen((page) {
+            if (page?.isNotEmpty == true) {
+              //! offAllNamed remove rodas as rotas e inclui uma nova
+              Get.offAllNamed(page);
+            }
+          });
+
           return GestureDetector(
             onTap: _hideKeyboard,
             child: SingleChildScrollView(

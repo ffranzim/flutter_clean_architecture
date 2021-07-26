@@ -20,6 +20,7 @@ void main() {
   StreamController<UIError> passwordConfirmationErrorController;
   StreamController<bool> isFormValidController;
   StreamController<bool> isLoadingController;
+  StreamController<String> navigateToController;
 
   void initStreams() {
     emailErrorController = StreamController<UIError>();
@@ -29,6 +30,7 @@ void main() {
     passwordConfirmationErrorController = StreamController<UIError>();
     isFormValidController = StreamController<bool>();
     isLoadingController = StreamController<bool>();
+    navigateToController = StreamController<String>();
   }
 
   void mockStreams() {
@@ -46,6 +48,8 @@ void main() {
         .thenAnswer((_) => isFormValidController.stream);
     when(presenter.isLoadingStream)
         .thenAnswer((_) => isLoadingController.stream);
+    when(presenter.navigateToStream)
+        .thenAnswer((_) => navigateToController.stream);
   }
 
   void closeStreams() {
@@ -56,6 +60,7 @@ void main() {
     passwordConfirmationErrorController.close();
     isFormValidController.close();
     isLoadingController.close();
+    navigateToController.close();
   }
 
   Future<void> loadPage(WidgetTester tester) async {
@@ -66,7 +71,16 @@ void main() {
     final signUpPage = GetMaterialApp(
       initialRoute: '/signup',
       getPages: [
-        GetPage(name: '/signup', page: () => SignUpPage(presenter: presenter)),
+        GetPage(
+          name: '/signup',
+          page: () => SignUpPage(presenter: presenter),
+        ),
+        GetPage(
+          name: '/any_route',
+          page: () => const Scaffold(
+            body: Text('fake_page'),
+          ),
+        ),
       ],
     );
     // ! Renderiza o componente
@@ -312,5 +326,28 @@ void main() {
 
     expect(find.text('Algo errado aconteceu. Tente novamente em breve.'),
         findsOneWidget);
+  });
+
+  testWidgets('Should change page', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    navigateToController.add('/any_route');
+    //! pumpAndSettle espera a animação acontecer e tudo mais
+    await tester.pumpAndSettle();
+
+    expect(Get.currentRoute, '/any_route');
+    expect(find.text('fake_page'), findsOneWidget);
+  });
+
+  testWidgets('Should not change page', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    navigateToController.add('');
+    await tester.pump();
+    expect(Get.currentRoute, '/signup');
+
+    navigateToController.add(null);
+    await tester.pump();
+    expect(Get.currentRoute, '/signup');
   });
 }
