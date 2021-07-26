@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:clean_architecture/app/ui/helpers/errors/errors.dart';
 import 'package:clean_architecture/app/ui/pages/pages.dart';
-import 'package:faker/faker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,16 +13,18 @@ class SignUpPresenterSpy extends Mock implements SignUpPresenter {}
 void main() {
   SignUpPresenter presenter;
 
-  StreamController<UIError> nameErrorController;
   StreamController<UIError> emailErrorController;
+  StreamController<UIError> nameErrorController;
+  StreamController<UIError> mainErrorController;
   StreamController<UIError> passwordErrorController;
   StreamController<UIError> passwordConfirmationErrorController;
   StreamController<bool> isFormValidController;
   StreamController<bool> isLoadingController;
 
   void initStreams() {
-    nameErrorController = StreamController<UIError>();
     emailErrorController = StreamController<UIError>();
+    nameErrorController = StreamController<UIError>();
+    mainErrorController = StreamController<UIError>();
     passwordErrorController = StreamController<UIError>();
     passwordConfirmationErrorController = StreamController<UIError>();
     isFormValidController = StreamController<bool>();
@@ -31,10 +32,12 @@ void main() {
   }
 
   void mockStreams() {
-    when(presenter.nameErrorStream)
-        .thenAnswer((_) => nameErrorController.stream);
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
+    when(presenter.nameErrorStream)
+        .thenAnswer((_) => nameErrorController.stream);
+    when(presenter.mainErrorStream)
+        .thenAnswer((_) => mainErrorController.stream);
     when(presenter.passwordErrorStream)
         .thenAnswer((_) => passwordErrorController.stream);
     when(presenter.passwordConfirmationErrorStream)
@@ -46,8 +49,9 @@ void main() {
   }
 
   void closeStreams() {
+    emailErrorController.close();
     nameErrorController.close();
-    nameErrorController.close();
+    mainErrorController.close();
     passwordErrorController.close();
     passwordConfirmationErrorController.close();
     isFormValidController.close();
@@ -287,5 +291,26 @@ void main() {
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('Should present error message if signup fails',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    mainErrorController.add(UIError.emailInUse);
+    await tester.pump();
+
+    expect(find.text('O email já está em uso.'), findsOneWidget);
+  });
+
+  testWidgets('Should present error message if signup throws',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    mainErrorController.add(UIError.unexpected);
+    await tester.pump();
+
+    expect(find.text('Algo errado aconteceu. Tente novamente em breve.'),
+        findsOneWidget);
   });
 }

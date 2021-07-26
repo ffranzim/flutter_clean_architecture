@@ -8,6 +8,7 @@ abstract class Translations {
   String get password;
   String get survey;
 
+  String get msgEmailInUse;
   String get msgRequiredField;
   String get msgInvalidFields;
   String get msgInvalidCredentials;

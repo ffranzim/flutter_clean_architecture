@@ -1,10 +1,10 @@
+import 'package:clean_architecture/app/ui/helpers/errors/errors.dart';
 import 'package:clean_architecture/app/ui/helpers/i18n/i18n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-
 
 import '../../components/components.dart';
 import 'components/components.dart';
@@ -39,6 +39,11 @@ class SignUpPage extends StatelessWidget {
             }
           });
 
+          presenter.mainErrorStream.listen((error) {
+            if (error != null) {
+              showErrorMessage(context: context, msg: error.description);
+            }
+          });
 
           return GestureDetector(
             onTap: _hideKeyboard,
@@ -61,12 +66,12 @@ class SignUpPage extends StatelessWidget {
                           PasswordInput(),
                           Padding(
                             padding:
-                            const EdgeInsets.only(top: 8.0, bottom: 32.0),
+                                const EdgeInsets.only(top: 8.0, bottom: 32.0),
                             child: PasswordConfirmationInput(),
                           ),
                           SignUpButton(),
                           TextButton.icon(
-                            // onPressed: () => log.i('TextButton'),
+                            onPressed: () => log.i('TextButton'),
                             icon: const Icon(Icons.login),
                             label: Text(R.strings.login),
                           )
@@ -83,5 +88,3 @@ class SignUpPage extends StatelessWidget {
     );
   }
 }
-
-

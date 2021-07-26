@@ -26,6 +26,9 @@ class PtBr implements Translations {
   String get survey => 'Enquete';
 
   @override
+  String get msgEmailInUse => 'O email já está em uso.';
+
+  @override
   String get msgInvalidCredentials => 'Credenciais inválidas.';
 
   @override
@@ -39,5 +42,4 @@ class PtBr implements Translations {
 
   @override
   String get msgLoading => 'Carregando ...';
-
 }

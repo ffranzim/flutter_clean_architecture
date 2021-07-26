@@ -4,17 +4,25 @@ enum UIError {
   requiredField,
   invalidField,
   unexpected,
-  invalidCredentials
+  invalidCredentials,
+  emailInUse,
 }
 
 extension UIErrorExtension on UIError {
   String get description {
     switch (this) {
-      case UIError.requiredField: return R.strings.msgRequiredField;
-      case UIError.invalidField: return R.strings.msgInvalidFields;
-      case UIError.invalidCredentials: return R.strings.msgInvalidCredentials;
-      case UIError.unexpected: return R.strings.msgUnexpected;
-      default: return R.strings.msgUnexpected;
+      case UIError.emailInUse:
+        return R.strings.msgEmailInUse;
+      case UIError.requiredField:
+        return R.strings.msgRequiredField;
+      case UIError.invalidField:
+        return R.strings.msgInvalidFields;
+      case UIError.invalidCredentials:
+        return R.strings.msgInvalidCredentials;
+      case UIError.unexpected:
+        return R.strings.msgUnexpected;
+      default:
+        return R.strings.msgUnexpected;
     }
   }
 }

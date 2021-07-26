@@ -4,8 +4,9 @@ import '../../helpers/errors/errors.dart';
 
 abstract class SignUpPresenter {
 
-  Stream<UIError> get nameErrorStream;
   Stream<UIError> get emailErrorStream;
+  Stream<UIError> get nameErrorStream;
+  Stream<UIError> get mainErrorStream;
   Stream<UIError> get passwordErrorStream;
   Stream<UIError> get passwordConfirmationErrorStream;
   Stream<bool> get isFormValidStream;
