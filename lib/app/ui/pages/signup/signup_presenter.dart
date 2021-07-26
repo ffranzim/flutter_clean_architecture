@@ -9,6 +9,7 @@ abstract class SignUpPresenter {
   Stream<UIError> get passwordErrorStream;
   Stream<UIError> get passwordConfirmationErrorStream;
   Stream<bool> get isFormValidStream;
+  Stream<bool> get isLoadingStream;
 
 
   void validateName({@required String name});
