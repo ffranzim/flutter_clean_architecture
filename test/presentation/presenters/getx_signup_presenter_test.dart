@@ -14,6 +14,7 @@ void main() {
   String email;
   String name;
   String password;
+  String passwordConfirmation;
 
   PostExpectation mockValidationCall({@required String field}) =>
       when(validation.validate(
@@ -265,81 +266,81 @@ void main() {
     sut.validatePassword(password: password);
   });
 
-  // ! Outro Validation
+  // ! passwordConfirmation Validation
 
-  test('Should call Validation with correct password', () {
-    sut.validatePassword(password: password);
+  test('Should call Validation with correct PasswordConfirmation', () {
+    sut.validatePasswordConfirmation(passwordConfirmation: passwordConfirmation);
 
-    verify(validation.validate(field: 'password', value: password)).called(1);
+    verify(validation.validate(field: 'passwordConfirmation', value: passwordConfirmation)).called(1);
   });
 
-  test('Should emit invalidFieldError if password validation fails', () {
+  test('Should emit invalidFieldError if passwordConfirmation validation fails', () {
     mockValidation(field: null, value: ValidationError.invalidField);
 
     // ! Espera até acontecer ou dar timeout
-    expectLater(sut.passwordErrorStream, emits(UIError.invalidField));
+    expectLater(sut.passwordConfirmationStream, emits(UIError.invalidField));
 
     // ? Execução pós expectativa
-    sut.validatePassword(password: password);
+    sut.validatePasswordConfirmation(passwordConfirmation: password);
   });
 
-  test('Should emit invalidFieldError if name validation fails - Validate Password', () {
+  test('Should emit invalidFieldError if name validation fails - Validate PasswordConfirmation', () {
     mockValidation(field: null, value: ValidationError.requiredField);
 
     // ! Espera até acontecer ou dar timeout
-    expectLater(sut.passwordErrorStream, emits(UIError.requiredField));
+    expectLater(sut.passwordConfirmationStream, emits(UIError.requiredField));
 
     // ? Execução pós expectativa
-    sut.validatePassword(password: password);
+    sut.validatePasswordConfirmation(passwordConfirmation: password);
   });
 
-  test('Should emit error if validation fails - Twice Array - Validate Password', () {
+  test('Should emit error if validation fails - Twice Array - Validate PasswordConfirmation', () {
     mockValidation(field: null, value: ValidationError.invalidField);
 
     // ! Espera até acontecer ou dar timeout
-    expectLater(sut.passwordErrorStream, emitsInOrder([UIError.invalidField]));
+    expectLater(sut.passwordConfirmationStream, emitsInOrder([UIError.invalidField]));
 
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
-    sut.validatePassword(password: password);
-    sut.validatePassword(password: password);
+    sut.validatePasswordConfirmation(passwordConfirmation: password);
+    sut.validatePasswordConfirmation(passwordConfirmation: password);
   });
 
-  test('Should emit error if validation fails - Twice Distinct - Validate Password', () {
+  test('Should emit error if validation fails - Twice Distinct - Validate PasswordConfirmation', () {
     mockValidation(field: null, value: ValidationError.invalidField);
 
     // ! Quando se tem apenas um parametro pode usar direto
     // sut.emailErrorStream.listen((error) {
     //   expectAsync1((error) => expect(error, 'error'));
     // });
-    sut.passwordErrorStream
+    sut.passwordConfirmationStream
         .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
 
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
-    sut.validatePassword(password: password);
-    sut.validatePassword(password: password);
+    sut.validatePasswordConfirmation(passwordConfirmation: password);
+    sut.validatePasswordConfirmation(passwordConfirmation: password);
   });
 
-  test('Should isFormValid emits false if password is invalid ', () {
+  test('Should isFormValid emits false if PasswordConfirmation is invalid ', () {
     mockValidation(field: null, value: ValidationError.invalidField);
 
-    sut.passwordErrorStream
+    sut.passwordConfirmationStream
         .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
-    sut.validatePassword(password: password);
-    sut.validatePassword(password: password);
+    sut.validatePasswordConfirmation(passwordConfirmation: passwordConfirmation);
+    sut.validatePasswordConfirmation(passwordConfirmation: passwordConfirmation);
   });
 
-  test('Should emit null if validation succeeds - Validate Password', () {
-    sut.passwordErrorStream.listen(expectAsync1((error) => expect(error, null)));
+  test('Should emit null if validation succeeds - Validate PasswordConfirmation', () {
+    sut.passwordConfirmationStream.listen(expectAsync1((error) => expect(error, null)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
-    sut.validatePassword(password: password);
-    sut.validatePassword(password: password);
+    sut.validatePasswordConfirmation(passwordConfirmation: password);
+    sut.validatePasswordConfirmation(passwordConfirmation: password);
   });
 
   // ! Outro Validation
