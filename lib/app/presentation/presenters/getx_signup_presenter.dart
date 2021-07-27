@@ -7,6 +7,7 @@ import '../protocols/validation.dart';
 class GetxSignUpPresenter extends GetxController {//implements SignUpPresenter {
 
   final _emailError = Rx<UIError>(null);
+  final _nameError = Rx<UIError>(null);
   final RxBool _isFormValid = false.obs;
 
   final Validation validation;
@@ -15,7 +16,10 @@ class GetxSignUpPresenter extends GetxController {//implements SignUpPresenter {
     @required this.validation,
   });
 
-  // ! distinct só emite valor se o valor state for diferente
+  // @override
+  Stream<UIError> get nameErrorStream => _nameError.stream;
+
+
   // @override
   Stream<UIError> get emailErrorStream => _emailError.stream;
 
@@ -25,6 +29,12 @@ class GetxSignUpPresenter extends GetxController {//implements SignUpPresenter {
   // @override
   void validateEmail({@required String email}) {
     _emailError.value = _validateField(field: 'email', value: email);
+    _validateForm();
+  }
+
+  // @override
+  void validateName({@required String name}) {
+    _nameError .value = _validateField(field: 'name', value: name);
     _validateForm();
   }
 
