@@ -8,6 +8,7 @@ class GetxSignUpPresenter extends GetxController {//implements SignUpPresenter {
 
   final _emailError = Rx<UIError>(null);
   final _nameError = Rx<UIError>(null);
+  final _passwordError = Rx<UIError>(null);
   final RxBool _isFormValid = false.obs;
 
   final Validation validation;
@@ -19,9 +20,10 @@ class GetxSignUpPresenter extends GetxController {//implements SignUpPresenter {
   // @override
   Stream<UIError> get nameErrorStream => _nameError.stream;
 
-
   // @override
   Stream<UIError> get emailErrorStream => _emailError.stream;
+
+  Stream<UIError> get passwordErrorStream => _passwordError.stream;
 
   // @override
   Stream<bool> get isFormValidStream => _isFormValid.stream;
@@ -38,6 +40,11 @@ class GetxSignUpPresenter extends GetxController {//implements SignUpPresenter {
     _validateForm();
   }
 
+  void validatePassword({@required String password}) {
+    _passwordError.value = _validateField(field: 'password', value: password);
+    _validateForm();
+  }
+
   UIError _validateField({String field, String value}) {
     final error = validation.validate(field: field, value: value);
     switch (error) {
@@ -46,7 +53,6 @@ class GetxSignUpPresenter extends GetxController {//implements SignUpPresenter {
       default : return null; break;
     }
   }
-
   void _validateForm() {
     _isFormValid.value = false;
   }
