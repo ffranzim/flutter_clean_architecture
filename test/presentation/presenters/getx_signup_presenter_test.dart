@@ -458,4 +458,9 @@ void main() {
 
     await sut.signUp();
   });
+
+  test('Should emit corect events on AddAccount success', () async {
+    expectLater(sut.isLoadingStream, emits(true));
+    await sut.signUp();
+  });
 }
