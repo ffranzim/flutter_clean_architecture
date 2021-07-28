@@ -1,4 +1,5 @@
 import 'package:clean_architecture/app/domain/entities/entities.dart';
+import 'package:clean_architecture/app/domain/helpers/domain_error.dart';
 import 'package:clean_architecture/app/domain/usecases/usecases.dart';
 import 'package:clean_architecture/app/presentation/presenters/presenters.dart';
 import 'package:clean_architecture/app/presentation/protocols/protocols.dart';
@@ -39,6 +40,13 @@ void main() {
   void mockValidation(
       {@required String field, @required ValidationError value}) {
     mockValidationCall(field: field).thenReturn(value);
+  }
+
+  PostExpectation mockSaveCurrentAccountCall() =>
+      when(saveCurrentAccount.saveSecure(account: anyNamed('account')));
+
+  void mockSaveCurrentAccountError() {
+    mockSaveCurrentAccountCall().thenThrow(DomainError.unexpected);
   }
 
   setUp(() {
@@ -434,12 +442,20 @@ void main() {
   });
 
   test('Should call SaveCurrentAccount with correct value', () async {
-    sut.validateEmail(email: email);
-    sut.validatePassword(password: password);
-
     await sut.signUp();
 
-    verify(saveCurrentAccount.saveSecure(account: AccountEntity(token: token)))
+    verify(saveCurrentAccount.saveSecure(account: AccountEntity(token: token),),)
         .called(1);
+  });
+
+  test('Should emit UnexpectedError if SaveCurrentAccount fails', () async {
+    mockSaveCurrentAccountError();
+
+    // ? aparentemente se perde no teste(try catch) com stream
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+     sut.mainErrorStream.listen(expectAsync1((error) =>
+        expect(error, UIError.unexpected)));
+
+    await sut.signUp();
   });
 }

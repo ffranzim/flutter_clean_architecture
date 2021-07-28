@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
+import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
 import '../../ui/helpers/helpers.dart';
 import '../protocols/validation.dart';
@@ -12,7 +13,9 @@ class GetxSignUpPresenter extends GetxController {
   final _nameError = Rx<UIError>(null);
   final _passwordError = Rx<UIError>(null);
   final _passwordConfirmationError = Rx<UIError>(null);
+  final _mainError = Rx<UIError>(null);
   final RxBool _isFormValid = false.obs;
+  final RxBool _isLoading = false.obs;
 
   String _email;
   String _name;
@@ -40,8 +43,12 @@ class GetxSignUpPresenter extends GetxController {
   Stream<UIError> get passwordConfirmationStream =>
       _passwordConfirmationError.stream;
 
+  Stream<UIError> get mainErrorStream => _mainError.stream;
+
   // @override
   Stream<bool> get isFormValidStream => _isFormValid.stream;
+
+  Stream<bool> get isLoadingStream => _isLoading.stream;
 
   // @override
   void validateEmail({@required String email}) {
@@ -97,12 +104,28 @@ class GetxSignUpPresenter extends GetxController {
   }
 
   Future<void> signUp() async {
-    final account = await addAccount.add(
-      params: AddAccountParams(
+    _isLoading.value = true;
+    try {
+      final account = await addAccount.add(
+        params: AddAccountParams(
           email: _email,
           name: _name,
           password: _password,
-          passwordConfirmation: _passwordConfimation),);
-    await saveCurrentAccount.saveSecure(account: account);
+          passwordConfirmation: _passwordConfimation,
+        ),
+      );
+      await saveCurrentAccount.saveSecure(account: account);
+      _isLoading.value = false;
+    } on DomainError catch (error) {
+      switch (error) {
+        // case DomainError.invalidCredentials:
+        //   _mainError.value = UIError.invalidCredentials;
+        //   break;
+        default:
+          _mainError.value = UIError.unexpected;
+          break;
+      }
+      _isLoading.value = false;
+    }
   }
 }
