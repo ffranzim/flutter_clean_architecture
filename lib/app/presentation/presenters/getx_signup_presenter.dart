@@ -21,10 +21,12 @@ class GetxSignUpPresenter extends GetxController {
 
   final Validation validation;
   final AddAccount addAccount;
+  final SaveCurrentAccount saveCurrentAccount;
 
   GetxSignUpPresenter({
     @required this.validation,
     @required this.addAccount,
+    @required this.saveCurrentAccount,
   });
 
   // @override
@@ -95,11 +97,12 @@ class GetxSignUpPresenter extends GetxController {
   }
 
   Future<void> signUp() async {
-    await addAccount.add(
-        params: AddAccountParams(
-            email: _email,
-            name: _name,
-            password: _password,
-            passwordConfirmation: _passwordConfimation));
+    final account = await addAccount.add(
+      params: AddAccountParams(
+          email: _email,
+          name: _name,
+          password: _password,
+          passwordConfirmation: _passwordConfimation),);
+    await saveCurrentAccount.saveSecure(account: account);
   }
 }
