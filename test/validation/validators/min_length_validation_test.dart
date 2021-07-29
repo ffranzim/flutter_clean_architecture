@@ -11,23 +11,25 @@ class MinLengthValidation implements FieldValidation {
 
   @override
   ValidationError validate({String value}) {
-    if(value == null || value.length < minSize) {
+    if (value == null || value.length < minSize) {
       return ValidationError.invalidField;
     }
     return null;
   }
-
 }
 
 void main() {
+  MinLengthValidation sut;
+  setUp(() {
+    sut = MinLengthValidation(field: 'any_field', minSize: 5);
+  });
+
   test('Should return error if value is empty', () {
-    final sut = MinLengthValidation(field: 'any_field', minSize: 5);
     final error = sut.validate(value: '');
     expect(error, ValidationError.invalidField);
   });
 
   test('Should return error if value is null', () {
-    final sut = MinLengthValidation(field: 'any_field', minSize: 5);
     final error = sut.validate(value: null);
     expect(error, ValidationError.invalidField);
   });
