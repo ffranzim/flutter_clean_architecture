@@ -39,4 +39,9 @@ void main() {
     final error = sut.validate(value: faker.randomGenerator.string(4, min: 1));
     expect(error, ValidationError.invalidField);
   });
+
+  test('Should return error if value is equal than min size ', () {
+    final error = sut.validate(value: faker.randomGenerator.string(5, min: 5));
+    expect(error, null);
+  });
 }
