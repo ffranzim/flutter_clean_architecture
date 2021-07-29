@@ -281,4 +281,9 @@ void main() {
 
     verify(saveCurrentAccount.saveSecure(account: AccountEntity(token: token))).called(1);
   });
+
+  test('Should goToSignUp page on link click', () async {
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/signup')));
+    sut.goToSignUp();
+  });
 }

@@ -14,6 +14,7 @@ abstract class LoginPresenter {
   void validateEmail({@required String email});
   void validatePassword({@required String password});
   Future<void> auth();
+  void goToSignUp();
   void dispose();
 
 }

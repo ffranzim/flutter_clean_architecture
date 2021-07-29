@@ -73,10 +73,11 @@ class LoginPage extends StatelessWidget {
                             ),
                             LoginButton(),
                             TextButton.icon(
-                              onPressed: () => log.i('TextButton'),
+                              onPressed: presenter.goToSignUp,
                               icon: const Icon(Icons.person),
                               label: Text(R.strings.addAccount),
                             )
+
                           ],
                         ),
                       ),

@@ -106,4 +106,9 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
     //? Mantendo o metodo pelo uso na interface
     _log.i('Call dispose');
   }
+
+  @override
+  void goToSignUp() {
+    _navigateTo.value = '/signup';
+  }
 }
