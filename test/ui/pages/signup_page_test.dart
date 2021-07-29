@@ -350,4 +350,22 @@ void main() {
     await tester.pump();
     expect(Get.currentRoute, '/signup');
   });
+
+  //! Funciona o teste com o provider, mas provider da erro em produção
+  //! Não funciona o teste com o provider, mas getx(provider) não dá erro em produção
+  testWidgets('Should call gotoLogin on link click',
+          (WidgetTester tester) async {
+
+        await loadPage(tester);
+
+        // ! Não acha TextButton
+        // await tester.tap(find.byType(TextButton));
+
+        final button = find.text('Login');
+        await tester.ensureVisible(button);
+        await tester.tap(button);
+        await tester.pump();
+
+        verify(presenter.goToLogin()).called(1);
+      });
 }

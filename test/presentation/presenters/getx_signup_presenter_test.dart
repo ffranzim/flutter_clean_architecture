@@ -330,7 +330,7 @@ void main() {
     mockValidation(field: null, value: ValidationError.invalidField);
 
     // ! Espera até acontecer ou dar timeout
-    expectLater(sut.passwordConfirmationStream, emits(UIError.invalidField));
+    expectLater(sut.passwordConfirmationErrorStream, emits(UIError.invalidField));
 
     // ? Execução pós expectativa
     sut.validatePasswordConfirmation(passwordConfirmation: password);
@@ -342,7 +342,7 @@ void main() {
     mockValidation(field: null, value: ValidationError.requiredField);
 
     // ! Espera até acontecer ou dar timeout
-    expectLater(sut.passwordConfirmationStream, emits(UIError.requiredField));
+    expectLater(sut.passwordConfirmationErrorStream, emits(UIError.requiredField));
 
     // ? Execução pós expectativa
     sut.validatePasswordConfirmation(passwordConfirmation: password);
@@ -355,7 +355,7 @@ void main() {
 
     // ! Espera até acontecer ou dar timeout
     expectLater(
-        sut.passwordConfirmationStream, emitsInOrder([UIError.invalidField]));
+        sut.passwordConfirmationErrorStream, emitsInOrder([UIError.invalidField]));
 
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
     sut.validatePasswordConfirmation(passwordConfirmation: password);
@@ -371,7 +371,7 @@ void main() {
     // sut.emailErrorStream.listen((error) {
     //   expectAsync1((error) => expect(error, 'error'));
     // });
-    sut.passwordConfirmationStream
+    sut.passwordConfirmationErrorStream
         .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
 
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
@@ -383,7 +383,7 @@ void main() {
       () {
     mockValidation(field: null, value: ValidationError.invalidField);
 
-    sut.passwordConfirmationStream
+    sut.passwordConfirmationErrorStream
         .listen(expectAsync1((error) => expect(error, UIError.invalidField)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
@@ -398,7 +398,7 @@ void main() {
   test(
       'Should emit null if validation succeeds - Validate PasswordConfirmation',
       () {
-    sut.passwordConfirmationStream
+    sut.passwordConfirmationErrorStream
         .listen(expectAsync1((error) => expect(error, null)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
@@ -497,5 +497,10 @@ void main() {
     await sut.signUp();
 
     verify(saveCurrentAccount.saveSecure(account: AccountEntity(token: token))).called(1);
+  });
+
+  test('Should go to LoginPage on link click', () async {
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/login')));
+    sut.goToLogin();
   });
 }
