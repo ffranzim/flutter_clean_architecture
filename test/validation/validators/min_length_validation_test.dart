@@ -44,4 +44,9 @@ void main() {
     final error = sut.validate(value: faker.randomGenerator.string(5, min: 5));
     expect(error, null);
   });
+
+  test('Should return error if value is bigger than min size ', () {
+    final error = sut.validate(value: faker.randomGenerator.string(10, min: 6));
+    expect(error, null);
+  });
 }
