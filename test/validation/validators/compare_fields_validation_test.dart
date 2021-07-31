@@ -1,7 +1,6 @@
 import 'package:clean_architecture/app/presentation/protocols/validation.dart';
 import 'package:clean_architecture/app/validation/validators/validators.dart';
 import 'package:flutter_test/flutter_test.dart';
-//? Só pra comitar
 
 void main() {
   CompareFieldsValidation sut;

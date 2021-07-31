@@ -4,7 +4,7 @@ import 'package:clean_architecture/app/validation/validators/validators.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('Shoukld return the correct validations', () {
+  test('Should return the correct validations', () {
     final validations = makeLoginValidations();
 
 
@@ -12,7 +12,9 @@ void main() {
       const RequiredFieldValidation(field: 'email'),
       const EmailValidation(field: 'email'),
       const RequiredFieldValidation(field: 'password'),
+      const MinLengthValidation(field: 'password', minSize: 3),
     ];
+
 
     expect(validations, fieldsValidation);
   });

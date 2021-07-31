@@ -12,6 +12,7 @@ List<FieldValidation> makeLoginValidations() {
   // ! Triple dot ou Spread Operator concatena listas
   return [
     ... ValidationBuilder.field('email').required().email().build(),
-    ... ValidationBuilder.field('password').required().build()
+    ... ValidationBuilder.field('password').required().min(minSize: 3).build(),
+
   ];
 }
