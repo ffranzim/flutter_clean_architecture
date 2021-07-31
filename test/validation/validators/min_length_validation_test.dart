@@ -6,31 +6,43 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   MinLengthValidation sut;
   setUp(() {
-    sut = MinLengthValidation(field: 'any_field', minSize: 5);
+    sut = const MinLengthValidation(field: 'any_field', minSize: 5);
   });
 
   test('Should return error if value is empty', () {
-    final error = sut.validate(value: '');
+    final formData = {'any_field': ''};
+    final error = sut.validate(input: formData);
     expect(error, ValidationError.invalidField);
   });
 
   test('Should return error if value is null', () {
-    final error = sut.validate(value: null);
+    final formData = {'any_field': null};
+    final error = sut.validate(input: formData);
     expect(error, ValidationError.invalidField);
   });
 
   test('Should return error if value is less than min size ', () {
-    final error = sut.validate(value: faker.randomGenerator.string(4, min: 1));
+    final formData = {'any_field': faker.randomGenerator.string(4, min: 1)};
+
+    final error = sut.validate(input: formData);
+
     expect(error, ValidationError.invalidField);
   });
 
   test('Should return error if value is equal than min size ', () {
-    final error = sut.validate(value: faker.randomGenerator.string(5, min: 5));
+    final formData = {'any_field': faker.randomGenerator.string(5, min: 5)};
+
+    final error = sut.validate(input: formData);
+
     expect(error, null);
   });
 
   test('Should return error if value is bigger than min size ', () {
-    final error = sut.validate(value: faker.randomGenerator.string(10, min: 6));
+
+    final formData = {'any_field': faker.randomGenerator.string(10, min: 6)};
+
+    final error = sut.validate(input: formData);
+
     expect(error, null);
   });
 }

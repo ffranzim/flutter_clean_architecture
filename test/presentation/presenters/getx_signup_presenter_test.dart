@@ -28,7 +28,7 @@ void main() {
 
   PostExpectation mockValidationCall({@required String field}) =>
       when(validation.validate(
-          field: field ?? anyNamed('field'), value: anyNamed('value')));
+          field: field ?? anyNamed('field'), input: anyNamed('input')));
 
   PostExpectation mockAddAccountCall() =>
       when(addAccount.add(params: anyNamed('params')));
@@ -73,9 +73,10 @@ void main() {
   });
 
   test('Should call Validation with correct email', () {
+    final formData = {'email': email, 'password': password};
     sut.validateEmail(email: email);
 
-    verify(validation.validate(field: 'email', value: email)).called(1);
+    verify(validation.validate(field: 'email', input: formData)).called(1);
   });
 
   test('Should emit invalidFieldError if email validation fails', () {
@@ -153,9 +154,15 @@ void main() {
   // ! Name Validation
 
   test('Should call Validation with correct name', () {
+    final formData = {
+      'email': email,
+      'name': name,
+      'password': password,
+      'passwordConfirmation': passwordConfirmation,
+    };
     sut.validateName(name: name);
 
-    verify(validation.validate(field: 'name', value: name)).called(1);
+    verify(validation.validate(field: 'name', input: formData)).called(1);
   });
 
   test('Should emit invalidFieldError if name validation fails', () {
@@ -233,9 +240,15 @@ void main() {
   // ! Password Validation
 
   test('Should call Validation with correct password', () {
+    final formData = {
+      'email': email,
+      'name': name,
+      'password': password,
+      'passwordConfirmation': passwordConfirmation,
+    };
     sut.validatePassword(password: password);
 
-    verify(validation.validate(field: 'password', value: password)).called(1);
+    verify(validation.validate(field: 'password', input: formData)).called(1);
   });
 
   test('Should emit invalidFieldError if password validation fails', () {
@@ -317,11 +330,18 @@ void main() {
   // ! passwordConfirmation Validation
 
   test('Should call Validation with correct PasswordConfirmation', () {
+    final formData = {
+      'email': email,
+      'name': name,
+      'password': password,
+      'passwordConfirmation': passwordConfirmation,
+    };
+
     sut.validatePasswordConfirmation(
         passwordConfirmation: passwordConfirmation);
 
     verify(validation.validate(
-            field: 'passwordConfirmation', value: passwordConfirmation))
+            field: 'passwordConfirmation', input: formData))
         .called(1);
   });
 
@@ -330,7 +350,8 @@ void main() {
     mockValidation(field: null, value: ValidationError.invalidField);
 
     // ! Espera até acontecer ou dar timeout
-    expectLater(sut.passwordConfirmationErrorStream, emits(UIError.invalidField));
+    expectLater(
+        sut.passwordConfirmationErrorStream, emits(UIError.invalidField));
 
     // ? Execução pós expectativa
     sut.validatePasswordConfirmation(passwordConfirmation: password);
@@ -342,7 +363,8 @@ void main() {
     mockValidation(field: null, value: ValidationError.requiredField);
 
     // ! Espera até acontecer ou dar timeout
-    expectLater(sut.passwordConfirmationErrorStream, emits(UIError.requiredField));
+    expectLater(
+        sut.passwordConfirmationErrorStream, emits(UIError.requiredField));
 
     // ? Execução pós expectativa
     sut.validatePasswordConfirmation(passwordConfirmation: password);
@@ -354,8 +376,8 @@ void main() {
     mockValidation(field: null, value: ValidationError.invalidField);
 
     // ! Espera até acontecer ou dar timeout
-    expectLater(
-        sut.passwordConfirmationErrorStream, emitsInOrder([UIError.invalidField]));
+    expectLater(sut.passwordConfirmationErrorStream,
+        emitsInOrder([UIError.invalidField]));
 
     // ? Execução pós expectativa! Chama 2x porém emite só um erro
     sut.validatePasswordConfirmation(passwordConfirmation: password);
@@ -448,8 +470,11 @@ void main() {
   test('Should call SaveCurrentAccount with correct value', () async {
     await sut.signUp();
 
-    verify(saveCurrentAccount.saveSecure(account: AccountEntity(token: token),),)
-        .called(1);
+    verify(
+      saveCurrentAccount.saveSecure(
+        account: AccountEntity(token: token),
+      ),
+    ).called(1);
   });
 
   test('Should emit UnexpectedError if SaveCurrentAccount fails', () async {
@@ -457,8 +482,8 @@ void main() {
 
     // ? aparentemente se perde no teste(try catch) com stream
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-     sut.mainErrorStream.listen(expectAsync1((error) =>
-        expect(error, UIError.unexpected)));
+    sut.mainErrorStream
+        .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
 
     await sut.signUp();
   });
@@ -473,8 +498,8 @@ void main() {
 
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
 
-    sut.mainErrorStream.listen(
-        expectAsync1((error) => expect(error, UIError.emailInUse)));
+    sut.mainErrorStream
+        .listen(expectAsync1((error) => expect(error, UIError.emailInUse)));
 
     await sut.signUp();
   });
@@ -484,19 +509,20 @@ void main() {
 
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
 
-    sut.mainErrorStream.listen(expectAsync1((error) =>
-        expect(error, UIError.unexpected)));
+    sut.mainErrorStream
+        .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
 
     await sut.signUp();
   });
 
   test('Should change page on success', () async {
-
-    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/surveys')));
+    sut.navigateToStream
+        .listen(expectAsync1((page) => expect(page, '/surveys')));
 
     await sut.signUp();
 
-    verify(saveCurrentAccount.saveSecure(account: AccountEntity(token: token))).called(1);
+    verify(saveCurrentAccount.saveSecure(account: AccountEntity(token: token)))
+        .called(1);
   });
 
   test('Should go to LoginPage on link click', () async {

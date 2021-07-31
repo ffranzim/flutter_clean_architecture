@@ -11,7 +11,8 @@ class MinLengthValidation extends Equatable implements FieldValidation {
   const MinLengthValidation({@required this.field, @required this.minSize});
 
   @override
-  ValidationError validate({String value}) {
+  ValidationError validate({Map input}) {
+    String value = input[field] as String;
     if (value == null || value.length < minSize) {
       return ValidationError.invalidField;
     }

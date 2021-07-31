@@ -54,23 +54,33 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
   @override
   void validateEmail({@required String email}) {
     _email = email;
-    _emailError.value = _validateField(field: 'email', value: email);
+    _emailError.value = _validateField(field: 'email');
     _validateForm();
   }
 
   @override
   void validatePassword({String password}) {
     _password = password;
-    _passwordError.value = _validateField(field: 'password', value: password);
+    _passwordError.value = _validateField(field: 'password');
     _validateForm();
   }
 
-  UIError _validateField({String field, String value}) {
-    final error = validation.validate(field: field, value: value);
+  UIError _validateField({@required String field}) {
+    final formData = {
+      'email': _email,
+      'password': _password,
+    };
+    final error = validation.validate(field: field, input: formData);
     switch (error) {
-      case ValidationError.invalidField : return UIError.invalidField; break;
-      case ValidationError.requiredField : return UIError.requiredField; break;
-      default : return null; break;
+      case ValidationError.invalidField:
+        return UIError.invalidField;
+        break;
+      case ValidationError.requiredField:
+        return UIError.requiredField;
+        break;
+      default:
+        return null;
+        break;
     }
   }
 
@@ -91,10 +101,13 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
       await saveCurrentAccount.saveSecure(account: account);
       _navigateTo.value = '/surveys';
     } on DomainError catch (error) {
-
       switch (error) {
-        case DomainError.invalidCredentials: _mainError.value = UIError.invalidCredentials; break;
-       default: _mainError.value = UIError.unexpected; break;
+        case DomainError.invalidCredentials:
+          _mainError.value = UIError.invalidCredentials;
+          break;
+        default:
+          _mainError.value = UIError.unexpected;
+          break;
       }
       _isLoading.value = false;
     }

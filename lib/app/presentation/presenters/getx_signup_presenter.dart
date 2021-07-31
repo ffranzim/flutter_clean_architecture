@@ -60,21 +60,21 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
   @override
   void validateEmail({@required String email}) {
     _email = email;
-    _emailError.value = _validateField(field: 'email', value: email);
+    _emailError.value = _validateField(field: 'email');
     _validateForm();
   }
 
   @override
   void validateName({@required String name}) {
     _name = name;
-    _nameError.value = _validateField(field: 'name', value: name);
+    _nameError.value = _validateField(field: 'name');
     _validateForm();
   }
 
   @override
   void validatePassword({@required String password}) {
     _password = password;
-    _passwordError.value = _validateField(field: 'password', value: password);
+    _passwordError.value = _validateField(field: 'password');
     _validateForm();
   }
 
@@ -82,12 +82,18 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
   void validatePasswordConfirmation({@required String passwordConfirmation}) {
     _passwordConfimation = passwordConfirmation;
     _passwordConfirmationError.value = _validateField(
-        field: 'passwordConfirmation', value: passwordConfirmation);
+        field: 'passwordConfirmation');
     _validateForm();
   }
 
-  UIError _validateField({String field, String value}) {
-    final error = validation.validate(field: field, value: value);
+  UIError _validateField({@required String field}) {
+    final formData = {
+      'email': _email,
+      'name': _name,
+      'password': _password,
+      'passwordConfimation': _passwordConfimation,
+    };
+    final error = validation.validate(field: field, input: formData);
     switch (error) {
       case ValidationError.invalidField:
         return UIError.invalidField;

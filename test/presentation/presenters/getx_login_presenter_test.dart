@@ -26,7 +26,7 @@ void main() {
 
   PostExpectation mockValidationCall({@required String field}) =>
       when(validation.validate(
-          field: field ?? anyNamed('field'), value: anyNamed('value')));
+          field: field ?? anyNamed('field'), input: anyNamed('input')));
 
   void mockValidation({@required String field, @required ValidationError value}) {
     mockValidationCall(field: field).thenReturn(value);
@@ -70,10 +70,14 @@ void main() {
   });
 
   test('Should call Validation with correct email', () {
-    sut.validateEmail(email: email);
+    final formData = {'email': email, 'password': password };
 
-    verify(validation.validate(field: 'email', value: email)).called(1);
+    sut.validateEmail(email: email );
+
+
+    verify(validation.validate(field: 'email', input: formData)).called(1);
   });
+
 
   test('Should emit invalidFieldError if email validation fails', () {
     mockValidation(field: null, value: ValidationError.invalidField);
@@ -145,9 +149,11 @@ void main() {
   });
 
   test('Should call Validation with correct password', () {
+    final formData = {'password': password};
+
     sut.validatePassword(password: password);
 
-    verify(validation.validate(field: 'password', value: password)).called(1);
+    verify(validation.validate(field: 'password', input: formData)).called(1);
   });
 
   test('Should emit password error if validation fails', () {

@@ -1,34 +1,40 @@
 import 'package:clean_architecture/app/presentation/protocols/protocols.dart';
 import 'package:clean_architecture/app/validation/validators/validators.dart';
+import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   EmailValidation sut;
 
   setUp(() {
-    sut = const EmailValidation(field: 'any_field');
+    sut = const EmailValidation(field: 'email');
   });
 
   test('Should return null if email is empty', () {
-    final error = sut.validate(value: '');
+    final formData = {'email': ''};
+    final error = sut.validate(input: formData);
 
     expect(error, null);
   });
 
   test('Should return null if email is null', () {
-    final error = sut.validate(value: null);
+    final formData = {'email': null};
+    final error = sut.validate(input: formData);
 
     expect(error, null);
   });
 
   test('Should return null if email is valid', () {
-    final error = sut.validate(value: 'fernando.franzim@gmail.com');
+    final formData = {'email': faker.internet.email()};
+    final error = sut.validate(input: formData);
 
     expect(error, null);
   });
 
   test('Should return null if email is invalid', () {
-    final error = sut.validate(value: 'fernando.franzim');
+    final formData = {'email': faker.internet.domainName()};
+
+    final error = sut.validate(input: formData);
 
     expect(error, ValidationError.invalidField);
   });
