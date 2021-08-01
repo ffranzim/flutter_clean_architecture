@@ -13,8 +13,10 @@ void main() {
       const EmailValidation(field: 'email'),
       const RequiredFieldValidation(field: 'password'),
       const MinLengthValidation(field: 'password', minSize: 3),
+      // const RequiredFieldValidation(field: 'passwordConfirmation'),
+      // const MinLengthValidation(field: 'passwordConfirmation', minSize: 3),
+      // CompareFieldsValidation(field: 'password', fieldToCompare: 'passwordConfirmation')
     ];
-
 
     expect(validations, fieldsValidation);
   });

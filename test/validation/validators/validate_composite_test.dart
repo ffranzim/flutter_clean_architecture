@@ -38,30 +38,28 @@ void main() {
   });
 
   test('Should return null if value all validations return null or empty', () {
-    final error = sut.validate(input: {});
+    final error = sut.validate(field: 'any_field',input: {});
 
     expect(error, null);
   });
 
   test('Should return error if value all validations return is not empty', () {
-    mockValidation(
-        validation: validaton1, error: ValidationError.requiredField);
-    mockValidation(
-        validation: validaton2, error: ValidationError.requiredField);
+    mockValidation(validation: validaton1, error: ValidationError.requiredField);
+    mockValidation(validation: validaton2, error: ValidationError.requiredField);
     mockValidation(validation: validaton3, error: ValidationError.invalidField);
 
-    final error = sut.validate(input: {});
+    final error = sut.validate(field: 'any_field',input: {});
 
     expect(error, ValidationError.requiredField);
   });
 
   test('Should return the first error', () {
     mockValidation(
-        validation: validaton1, error: ValidationError.requiredField);
-    mockValidation(validation: validaton2, error: ValidationError.invalidField);
-    mockValidation(validation: validaton3, error: ValidationError.invalidField);
+        validation: validaton1, error: ValidationError.invalidField);
+    mockValidation(validation: validaton2, error: ValidationError.requiredField);
+    mockValidation(validation: validaton3, error: ValidationError.requiredField);
 
-    final error = sut.validate(input: {});
+    final error = sut.validate(field: 'any_field',input: {});
 
     expect(error, ValidationError.invalidField);
   });

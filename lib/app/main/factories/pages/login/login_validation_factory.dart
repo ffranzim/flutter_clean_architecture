@@ -13,7 +13,6 @@ List<FieldValidation> makeLoginValidations() {
   return [
     ... ValidationBuilder.field('email').required().email().build(),
     ... ValidationBuilder.field('password').required().min(minSize: 3).build(),
-    ... ValidationBuilder.field('passwordConfirmation').required().min(minSize: 3).sameAs(fieldToCompare: 'password').build(),
-
+    // ... ValidationBuilder.field('passwordConfirmation').required().min(minSize: 3).sameAs(fieldToCompare: 'password').build(),
   ];
 }

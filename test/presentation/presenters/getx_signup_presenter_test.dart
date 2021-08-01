@@ -73,7 +73,8 @@ void main() {
   });
 
   test('Should call Validation with correct email', () {
-    final formData = {'email': email, 'password': password};
+    final formData = {'email': email, 'name': null, 'password': null, 'passwordConfirmation': null};
+
     sut.validateEmail(email: email);
 
     verify(validation.validate(field: 'email', input: formData)).called(1);
@@ -155,10 +156,10 @@ void main() {
 
   test('Should call Validation with correct name', () {
     final formData = {
-      'email': email,
+      'email': null,
       'name': name,
-      'password': password,
-      'passwordConfirmation': passwordConfirmation,
+      'password': null,
+      'passwordConfirmation': null,
     };
     sut.validateName(name: name);
 
@@ -241,10 +242,10 @@ void main() {
 
   test('Should call Validation with correct password', () {
     final formData = {
-      'email': email,
-      'name': name,
+      'email': null,
+      'name': null,
       'password': password,
-      'passwordConfirmation': passwordConfirmation,
+      'passwordConfirmation': null,
     };
     sut.validatePassword(password: password);
 
@@ -331,9 +332,9 @@ void main() {
 
   test('Should call Validation with correct PasswordConfirmation', () {
     final formData = {
-      'email': email,
-      'name': name,
-      'password': password,
+      'name': null,
+      'email': null,
+      'password': null,
       'passwordConfirmation': passwordConfirmation,
     };
 

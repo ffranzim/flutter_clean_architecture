@@ -91,7 +91,7 @@ class GetxSignUpPresenter extends GetxController implements SignUpPresenter {
       'email': _email,
       'name': _name,
       'password': _password,
-      'passwordConfimation': _passwordConfimation,
+      'passwordConfirmation': _passwordConfimation,
     };
     final error = validation.validate(field: field, input: formData);
     switch (error) {
