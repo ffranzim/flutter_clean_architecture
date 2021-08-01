@@ -5,6 +5,7 @@ import '../../presentation/protocols/protocols.dart';
 import '../protocols/protocols.dart';
 
 class MinLengthValidation extends Equatable implements FieldValidation {
+  @override
   final String field;
   final int minSize;
 
@@ -12,7 +13,7 @@ class MinLengthValidation extends Equatable implements FieldValidation {
 
   @override
   ValidationError validate({Map input}) {
-    String value = input[field] as String;
+    final value = input[field] as String;
     if (value == null || value.length < minSize) {
       return ValidationError.invalidField;
     }

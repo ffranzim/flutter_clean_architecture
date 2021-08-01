@@ -10,6 +10,12 @@ void main() {
     sut = const EmailValidation(field: 'email');
   });
 
+  test('Should return null on invalid case', () {
+    final error = sut.validate(input: {});
+
+    expect(error, null);
+  });
+
   test('Should return null if email is empty', () {
     final formData = {'email': ''};
     final error = sut.validate(input: formData);

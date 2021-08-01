@@ -6,7 +6,7 @@ void main() {
   CompareFieldsValidation sut;
 
   setUp(() {
-    sut = CompareFieldsValidation(field: 'any_field', fieldToCompare: 'other_field');
+    sut = const CompareFieldsValidation(field: 'any_field', fieldToCompare: 'other_field');
   });
 
   test('Should return null on invalid cases', () {
@@ -14,7 +14,7 @@ void main() {
     final formDataJustOtherField = {'other_field': 'other_value'};
     final formDataEmpty = {};
 
-    expect(sut.validate(input: null), null);
+    expect(sut.validate(), null);
     expect(sut.validate(input: formDataEmpty), null);
     expect(sut.validate(input: formDataJustOtherField), null);
     expect(sut.validate(input: formDataJustAnyField), null);

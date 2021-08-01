@@ -5,10 +5,11 @@ import '../../presentation/protocols/protocols.dart';
 import '../protocols/protocols.dart';
 
 class CompareFieldsValidation extends Equatable implements FieldValidation {
+  @override
   final String field;
   final String fieldToCompare;
 
-  CompareFieldsValidation(
+  const CompareFieldsValidation(
       {@required this.field, @required this.fieldToCompare});
 
   @override
