@@ -212,7 +212,7 @@ void main() {
     sut.validateEmail(email: email);
     sut.validatePassword(password: password);
 
-    // expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    expectLater(sut.mainErrorStream, emits(null));
     expectLater(sut.isLoadingStream, emits(true));
 
     await sut.auth();
@@ -228,8 +228,11 @@ void main() {
     // ! verifica só o estado final para verificar algo
     // expectLater(sut.isLoadingStream, emits(false));
 
-    sut.mainErrorStream.listen(
-        expectAsync1((error) => expect(error, UIError.invalidCredentials)));
+
+    expectLater(sut.mainErrorStream, emitsInOrder([null, UIError.invalidCredentials]));
+
+    // sut.mainErrorStream.listen(
+    //     expectAsync1((error) => expect(error, UIError.invalidCredentials)));
 
     await sut.auth();
   });
@@ -244,8 +247,7 @@ void main() {
     // ! verifica só o estado final para verificar algo
     // expectLater(sut.isLoadingStream, emits(false));
 
-    sut.mainErrorStream
-        .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
+    expectLater(sut.mainErrorStream, emitsInOrder([null, UIError.unexpected]));
 
     await sut.auth();
   });
@@ -270,8 +272,7 @@ void main() {
     // ! verifica só o estado final para verificar algo
     // expectLater(sut.isLoadingStream, emits(false));
 
-    sut.mainErrorStream
-        .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
+    expectLater(sut.mainErrorStream, emitsInOrder([null, UIError.unexpected]));
 
     await sut.auth();
   });

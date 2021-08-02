@@ -93,6 +93,8 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
 
   @override
   Future<void> auth() async {
+
+    _mainError.value = null;
     _isLoading.value = true;
 
     try {
