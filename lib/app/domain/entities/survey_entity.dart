@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 
-class Survey {
+class SurveyEntity {
   final String id;
   final String question;
   final DateTime dateTime;
   final bool didAnswer;
 
-  Survey({
+  SurveyEntity({
     @required this.id,
     @required this.question,
     @required this.dateTime,
