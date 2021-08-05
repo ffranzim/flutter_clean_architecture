@@ -12,18 +12,23 @@ class RemoteLoadSurveys {
 
   Future<void> load() async {
     await httpClient.request(url: url, method: 'get');
-
   }
 }
 
-class HttpClientSpy extends Mock implements HttpClient {
-}
+class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
+  Uri url;
+  HttpClient httpClient;
+  RemoteLoadSurveys sut;
+
+  setUp(() {
+    url = Uri.parse(faker.internet.httpUrl());
+    httpClient = HttpClientSpy();
+    sut = RemoteLoadSurveys(url: url, httpClient: httpClient);
+  });
+
   test('Should call HttpClient with correct values', () async {
-    final url = Uri.parse(faker.internet.httpUrl());
-    final httpClient = HttpClientSpy();
-    final sut = RemoteLoadSurveys(url: url, httpClient: httpClient);
     await sut.load();
 
     verify(httpClient.request(url: url, method: 'get'));
