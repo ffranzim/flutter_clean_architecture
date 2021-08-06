@@ -7,7 +7,7 @@ class SurveyEntity extends Equatable {
   final DateTime dateTime;
   final bool didAnswer;
 
-  SurveyEntity({
+  const SurveyEntity({
     @required this.id,
     @required this.question,
     @required this.dateTime,
