@@ -1,5 +1,9 @@
 enum DomainError {
-  unexpected,
+  accessDenied,
+  emailInUse,
   invalidCredentials,
-  emailInUse
+  unexpected
+
+
+
 }
