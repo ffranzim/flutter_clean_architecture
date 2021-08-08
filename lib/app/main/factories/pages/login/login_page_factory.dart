@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../ui/pages/login/login_page.dart';
+import '../../../../ui/pages/pages.dart';
 import '../../factories.dart';
 
 Widget makeLoginPage() {

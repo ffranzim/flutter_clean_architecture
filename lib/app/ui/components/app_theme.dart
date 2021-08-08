@@ -4,11 +4,13 @@ ThemeData makeAppTheme() {
   const primaryColor = Color.fromRGBO(136, 14, 79, 1);
   const primaryColorDark = Color.fromRGBO(96, 0, 39, 1);
   const primaryColorLight = Color.fromRGBO(188, 71, 123, 1);
+  const secundaryColorDart = Color.fromRGBO(0, 37, 26, 1);
 
   return ThemeData(
     primaryColor: primaryColor,
     primaryColorDark: primaryColorDark,
     primaryColorLight: primaryColorLight,
+    secondaryHeaderColor: secundaryColorDart,
     accentColor: primaryColor,
     backgroundColor: Colors.white,
     //scaffoldBackgroundColor: primaryColorDark, // -> works

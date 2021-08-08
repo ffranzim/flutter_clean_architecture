@@ -23,7 +23,7 @@ class PtBr implements Translations {
   String get password => 'Senha';
 
   @override
-  String get survey => 'Enquete';
+  String get surveys => 'Enquetes';
 
   @override
   String get msgEmailInUse => 'O email já está em uso.';
