@@ -30,6 +30,7 @@ void main() {
     });
   });
 
+  //? POST
   group('post', () {
     PostExpectation mockRequest() => when(
         client.post(url, body: anyNamed('body'), headers: anyNamed('headers')));
@@ -180,6 +181,10 @@ void main() {
       mockRequest().thenAnswer((_) async => Response(body, statusCode));
     }
 
+    void mockError() {
+      mockRequest().thenThrow(Exception());
+    }
+
     setUp(() {
       mockResponse(200);
     });
@@ -277,13 +282,13 @@ void main() {
 
         expect(future, throwsA(HttpError.serverError));
       });
-    //
-    //   test('Should return BadRequestError if post throws', () async {
-    //     mockError();
-    //
-    //     final future = sut.request(url: url, method: 'post');
-    //
-    //     expect(future, throwsA(HttpError.serverError));
-    //   });
+
+      test('Should return BadRequestError if get throws', () async {
+        mockError();
+
+        final future = sut.request(url: url, method: 'get');
+
+        expect(future, throwsA(HttpError.serverError));
+      });
   });
 }
