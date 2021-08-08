@@ -252,14 +252,15 @@ void main() {
 
         expect(future, throwsA(HttpError.unauthorized));
       });
-    //
-    //   test('Should return BadRequestError if post returns 403', () async {
-    //     mockResponse(403);
-    //
-    //     final future = sut.request(url: url, method: 'post');
-    //
-    //     expect(future, throwsA(HttpError.forbidden));
-    //   });
+
+      test('Should return BadRequestError if get returns 403', () async {
+        mockResponse(403);
+
+        final future = sut.request(url: url, method: 'get');
+
+        expect(future, throwsA(HttpError.forbidden));
+      });
+
     //
     //   test('Should return BadRequestError if post returns 404', () async {
     //     mockResponse(404);
