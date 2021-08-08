@@ -22,6 +22,7 @@ void main() {
     body = {'any_key': 'any_value'};
   });
 
+  //? Shared
   group('shared', () {
     test('Should throw ServerError if invalid method is provided', () async {
       final future = sut.request(url: url, method: 'invalid_method');
