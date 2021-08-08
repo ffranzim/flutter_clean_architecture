@@ -175,7 +175,7 @@ void main() {
 
     void mockResponse(
       int statusCode, {
-      String body = '{"any_ke y":"any_value"}',
+      String body = '{"any_key":"any_value"}',
     }) {
       mockRequest().thenAnswer((_) async => Response(body, statusCode));
     }
@@ -197,34 +197,20 @@ void main() {
         ),
       );
     });
-    //
-    //   test('Should call post without body', () async {
-    //     await sut.request(
-    //       url: url,
-    //       method: 'post',
-    //     );
-    //
-    //     verify(
-    //       client.post(
-    //         url,
-    //         headers: anyNamed('headers'),
-    //       ),
-    //     );
-    //   });
-    //
-    //   test('Should return data if post returns 200', () async {
-    //     final response = await sut.request(url: url, method: 'post');
-    //
-    //     expect(response, {'any_key': 'any_value'});
-    //   });
-    //
-    //   test('Should return null if post returns 200 with no data', () async {
-    //     mockResponse(200, body: '');
-    //
-    //     final response = await sut.request(url: url, method: 'post');
-    //
-    //     expect(response, null);
-    //   });
+
+      test('Should return data if get  returns 200', () async {
+        final response = await sut.request(url: url, method: 'get');
+
+        expect(response, {'any_key': 'any_value'});
+      });
+
+      test('Should return null if get returns 200 with no data', () async {
+        mockResponse(200, body: '');
+
+        final response = await sut.request(url: url, method: 'get');
+
+        expect(response, null);
+      });
     //
     //   test('Should return null if post returns 204', () async {
     //     mockResponse(204, body: '');
