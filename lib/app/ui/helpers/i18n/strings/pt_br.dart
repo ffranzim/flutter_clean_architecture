@@ -42,4 +42,7 @@ class PtBr implements Translations {
 
   @override
   String get msgLoading => 'Carregando ...';
+
+  @override
+  String get reload => 'Recarregar';
 }

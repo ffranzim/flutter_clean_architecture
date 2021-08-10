@@ -16,4 +16,6 @@ abstract class Translations {
 
   String get msgLoading;
 
+  String get reload;
+
 }
