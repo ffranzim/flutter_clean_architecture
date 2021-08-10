@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:clean_architecture/app/ui/helpers/errors/errors.dart';
 import 'package:clean_architecture/app/ui/pages/pages.dart';
 import 'package:clean_architecture/app/ui/pages/surveys/surveys.dart';
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -29,7 +30,6 @@ void main() {
   void closeStreams() {
     isLoadingController.close();
     loadSurveysController.close();
-
   }
 
   setUp(() {
@@ -50,6 +50,19 @@ void main() {
   tearDown(() {
     closeStreams();
   });
+
+  List<SurveyViewModel> makeSurveys() => [
+        SurveyViewModel(
+            id: faker.guid.guid(),
+            question: 'Question 1',
+            dateTime: faker.date.toString(),
+            didAnswer: true),
+        SurveyViewModel(
+            id: faker.guid.guid(),
+            question: 'Question 2',
+            dateTime: faker.date.toString(),
+            didAnswer: false),
+      ];
 
   testWidgets('Should call Load Surveys on page load', (WidgetTester tester) async {
     await loadPage(tester);
@@ -94,5 +107,17 @@ void main() {
     expect(find.text('Algo errado aconteceu. Tente novamente em breve.'), findsOneWidget);
     expect(find.text('Recarregar'), findsOneWidget);
     expect(find.text('Question 1'), findsNothing);
+  });
+
+  testWidgets('Should present list if loadSurveysStream success', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    loadSurveysController.add(makeSurveys());
+    await tester.pump();
+
+    expect(find.text('Algo errado aconteceu. Tente novamente em breve.'), findsNothing);
+    expect(find.text('Recarregar'), findsNothing);
+    expect(find.text('Question 1'), findsWidgets);
+    expect(find.text('Question 2'), findsWidgets);
   });
 }

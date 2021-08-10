@@ -31,30 +31,38 @@ class SurveysPage extends StatelessWidget {
           });
 
           return StreamBuilder<List<SurveyViewModel>>(
-            stream: presenter.loadSurveysStream,
-            builder: (context, snapshot) {
-              if(snapshot.hasError)  {
-                return Column(
-                  children: [
-                    Text(snapshot.error.toString()),
-                    ElevatedButton(onPressed: () {}, child: Text(R.strings.reload))
-                  ],
-                );
-              }
+              stream: presenter.loadSurveysStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Column(
+                    children: [
+                      Text(snapshot.error.toString()),
+                      ElevatedButton(onPressed: () {}, child: Text(R.strings.reload))
+                    ],
+                  );
+                } else if (snapshot.hasData) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+                        enlargeCenterPage: true,
+                        aspectRatio: 1,
+                        // enableInfiniteScroll: false,
+                      ),
+                      items: snapshot.data
+                          .map((viewModel) => SurveyItem(surveyViewModel: viewModel))
+                          .toList(),
+                      // items: [
+                      //   SurveyItem(),
+                      //   SurveyItem(),
+                      //   SurveyItem(),
+                      // ],
+                    ),
+                  );
+                }
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: CarouselSlider(
-                  options: CarouselOptions(enlargeCenterPage: true, aspectRatio: 1),
-                  items: [
-                    SurveyItem(),
-                    SurveyItem(),
-                    SurveyItem(),
-                  ],
-                ),
-              );
-            }
-          );
+                return const SizedBox(height: 0);
+              });
         },
       ),
     );
