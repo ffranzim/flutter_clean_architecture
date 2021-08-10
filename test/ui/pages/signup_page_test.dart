@@ -286,26 +286,33 @@ void main() {
   //   verify(presenter.signUp()).called(1);
   // });
 
-  testWidgets('Should present loading', (WidgetTester tester) async {
+  testWidgets('Should handle loading correctly', (WidgetTester tester) async {
     await loadPage(tester);
 
+    //? true case
     isLoadingController.add(true);
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
-  });
 
-  testWidgets('Should hide loading', (WidgetTester tester) async {
-    await loadPage(tester);
-
-    isLoadingController.add(true);
-    await tester.pump();
-
+    //? false case
     isLoadingController.add(false);
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsNothing);
-  });
+
+    //? true case
+    isLoadingController.add(true);
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    //? null case
+    isLoadingController.add(null);
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+  });;
 
   testWidgets('Should present error message if signup fails',
       (WidgetTester tester) async {

@@ -41,7 +41,7 @@ void main() {
     await tester.pumpWidget(surveysPage);
   }
 
-  tearDown((){
+  tearDown(() {
     closeStreams();
   });
 
@@ -77,7 +77,5 @@ void main() {
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsNothing);
-
-
   });
 }
