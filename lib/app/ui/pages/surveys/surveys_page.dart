@@ -37,7 +37,7 @@ class SurveysPage extends StatelessWidget {
                   return Column(
                     children: [
                       Text(snapshot.error.toString()),
-                      ElevatedButton(onPressed: () {}, child: Text(R.strings.reload))
+                      ElevatedButton(onPressed: presenter.loadData, child: Text(R.strings.reload))
                     ],
                   );
                 } else if (snapshot.hasData) {
@@ -52,11 +52,6 @@ class SurveysPage extends StatelessWidget {
                       items: snapshot.data
                           .map((viewModel) => SurveyItem(surveyViewModel: viewModel))
                           .toList(),
-                      // items: [
-                      //   SurveyItem(),
-                      //   SurveyItem(),
-                      //   SurveyItem(),
-                      // ],
                     ),
                   );
                 }
