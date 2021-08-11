@@ -21,7 +21,7 @@ class SurveyItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              surveyViewModel.dateTime,
+              surveyViewModel.date,
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
