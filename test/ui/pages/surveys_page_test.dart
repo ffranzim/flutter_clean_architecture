@@ -55,12 +55,12 @@ void main() {
         SurveyViewModel(
             id: faker.guid.guid(),
             question: 'Question 1',
-            dateTime: faker.date.toString(),
+            dateTime: 'Date 1',
             didAnswer: true),
         SurveyViewModel(
             id: faker.guid.guid(),
             question: 'Question 2',
-            dateTime: faker.date.toString(),
+            dateTime: 'Date 2',
             didAnswer: false),
       ];
 
@@ -119,5 +119,7 @@ void main() {
     expect(find.text('Recarregar'), findsNothing);
     expect(find.text('Question 1'), findsWidgets);
     expect(find.text('Question 2'), findsWidgets);
+    expect(find.text('Date 1 '), findsWidgets);
+    expect(find.text('Date 2'), findsWidgets);
   });
 }
