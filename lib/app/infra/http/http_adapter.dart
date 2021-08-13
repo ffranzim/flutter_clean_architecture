@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 
 import '../../data/http/http.dart';
 
-class HttpAdapter implements HttpClient<Map> {
+class HttpAdapter<ResponseType>  implements HttpClient<ResponseType>  {
   final Client client;
 
   HttpAdapter(this.client);
@@ -17,7 +17,7 @@ class HttpAdapter implements HttpClient<Map> {
   String jsonBody(Map body) => body != null ? jsonEncode(body) : null;
 
   @override
-  Future<Map> request({@required Uri url, @required String method, Map body}) async {
+  Future<ResponseType> request({@required Uri url, @required String method, Map body}) async {
     var response = Response('', 500);
 
     try {
@@ -33,9 +33,9 @@ class HttpAdapter implements HttpClient<Map> {
     return _handleResponse(response);
   }
 
-  T _handleResponse<T>(Response response) {
+  ResponseType _handleResponse(Response response) {
     if (response.statusCode == 200) {
-      return response.body.isEmpty ? null : jsonDecode(response.body) as T;
+      return response.body.isEmpty ? null : jsonDecode(response.body) as ResponseType;
     } else if (response.statusCode == 204) {
       return null;
     } else if (response.statusCode == 400) {
