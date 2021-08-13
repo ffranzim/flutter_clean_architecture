@@ -50,7 +50,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  lint: ^1.0.0
+#  lint: ^1.0.0
   mockito: ^5.0.10
   #  mocktail: ^0.1.4
   triple_test: ^0.0.6
