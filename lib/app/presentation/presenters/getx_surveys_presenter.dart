@@ -7,11 +7,11 @@ import '../../domain/usecases/usecases.dart';
 import '../../ui/helpers/helpers.dart';
 import '../../ui/pages/pages.dart';
 
-class GetxSurveysPresenter implements SurveysPresenter {
+class GetxSurveysPresenter extends GetxController implements SurveysPresenter {
   final LoadSurveys loadSurveys;
 
   final _isLoading = true.obs;
-  final _surveys = Rx<List<SurveyViewModel>>([]);
+  final _surveys = RxList<SurveyViewModel>([]);
 
   @override
   Stream<bool> get isLoadingStream => _isLoading.stream;
@@ -25,20 +25,30 @@ class GetxSurveysPresenter implements SurveysPresenter {
   Future<void> loadData() async {
     try {
       _isLoading.value = true;
-      final surveys = await loadSurveys.load();
-      _surveys.value = surveys
-          .map((survey) => SurveyViewModel(
-        id: survey.id,
-        question: survey.question,
-        date: DateFormat('dd MMM yyyy').format(survey.dateTime),
-        didAnswer: survey.didAnswer,
-      ))
-          .toList();
-      _isLoading.value = false;
+
+      final surveysList = await loadSurveys.load();
+
+      _surveys.value = surveysList
+          .map(
+            (survey) => SurveyViewModel(
+              id: survey.id,
+              question: survey.question,
+              date: DateFormat('dd MMM yyyy').format(survey.dateTime),
+              didAnswer: survey.didAnswer,
+            ),
+          ).toList();
     } on DomainError {
+
       _surveys.subject.addError(UIError.unexpected.description);
+      // _surveys.addError(UIError.unexpected.description);
+      // change([], status: RxStatus.error('message'));
+      _surveys.value = [];
+
     } finally {
       _isLoading.value = false;
     }
   }
+
+
+
 }

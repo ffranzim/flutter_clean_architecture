@@ -35,7 +35,9 @@ dependencies:
 
   flutter_secure_storage: ^4.2.0
 
-  get: ^4.2.4
+#  get: ^4.2.4
+#  get: ^3.26.0
+  get: ^4.3.8
   http: ^0.13.3
   intl: ^0.17.0
   logger: ^1.0.0
