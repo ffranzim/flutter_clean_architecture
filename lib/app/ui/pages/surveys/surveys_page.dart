@@ -21,69 +21,88 @@ class SurveysPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(R.strings.surveys),
       ),
-      body: SingleChildScrollView(
-        child: Builder(
-            builder: (context) {
-              presenter.loadData();
+      //? Tive que colocar nos testes, mas não precisou mais. Deixei por precaucao
+      // body: SingleChildScrollView(
+      //   child: Builder(
+         body: Builder(
+          builder: (context) {
+            presenter.loadData();
 
-              presenter.isLoadingStream.listen((isLoading) {
-                if (isLoading == true) {
-                  showLoading(context: context);
-                } else {
-                  hideLoading(context: context);
-                }
-              });
+            presenter.isLoadingStream.listen((isLoading) {
+              if (isLoading == true) {
+                showLoading(context: context);
+              } else {
+                hideLoading(context: context);
+              }
+            });
 
-              return StreamBuilder<List<SurveyViewModel>>(
-                  stream: presenter.surveysStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Column(
-                        children: [
-                          Text(snapshot.error.toString()),
-                          ElevatedButton(
-                              onPressed: presenter.loadData, child: Text(R.strings.reload))
-                        ],
-                      );
-                    }
-                    if (!snapshot.hasData || snapshot.data.isEmpty) {
-                      return Column(
-                        children: [
-                          Text(UIError.unexpected.description),
-                          ElevatedButton(
-                              onPressed: presenter.loadData, child: Text(R.strings.reload))
-                        ],
-                      );
-                    }
+            return StreamBuilder<List<SurveyViewModel>>(
+                stream: presenter.surveysStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    final String message = snapshot.error.toString();
+                    return errorScreenReload(message);
+                  }
 
-                    if (snapshot.hasData) {
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: CarouselSlider(
-                              options: CarouselOptions(
-                                enlargeCenterPage: true,
-                                aspectRatio: 1,
-                                // enableInfiniteScroll: false,
-                              ),
-                              items: snapshot.data
-                                  .map((viewModel) => SurveyItem(surveyViewModel: viewModel))
-                                  .toList(),
+                  if (!snapshot.hasData || snapshot.data.isEmpty) {
+                    final String message = UIError.unexpected.description;
+                    return errorScreenReload(message);
+                  }
+
+                  if (snapshot.hasData) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: CarouselSlider(
+                            options: CarouselOptions(
+                              enlargeCenterPage: true,
+                              aspectRatio: 1,
+                              // enableInfiniteScroll: false,
                             ),
+                            items: snapshot.data
+                                .map((viewModel) => SurveyItem(surveyViewModel: viewModel))
+                                .toList(),
                           ),
-                          // ElevatedButton(onPressed: presenter.loadData, child: Text(R.strings.reload))
-                        ],
-                      );
-                    }
+                        ),
+                        // ElevatedButton(onPressed: presenter.loadData, child: Text(R.strings.reload))
+                      ],
+                    );
+                  }
 
-                    // presenter.loadData();
+                  // presenter.loadData();
 
-                    return const SizedBox(height: 0);
-                  });
-            },
-          ),
+                  return const SizedBox(height: 0);
+                });
+          },
         ),
+      // ),
+    );
+  }
+
+  Widget errorScreenReload(String message) {
+    // return Expanded(
+    //   // padding: const EdgeInsets.all(0),
+    //   child: Column(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     children: [
+    //       Text(message, style: const TextStyle(fontSize: 16),
+    //           textAlign: TextAlign.center),
+    //       const SizedBox(height: 8),
+    //       ElevatedButton(onPressed: presenter.loadData, child: Text(R.strings.reload))
+    //     ],
+    //   ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: double.infinity,
+          child: Text(message, style: const TextStyle(fontSize: 16),
+              textAlign: TextAlign.center),
+        ),
+        const SizedBox(height: 8),
+        ElevatedButton(onPressed: presenter.loadData, child: Text(R.strings.reload))
+      ],
     );
   }
 }
