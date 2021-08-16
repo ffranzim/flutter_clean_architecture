@@ -9,22 +9,26 @@ class HttpAdapter<ResponseType>  implements HttpClient<ResponseType>  {
 
   HttpAdapter(this.client);
 
-  final headers = {
-    'content-type': 'application/json',
-    'accept': 'application/json',
-  };
-
   String jsonBody(Map body) => body != null ? jsonEncode(body) : null;
 
   @override
-  Future<ResponseType> request({@required Uri url, @required String method, Map body}) async {
+  Future<ResponseType> request({@required Uri url, @required String method, Map body, Map headers}) async {
+
+    //? Se o headers for nulo passa o map vazio
+    //? .. pega o retorno da funçao, tipo pega o resultado do headers .(adiciona) .(retorna)
+    final defaultHeaders = headers?.cast<String, String>() ?? {} ..addAll({
+      'content-type': 'application/json',
+      'accept': 'application/json',
+    });
+
+
     var response = Response('', 500);
 
     try {
       if (method == 'post') {
-        response = await client.post(url, headers: headers, body: jsonBody(body));
+        response = await client.post(url, headers: defaultHeaders, body: jsonBody(body));
       } else if (method == 'get') {
-        response = await client.get(url, headers: headers);
+        response = await client.get(url, headers: defaultHeaders);
       }
     } catch (error) {
       throw HttpError.serverError;

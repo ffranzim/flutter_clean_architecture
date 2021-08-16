@@ -66,6 +66,25 @@ void main() {
           body: json.encode(body),
         ),
       );
+
+      await sut.request(
+        url: url,
+        method: 'post',
+        body: body,
+        headers: {'any_header': 'any_value'}
+      );
+
+      verify(
+        client.post(
+          url,
+          headers: {
+            'content-type': 'application/json',
+            'accept': 'application/json',
+            'any_header': 'any_value'
+          },
+          body: json.encode(body),
+        ),
+      );
     });
 
     test('Should call post without body', () async {
@@ -192,13 +211,24 @@ void main() {
 
     test('Should call get with correct values', () async {
       await sut.request(url: url, method: 'get');
-
       verify(
         client.get(
           url,
           headers: {
             'content-type': 'application/json',
             'accept': 'application/json'
+          },
+        ),
+      );
+
+      await sut.request(url: url, method: 'get', headers: {'any_header': 'any_value'});
+      verify(
+        client.get(
+          url,
+          headers: {
+            'content-type': 'application/json',
+            'accept': 'application/json',
+            'any_header': 'any_value'
           },
         ),
       );

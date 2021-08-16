@@ -5,5 +5,6 @@ abstract class HttpClient<ResponseType> {
     @required Uri url,
     @required String method,
     Map body,
+    Map headers,
   });
 }
