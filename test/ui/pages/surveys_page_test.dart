@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:clean_architecture/app/ui/helpers/errors/errors.dart';
 import 'package:clean_architecture/app/ui/pages/pages.dart';
 import 'package:clean_architecture/app/ui/pages/surveys/surveys.dart';
-import 'package:faker/faker.dart';
+//import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -23,7 +23,8 @@ void main() {
   }
 
   void mockStreams() {
-    when(presenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
+    when(presenter.isLoadingStream)
+        .thenAnswer((_) => isLoadingController.stream);
     when(presenter.surveysStream).thenAnswer((_) => surveysController.stream);
   }
 
@@ -41,7 +42,9 @@ void main() {
     mockStreams();
     final surveysPage = GetMaterialApp(
       initialRoute: '/surveys',
-      getPages: [GetPage(name: '/surveys', page: () => SurveysPage(presenter: presenter))],
+      getPages: [
+        GetPage(name: '/surveys', page: () => SurveysPage(presenter: presenter))
+      ],
     );
 
     await tester.pumpWidget(surveysPage);
@@ -51,20 +54,22 @@ void main() {
     closeStreams();
   });
 
-  List<SurveyViewModel> makeSurveys() => [
-        SurveyViewModel(
-            id: faker.guid.guid(),
-            question: 'Question 1',
-            date: 'Date 1',
-            didAnswer: true),
-        SurveyViewModel(
-            id: faker.guid.guid(),
-            question: 'Question 2',
-            date: 'Date 2',
-            didAnswer: false),
-      ];
+  //? Utilizado em 'Should present list if loadSurveysStream success
+  // List<SurveyViewModel> makeSurveys() => [
+  //       SurveyViewModel(
+  //           id: faker.guid.guid(),
+  //           question: 'Question 1',
+  //           date: 'Date 1',
+  //           didAnswer: true),
+  //       SurveyViewModel(
+  //           id: faker.guid.guid(),
+  //           question: 'Question 2',
+  //           date: 'Date 2',
+  //           didAnswer: false),
+  //     ];
 
-  testWidgets('Should call Load Surveys on page load', (WidgetTester tester) async {
+  testWidgets('Should call Load Surveys on page load',
+      (WidgetTester tester) async {
     await loadPage(tester);
 
     verify(presenter.loadData()).called(1);
@@ -98,13 +103,15 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 
-  testWidgets('Should present error if loadSurveysStream fails', (WidgetTester tester) async {
+  testWidgets('Should present error if loadSurveysStream fails',
+      (WidgetTester tester) async {
     await loadPage(tester);
 
     surveysController.addError(UIError.unexpected.description);
     await tester.pump();
 
-    expect(find.text('Algo errado aconteceu. Tente novamente em breve.'), findsOneWidget);
+    expect(find.text('Algo errado aconteceu. Tente novamente em breve.'),
+        findsOneWidget);
     expect(find.text('Recarregar'), findsOneWidget);
     expect(find.text('Question 1'), findsNothing);
   });
@@ -124,7 +131,8 @@ void main() {
   //   expect(find.text('Date 2'), findsWidgets);
   // });
 
-  testWidgets('Should call Load Surveys on reload button click', (WidgetTester tester) async {
+  testWidgets('Should call Load Surveys on reload button click',
+      (WidgetTester tester) async {
     await loadPage(tester);
 
     surveysController.addError(UIError.unexpected.description);
@@ -133,5 +141,4 @@ void main() {
 
     verify(presenter.loadData()).called(2);
   });
-
 }
