@@ -32,8 +32,9 @@ class AuthorizeHttpClientDecorator<ResponseType> implements HttpClient {
         body: body,
         headers: authorizeHeaders,
       );
-
       return result;
+    } on HttpError {
+      rethrow;
     } catch (error) {
       throw HttpError.forbidden;
     }
@@ -69,14 +70,20 @@ void main() {
     mockTokenCall(fetchSecureCacheStorage).thenThrow(Exception());
   }
 
+  PostExpectation<Future> mockReponseCall() => when(httpClient.request(
+        url: anyNamed('url'),
+        method: anyNamed('method'),
+        body: anyNamed('body'),
+        headers: anyNamed('headers'),
+      ));
+
   void mockHttpResponse() {
     httpResponse = faker.randomGenerator.string(50);
-    when(httpClient.request(
-      url: anyNamed('url'),
-      method: anyNamed('method'),
-      body: anyNamed('body'),
-      headers: anyNamed('headers'),
-    )).thenAnswer((_) async => httpResponse);
+    mockReponseCall().thenAnswer((_) async => httpResponse);
+  }
+
+  void mockHttpResponseError(error) {
+    mockReponseCall().thenThrow(error);
   }
 
   setUp(() {
@@ -127,11 +134,20 @@ void main() {
     expect(response, httpResponse);
   });
 
-  test('Should throw ForbiddenError if FetchSecureCacheStorage', () async {
+  test('Should throw ForbiddenError if FetchSecureCacheStorage throws',
+      () async {
     mockTokenError();
 
     final future = sut.request(url: url, method: method, body: body);
 
     expect(future, throwsA(HttpError.forbidden));
+  });
+
+  test('Should rethrow if decorate throws', () async {
+    mockHttpResponseError(HttpError.badRequest);
+
+    final future = sut.request(url: url, method: method, body: body);
+
+    expect(future, throwsA(HttpError.badRequest));
   });
 }
