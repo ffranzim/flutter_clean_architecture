@@ -5,30 +5,34 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-class AuthorizeHttpClientDecorator {
+class AuthorizeHttpClientDecorator<ResponseType> implements HttpClient {
   final FetchSecureCacheStorage fetchSecureCacheStorage;
   //? convenção de decorator
-  final HttpClient decoratee;
+  final HttpClient<ResponseType> decoratee;
 
   AuthorizeHttpClientDecorator({
     @required this.fetchSecureCacheStorage,
     this.decoratee,
   });
 
-  Future<void> request(
-      {@required Uri url,
-      @required String method,
-      Map body,
-      Map headers}) async {
+  @override
+  Future<ResponseType> request({
+    @required Uri url,
+    @required String method,
+    Map body,
+    Map headers,
+  }) async {
     final token = await fetchSecureCacheStorage.fetchSecure(key: 'token');
     final authorizeHeaders = headers ?? {}
       ..addAll({'x-access-token': token});
-    await decoratee.request(
+    final result = await decoratee.request(
       url: url,
       method: method,
       body: body,
       headers: authorizeHeaders,
     );
+
+    return result;
   }
 }
 
@@ -45,11 +49,22 @@ void main() {
   String method;
   Map body;
   String token;
+  String httpResponse;
 
   void mockToken() {
     token = faker.guid.guid();
     when(fetchSecureCacheStorage.fetchSecure(key: anyNamed('key')))
         .thenAnswer((_) async => token);
+  }
+
+  void mockHttpResponse() {
+    httpResponse = faker.randomGenerator.string(50);
+    when(httpClient.request(
+      url: anyNamed('url'),
+      method: anyNamed('method'),
+      body: anyNamed('body'),
+      headers: anyNamed('headers'),
+    )).thenAnswer((_) async => httpResponse);
   }
 
   setUp(() {
@@ -63,6 +78,7 @@ void main() {
     method = faker.randomGenerator.string(4);
     body = {'any_key': 'any_value'};
     mockToken();
+    mockHttpResponse();
   });
 
   test('Should call FetchSecureCacheStorage with correct key', () async {
@@ -91,5 +107,11 @@ void main() {
       body: body,
       headers: {'x-access-token': token, 'any_header': 'any_value'},
     )).called(1);
+  });
+
+  test('Should return same result as decoratee', () async {
+    final response = await sut.request(url: url, method: method, body: body);
+
+    expect(response, httpResponse);
   });
 }
