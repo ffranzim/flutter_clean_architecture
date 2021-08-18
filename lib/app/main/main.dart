@@ -16,8 +16,6 @@ class App extends StatelessWidget {
     // ! Deixa a statusBar com caracteres brancos
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
-
-
     return GetMaterialApp(
       title: 'Clean Architecture',
       debugShowCheckedModeBanner: false,
