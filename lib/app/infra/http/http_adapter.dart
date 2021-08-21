@@ -1,10 +1,11 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
 import '../../data/http/http.dart';
 
-class HttpAdapter<ResponseType>  implements HttpClient<ResponseType>  {
+class HttpAdapter implements HttpClient {
   final Client client;
 
   HttpAdapter(this.client);
@@ -12,7 +13,7 @@ class HttpAdapter<ResponseType>  implements HttpClient<ResponseType>  {
   String jsonBody(Map body) => body != null ? jsonEncode(body) : null;
 
   @override
-  Future<ResponseType> request({@required Uri url, @required String method, Map body, Map headers}) async {
+  Future<dynamic> request({@required Uri url, @required String method, Map body, Map headers}) async {
 
     //? Se o headers for nulo passa o map vazio
     //? .. pega o retorno da funçao, tipo pega o resultado do headers .(adiciona) .(retorna)
@@ -37,9 +38,9 @@ class HttpAdapter<ResponseType>  implements HttpClient<ResponseType>  {
     return _handleResponse(response);
   }
 
-  ResponseType _handleResponse(Response response) {
+  dynamic _handleResponse(Response response) {
     if (response.statusCode == 200) {
-      return response.body.isEmpty ? null : jsonDecode(response.body) as ResponseType;
+      return response.body.isEmpty ? null : jsonDecode(response.body);
     } else if (response.statusCode == 204) {
       return null;
     } else if (response.statusCode == 400) {

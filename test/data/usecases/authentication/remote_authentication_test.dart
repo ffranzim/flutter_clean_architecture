@@ -8,11 +8,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:faker/faker.dart';
 
 
-class HttpClientSpy extends Mock implements HttpClient<Map> {}
+class HttpClientSpy extends Mock implements HttpClient {}
 
 void main() {
   RemoteAuthetication sut;
-  HttpClient<Map> httpClient;
+  HttpClient httpClient;
   Uri url;
   AuthenticationParams params;
 

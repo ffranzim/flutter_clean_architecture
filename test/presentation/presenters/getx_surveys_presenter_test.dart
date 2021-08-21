@@ -51,25 +51,47 @@ void main() {
 
   test('Should emit correct events on success', () async {
     expectLater(sut.isLoadingStream, emitsInAnyOrder([true, false]));
-    sut.surveysStream.listen(expectAsync1((surveys) => expect(surveys, [
-          SurveyViewModel(
-              id: surveys[0].id,
-              question: surveys[0].question,
-              date: '20 Mar 2021',
-              didAnswer: surveys[0].didAnswer),
-          SurveyViewModel(
-              id: surveys[1].id,
-              question: surveys[1].question,
-              date: '05 Oct 2020',
-              didAnswer: surveys[1].didAnswer),
-        ])));
+    sut.surveysStream.listen(expectAsync1((surveys) {
+      print(surveys.length);
+      expect(surveys, [
+        SurveyViewModel(
+            id: surveys[0].id,
+            question: surveys[0].question,
+            date: '20 Mar 2021',
+            didAnswer: surveys[0].didAnswer),
+        SurveyViewModel(
+            id: surveys[1].id,
+            question: surveys[1].question,
+            date: '05 Oct 2020',
+            didAnswer: surveys[1].didAnswer),
+      ]);
+    }
+        //     expect(surveys,
+        //
+        //     [
+        //       SurveyViewModel(
+        //           id: surveys[0].id,
+        //           question: surveys[0].question,
+        //           date: '20 Mar 2021',
+        //           didAnswer: surveys[0].didAnswer),
+        //       SurveyViewModel(
+        //           id: surveys[1].id,
+        //           question: surveys[1].question,
+        //           date: '05 Oct 2020',
+        //           didAnswer: surveys[1].didAnswer),
+        //     ]
+        //
+        // )
+
+        ));
     await sut.loadData();
   });
 
   test('Should emit correct events on failure', () async {
     mockLoadSurveysError();
     expectLater(sut.isLoadingStream, emitsInAnyOrder([true, false]));
-    sut.surveysStream.listen(null, onError: expectAsync1((error) => expect(error, UIError.unexpected.description)));
+    sut.surveysStream.listen(null,
+        onError: expectAsync1((error) => expect(error, UIError.unexpected.description)));
     await sut.loadData();
   });
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-abstract class HttpClient<ResponseType> {
-  Future<ResponseType> request ({
+abstract class HttpClient {
+  Future<dynamic> request ({
     @required Uri url,
     @required String method,
     Map body,

@@ -7,7 +7,7 @@ import '../../http/http.dart';
 import '../../models/models.dart';
 
 class RemoteAuthetication implements Authetication {
-  final HttpClient<Map> httpClient;
+  final HttpClient httpClient;
   final Uri url;
 
   RemoteAuthetication({@required this.httpClient, @required this.url});
@@ -19,6 +19,7 @@ class RemoteAuthetication implements Authetication {
           url: url,
           method: 'post',
           body: RemoteAuthenticationParams.fromDomain(params).toJson());
+      // ignore: argument_type_not_assignable
       return RemoteAccountModel.fromJson(httpResponse).toEntity();
     } on HttpError catch (error) {
       error == HttpError.unauthorized

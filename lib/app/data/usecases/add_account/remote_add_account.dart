@@ -7,7 +7,7 @@ import '../../../domain/usecases/usecases.dart';
 import '../../http/http.dart';
 
 class RemoteAddAccount implements AddAccount {
-  final HttpClient<Map> httpClient;
+  final HttpClient httpClient;
   final Uri url;
 
   RemoteAddAccount({@required this.httpClient, @required this.url});
@@ -19,7 +19,8 @@ class RemoteAddAccount implements AddAccount {
           url: url,
           method: 'post',
           body: RemoteAddAccountParams.fromDomain(params).toJson());
-      return RemoteAccountModel.fromJson(httpResponse).toEntity();
+          // ignore: argument_type_not_assignable
+          return RemoteAccountModel.fromJson(httpResponse).toEntity();
     } on HttpError catch (error) {
       error == HttpError.forbidden
           ? throw DomainError.emailInUse

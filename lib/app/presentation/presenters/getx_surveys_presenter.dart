@@ -37,6 +37,7 @@ class GetxSurveysPresenter extends GetxController implements SurveysPresenter {
               didAnswer: survey.didAnswer,
             ),
           ).toList();
+
     } on DomainError {
 
       _surveys.subject.addError(UIError.unexpected.description);

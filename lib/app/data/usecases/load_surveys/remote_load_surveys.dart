@@ -8,7 +8,8 @@ import '../../models/models.dart';
 
 class RemoteLoadSurveys implements LoadSurveys {
   final Uri url;
-  final HttpClient<List<Map>> httpClient;
+
+  final HttpClient httpClient;
 
   RemoteLoadSurveys({@required this.url, @required this.httpClient});
 
@@ -16,13 +17,22 @@ class RemoteLoadSurveys implements LoadSurveys {
   Future<List<SurveyEntity>> load() async {
     try {
       final httpResponse = await httpClient.request(url: url, method: 'get');
-      return httpResponse
+
+      // ignore: argument_type_not_assignable
+      // return httpResponse
+      //     .map((json) => RemoteSurveyModel.fromJson(json).toEntity())
+      //     .toList();
+
+      final surveysDynamic = httpResponse
+          // ignore: argument_type_not_assignable
           .map((json) => RemoteSurveyModel.fromJson(json).toEntity())
           .toList();
+
+      final surveysEntity = (surveysDynamic as List<dynamic>).cast<SurveyEntity>();
+
+      return surveysEntity;
     } on HttpError catch (error) {
-      error == HttpError.forbidden
-          ? throw DomainError.accessDenied
-          : throw DomainError.unexpected;
+      error == HttpError.forbidden ? throw DomainError.accessDenied : throw DomainError.unexpected;
     }
   }
 }
