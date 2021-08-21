@@ -26,7 +26,7 @@ class SurveysPage extends StatelessWidget {
       //   child: Builder(
          body: Builder(
           builder: (context) {
-            presenter.loadData();
+
 
             presenter.isLoadingStream.listen((isLoading) {
               if (isLoading == true) {
@@ -70,8 +70,7 @@ class SurveysPage extends StatelessWidget {
                     );
                   }
 
-                  // presenter.loadData();
-
+                  presenter.loadData();
                   return const SizedBox(height: 0);
                 });
           },
@@ -81,17 +80,6 @@ class SurveysPage extends StatelessWidget {
   }
 
   Widget errorScreenReload(String message) {
-    // return Expanded(
-    //   // padding: const EdgeInsets.all(0),
-    //   child: Column(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     children: [
-    //       Text(message, style: const TextStyle(fontSize: 16),
-    //           textAlign: TextAlign.center),
-    //       const SizedBox(height: 8),
-    //       ElevatedButton(onPressed: presenter.loadData, child: Text(R.strings.reload))
-    //     ],
-    //   ),
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
