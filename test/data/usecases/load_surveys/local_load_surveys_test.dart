@@ -1,3 +1,4 @@
+import 'package:clean_architecture/app/data/cache/cache.dart';
 import 'package:clean_architecture/app/data/models/models.dart';
 import 'package:clean_architecture/app/domain/entities/entities.dart';
 import 'package:clean_architecture/app/domain/helpers/helpers.dart';
@@ -30,9 +31,7 @@ class LocalLoadSurveys {
   }
 }
 
-abstract class FetchCacheStorage {
-  Future<dynamic> fetch(String key);
-}
+
 
 class FetchCacheStorageSpy extends Mock implements FetchCacheStorage {}
 
