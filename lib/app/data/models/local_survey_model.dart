@@ -24,7 +24,7 @@ class LocalSurveyModel {
     return LocalSurveyModel(
       id: json['id'] as String,
       question: json['question'] as String,
-      date: json['dateTime'] as DateTime,
+      date: json['date'] as DateTime,
       didAnswer: json['didAnswer'] as bool,
     );
   }
@@ -33,7 +33,7 @@ class LocalSurveyModel {
         id: id,
         question: question,
         // dateTime: DateTime.parse(date),
-        dateTime: date,
+        date: date,
         didAnswer: didAnswer,
       );
 }

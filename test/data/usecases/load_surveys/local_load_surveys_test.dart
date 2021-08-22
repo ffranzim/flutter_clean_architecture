@@ -12,9 +12,9 @@ class LocalLoadSurveys {
   LocalLoadSurveys({@required this.fetchCacheStorage});
 
   Future<List<SurveyEntity>> load() async {
-    final data = await fetchCacheStorage.fetch('surveys');
-
     try {
+      final data = await fetchCacheStorage.fetch('surveys');
+
       if (data?.isEmpty != false) {
         throw Exception();
       }
@@ -46,21 +46,23 @@ void main() {
         {
           'id': faker.guid.guid(),
           'question': faker.lorem.random.string(10),
-          'dateTime': faker.date.dateTime(),
+          'date': faker.date.dateTime(),
           'didAnswer': false,
         },
         {
           'id': faker.guid.guid(),
           'question': faker.lorem.random.string(10),
-          'dateTime': faker.date.dateTime(),
+          'date': faker.date.dateTime(),
           'didAnswer': false,
         }
       ];
 
   void mockFetch(List<Map> list) {
     data = list;
-    when(fetchCacheStorage.fetch(any)).thenAnswer((_) async => data);
+    mockFetchCall(fetchCacheStorage).thenAnswer((_) async => data);
   }
+
+  void mockFetchError() => mockFetchCall(fetchCacheStorage).thenThrow((_) => Exception());
 
   setUp(() {
     fetchCacheStorage = FetchCacheStorageSpy();
@@ -81,12 +83,12 @@ void main() {
       SurveyEntity(
           id: data[0]['id'] as String,
           question: data[0]['question'] as String,
-          dateTime: data[0]['dateTime'] as DateTime,
+          date: data[0]['date'] as DateTime,
           didAnswer: data[0]['didAnswer'] as bool),
       SurveyEntity(
           id: data[1]['id'] as String,
           question: data[1]['question'] as String,
-          dateTime: data[1]['dateTime'] as DateTime,
+          date: data[1]['date'] as DateTime,
           didAnswer: data[1]['didAnswer'] as bool),
     ]);
   });
@@ -135,4 +137,15 @@ void main() {
 
     expect(future, throwsA(DomainError.unexpected));
   });
+
+  test('Should throw UnexpectedError if cache is incomplete', () async {
+    mockFetchError();
+
+    final future = sut.load();
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
 }
+
+PostExpectation<Future<dynamic>> mockFetchCall(FetchCacheStorage fetchCacheStorage) =>
+    when(fetchCacheStorage.fetch(any));

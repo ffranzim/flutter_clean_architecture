@@ -63,12 +63,12 @@ void main() {
       SurveyEntity(
           id: list[0]['id'] as String,
           question: list[0]['question'] as String,
-          dateTime: DateTime.parse(list[0]['date'] as String),
+          date: DateTime.parse(list[0]['date'] as String),
           didAnswer: list[0]['didAnswer'] as bool),
       SurveyEntity(
           id: list[1]['id'] as String,
           question: list[1]['question'] as String,
-          dateTime: DateTime.parse(list[1]['date'] as String),
+          date: DateTime.parse(list[1]['date'] as String),
           didAnswer: list[1]['didAnswer'] as bool),
     ]);
   });
