@@ -99,7 +99,7 @@ void main() {
     expect(future, throwsA(DomainError.unexpected));
   });
 
-  test('Should throw UnexpectedError if cache is empty', () async {
+  test('Should throw UnexpectedError if cache is null', () async {
     mockFetch(null);
 
     final future = sut.load();
@@ -107,12 +107,26 @@ void main() {
     expect(future, throwsA(DomainError.unexpected));
   });
 
-  test('Should return a list of surveys on success', () async {
+  test('Should throw UnexpectedError if cache is invalid', () async {
     mockFetch([
       {
         'id': faker.guid.guid(),
         'question': faker.lorem.random.string(10),
         'dateTime': faker.lorem.sentence(),
+        'didAnswer': false,
+      }
+    ]);
+
+    final future = sut.load();
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
+
+  test('Should throw UnexpectedError if cache is incomplete', () async {
+    mockFetch([
+      {
+        'id': faker.guid.guid(),
+        'dateTime': faker.date.dateTime(),
         'didAnswer': false,
       }
     ]);
