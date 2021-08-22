@@ -1,5 +1,6 @@
 import 'package:clean_architecture/app/data/models/models.dart';
 import 'package:clean_architecture/app/domain/entities/entities.dart';
+import 'package:clean_architecture/app/domain/helpers/helpers.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,6 +13,10 @@ class LocalLoadSurveys {
 
   Future<List<SurveyEntity>> load() async {
     final data = await fetchCacheStorage.fetch('surveys');
+
+    if(data?.isEmpty == true) {
+      throw DomainError.unexpected;
+    }
 
     // ignore: argument_type_not_assignable
     final surveysDynamic = data.map<SurveyEntity>((json) => LocalSurveyModel.fromJson(json).toEntity()).toList();
@@ -80,5 +85,13 @@ void main() {
           dateTime: data[1]['dateTime'] as DateTime,
           didAnswer: data[1]['didAnswer'] as bool),
     ]);
+  });
+
+  test('Should throw UnexpectedError if cache is empty', () async {
+    mockFetch([]);
+
+    final future = sut.load();
+
+    expect(future, throwsA(DomainError.unexpected));
   });
 }
