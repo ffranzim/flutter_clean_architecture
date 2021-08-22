@@ -14,14 +14,19 @@ class LocalLoadSurveys {
   Future<List<SurveyEntity>> load() async {
     final data = await fetchCacheStorage.fetch('surveys');
 
-    if(data?.isEmpty != false) {
+    try {
+      if (data?.isEmpty != false) {
+        throw Exception();
+      }
+
+      final surveysDynamic =
+          // ignore: argument_type_not_assignable
+          data.map<SurveyEntity>((json) => LocalSurveyModel.fromJson(json).toEntity()).toList();
+      final surveysEntity = (surveysDynamic as List<dynamic>).cast<SurveyEntity>();
+      return surveysEntity;
+    } catch (error) {
       throw DomainError.unexpected;
     }
-
-    // ignore: argument_type_not_assignable
-    final surveysDynamic = data.map<SurveyEntity>((json) => LocalSurveyModel.fromJson(json).toEntity()).toList();
-    final surveysEntity = (surveysDynamic as List<dynamic>).cast<SurveyEntity>();
-    return surveysEntity;
   }
 }
 
@@ -37,8 +42,7 @@ void main() {
   List<Map> data;
 
   //? DateTime.utc(2020, 7, 20)
-  List<Map> mockValidData() =>
-      [
+  List<Map> mockValidData() => [
         {
           'id': faker.guid.guid(),
           'question': faker.lorem.random.string(10),
@@ -97,6 +101,21 @@ void main() {
 
   test('Should throw UnexpectedError if cache is empty', () async {
     mockFetch(null);
+
+    final future = sut.load();
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
+
+  test('Should return a list of surveys on success', () async {
+    mockFetch([
+      {
+        'id': faker.guid.guid(),
+        'question': faker.lorem.random.string(10),
+        'dateTime': faker.lorem.sentence(),
+        'didAnswer': false,
+      }
+    ]);
 
     final future = sut.load();
 
