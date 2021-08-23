@@ -32,8 +32,7 @@ void main() {
           }
         ];
 
-    PostExpectation<Future<dynamic>> mockFetchCall(CacheStorage cache) =>
-        when(cache.fetch(any));
+    PostExpectation<Future<dynamic>> mockFetchCall(CacheStorage cache) => when(cache.fetch(any));
 
     void mockFetch(List<Map> list) {
       data = list;
@@ -146,8 +145,7 @@ void main() {
           }
         ];
 
-    PostExpectation<Future<dynamic>> mockFetchCall(CacheStorage cache) =>
-        when(cache.fetch(any));
+    PostExpectation<Future<dynamic>> mockFetchCall(CacheStorage cache) => when(cache.fetch(any));
 
     void mockFetch(List<Map> list) {
       data = list;
@@ -166,6 +164,20 @@ void main() {
       await sut.validate();
 
       verify(cacheStorage.fetch('surveys')).called(1);
+    });
+
+    test('Should delete cache if it is invalid', () async {
+      mockFetch([
+        {
+          'id': faker.guid.guid(),
+          'question': faker.lorem.random.string(10),
+          'date': 'invalid date',
+          'didAnswer': false,
+        }
+      ]);
+
+      await sut.validate();
+      verify(cacheStorage.delete('surveys')).called(1);
     });
   });
 }

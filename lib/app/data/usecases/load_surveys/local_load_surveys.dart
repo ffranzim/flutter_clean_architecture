@@ -32,6 +32,18 @@ class LocalLoadSurveys implements LoadSurveys {
   }
 
   Future<void> validate() async {
-    await cacheStorage.fetch('surveys');
+    final data = await cacheStorage.fetch('surveys');
+    try {
+      final surveysDynamic =
+      // ignore: argument_type_not_assignable
+      data.map<SurveyEntity>((json) => LocalSurveyModel.fromJson(json).toEntity()).toList();
+      final surveysEntity = (surveysDynamic as List<dynamic>).cast<SurveyEntity>();
+      
+
+    } catch (error) {
+      await cacheStorage.delete('surveys');
+    }
+
   }
+
 }
