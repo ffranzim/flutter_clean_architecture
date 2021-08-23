@@ -152,7 +152,7 @@ void main() {
       mockFetchCall(cacheStorage).thenAnswer((_) async => data);
     }
 
-    // void mockFetchError() => mockFetchCall(cacheStorage).thenThrow((_) => Exception());
+    void mockFetchError() => mockFetchCall(cacheStorage).thenThrow((_) => Exception());
 
     setUp(() {
       cacheStorage = CacheStorageSpy();
@@ -181,13 +181,7 @@ void main() {
     });
 
     test('Should delete cache if it is incomplete', () async {
-      mockFetch([
-        {
-          'id': faker.guid.guid(),
-          'question': faker.lorem.random.string(10),
-          'date': faker.date.dateTime(),
-        }
-      ]);
+      mockFetchError();
 
       await sut.validate();
       verify(cacheStorage.delete('surveys')).called(1);
