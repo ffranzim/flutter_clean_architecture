@@ -179,5 +179,18 @@ void main() {
       await sut.validate();
       verify(cacheStorage.delete('surveys')).called(1);
     });
+
+    test('Should delete cache if it is incomplete', () async {
+      mockFetch([
+        {
+          'id': faker.guid.guid(),
+          'question': faker.lorem.random.string(10),
+          'date': faker.date.dateTime(),
+        }
+      ]);
+
+      await sut.validate();
+      verify(cacheStorage.delete('surveys')).called(1);
+    });
   });
 }
