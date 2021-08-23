@@ -6,7 +6,6 @@ import '../../../domain/helpers/helpers.dart';
 import '../../cache/cache.dart';
 import '../../models/models.dart';
 
-
 class LocalLoadSurveys implements LoadSurveys {
   final CacheStorage cacheStorage;
 
@@ -21,11 +20,7 @@ class LocalLoadSurveys implements LoadSurveys {
         throw Exception();
       }
 
-      final surveysDynamic =
-          // ignore: argument_type_not_assignable
-          data.map<SurveyEntity>((json) => LocalSurveyModel.fromJson(json).toEntity()).toList();
-      final surveysEntity = (surveysDynamic as List<dynamic>).cast<SurveyEntity>();
-      return surveysEntity;
+      return _castDynamicToListSurveys(data);
     } catch (error) {
       throw DomainError.unexpected;
     }
@@ -34,16 +29,17 @@ class LocalLoadSurveys implements LoadSurveys {
   Future<void> validate() async {
     final data = await cacheStorage.fetch('surveys');
     try {
-      final surveysDynamic =
-      // ignore: argument_type_not_assignable
-      data.map<SurveyEntity>((json) => LocalSurveyModel.fromJson(json).toEntity()).toList();
-      final surveysEntity = (surveysDynamic as List<dynamic>).cast<SurveyEntity>();
-      
-
+      return _castDynamicToListSurveys(data);
     } catch (error) {
       await cacheStorage.delete('surveys');
     }
-
   }
 
+  List<SurveyEntity> _castDynamicToListSurveys(dynamic data) {
+    final surveysDynamic =
+        // ignore: argument_type_not_assignable
+        data.map<SurveyEntity>((json) => LocalSurveyModel.fromJson(json).toEntity()).toList();
+    final surveysEntity = (surveysDynamic as List<dynamic>).cast<SurveyEntity>();
+    return surveysEntity;
+  }
 }
