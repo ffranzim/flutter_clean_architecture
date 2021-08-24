@@ -187,4 +187,49 @@ void main() {
       verify(cacheStorage.delete('surveys')).called(1);
     });
   });
+  group('save', () {
+    CacheStorage cacheStorage;
+    LocalLoadSurveys sut;
+    List<SurveyEntity> _surveys;
+
+    List<SurveyEntity> mockSurveys() => [
+          SurveyEntity(
+              id: faker.guid.guid(),
+              question: faker.lorem.sentence(),
+              date: DateTime.utc(2020, 6, 3),
+              didAnswer: false),
+          SurveyEntity(
+              id: faker.guid.guid(),
+              question: faker.lorem.sentence(),
+              date: DateTime.utc(2020, 1, 11),
+              didAnswer: true),
+        ];
+
+    setUp(() {
+      cacheStorage = CacheStorageSpy();
+      sut = LocalLoadSurveys(cacheStorage: cacheStorage);
+      _surveys = mockSurveys();
+    });
+
+    test('Should call cacheStorage with correct values ', () async {
+      final list = [
+        {
+          'id': _surveys[0].id,
+          'question': _surveys[0].question,
+          'date': _surveys[0].date,
+          'didAnswer': _surveys[0].didAnswer,
+        },
+        {
+          'id': _surveys[1].id,
+          'question': _surveys[1].question,
+          'date': _surveys[1].date,
+          'didAnswer': _surveys[1].didAnswer,
+        }
+      ];
+
+      await sut.save(_surveys);
+
+      verify(cacheStorage.save(key: 'surveys', value: list)).called(1);
+    });
+  });
 }

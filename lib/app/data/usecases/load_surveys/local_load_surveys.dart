@@ -35,6 +35,14 @@ class LocalLoadSurveys implements LoadSurveys {
     }
   }
 
+  Future<void> save(List<SurveyEntity> surveys) async {
+    await cacheStorage.save(key: 'surveys', value: _mapToJson(surveys));
+  }
+
+  List _mapToJson(List<SurveyEntity> list) {
+   return list.map((entity) => LocalSurveyModel.fromEntity(entity).toJson()).toList();
+  }
+
   List<SurveyEntity> _castDynamicToListSurveys(dynamic data) {
     final surveysDynamic =
         // ignore: argument_type_not_assignable
