@@ -192,6 +192,11 @@ void main() {
     LocalLoadSurveys sut;
     List<SurveyEntity> _surveys;
 
+    PostExpectation<Future<dynamic>> mockFSaveCall(CacheStorage cache) =>
+        when(cache.save(key: anyNamed('key'), value: anyNamed('value')));
+
+    void mockSaveError() => mockFSaveCall(cacheStorage).thenThrow((_) => Exception());
+
     List<SurveyEntity> mockSurveys() => [
           SurveyEntity(
               id: faker.guid.guid(),
@@ -230,6 +235,14 @@ void main() {
       await sut.save(_surveys);
 
       verify(cacheStorage.save(key: 'surveys', value: list)).called(1);
+    });
+
+    test('Should throw UnexpectedError if save throws ', () async {
+      mockSaveError();
+
+      final future =  sut.save(_surveys);
+
+      expect(future, throwsA(DomainError.unexpected));
     });
   });
 }
