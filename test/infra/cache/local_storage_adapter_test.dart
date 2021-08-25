@@ -1,4 +1,5 @@
 import 'package:clean_architecture/app/data/cache/cache.dart';
+import 'package:clean_architecture/app/domain/helpers/helpers.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,6 +36,8 @@ void main() {
   String key;
   dynamic value;
 
+  void mockDeleteItemError() => when(localStorage.deleteItem(any)).thenThrow(Exception());
+
   setUp(() {
     localStorage = LocalStorageSpy();
     sut = LocalStorageAdapter(localStorage: localStorage);
@@ -47,5 +50,12 @@ void main() {
 
     verify(localStorage.deleteItem(key)).called(1);
     verify(localStorage.setItem(key, value)).called(1);
+  });
+
+  test('Should throw if deleteItem throws', () async {
+    mockDeleteItemError();
+    final future = sut.save(key: key, value: value);
+
+    expect(future, throwsA(const TypeMatcher<Exception>()));
   });
 }
