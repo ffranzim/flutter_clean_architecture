@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:clean_architecture/app/ui/helpers/errors/errors.dart';
 import 'package:clean_architecture/app/ui/pages/pages.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';

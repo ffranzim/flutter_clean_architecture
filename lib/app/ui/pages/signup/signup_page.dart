@@ -1,8 +1,6 @@
 import 'package:clean_architecture/app/ui/helpers/errors/errors.dart';
 import 'package:clean_architecture/app/ui/helpers/i18n/i18n.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
