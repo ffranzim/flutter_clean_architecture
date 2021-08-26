@@ -50,7 +50,7 @@ void main() {
       await sut.delete(key: key);
 
       verify(localStorage.deleteItem(key)).called(1);
-     });
+    });
 
     test('Should throw if deleteItem throws', () async {
       mockDeleteError();
@@ -62,11 +62,25 @@ void main() {
   });
 
   group('fetch', () {
+    String resultFetch = faker.lorem.sentence();
+
+    void mockFetch() => when(localStorage.getItem(key)).thenAnswer((_) async => resultFetch);
+
+    setUp(() {
+      mockFetch();
+    });
+
     test('Should call localStorage with correct values', () async {
       await sut.fetch(key: key);
 
       verify(localStorage.getItem(key)).called(1);
-     });
+    });
+
+    test('Should return same value as localStorage', () async {
+      final data = await sut.fetch(key: key);
+
+      expect(data, resultFetch);
+    });
 
     // test('Should throw if deleteItem throws', () async {
     //   mockDeleteError();

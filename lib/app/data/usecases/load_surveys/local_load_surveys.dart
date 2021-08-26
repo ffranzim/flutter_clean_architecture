@@ -1,8 +1,8 @@
-import 'package:clean_architecture/app/domain/usecases/load_surveys.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../domain/entities/entities.dart';
 import '../../../domain/helpers/helpers.dart';
+import '../../../domain/usecases/load_surveys.dart';
 import '../../cache/cache.dart';
 import '../../models/models.dart';
 
