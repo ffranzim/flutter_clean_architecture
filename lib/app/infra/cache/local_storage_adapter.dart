@@ -9,12 +9,12 @@ class LocalStorageAdapter implements CacheStorage {
   LocalStorageAdapter({@required this.localStorage});
 
   @override
-  Future<void> delete({@required String key}) async {
+  Future<void> delete(String key) async {
     await localStorage.deleteItem(key);
   }
 
   @override
-  Future fetch({@required String key}) async {
+  Future fetch(String key) async {
     return await localStorage.getItem(key);
   }
 

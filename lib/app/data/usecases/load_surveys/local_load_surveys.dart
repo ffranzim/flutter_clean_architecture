@@ -14,7 +14,7 @@ class LocalLoadSurveys implements LoadSurveys {
   @override
   Future<List<SurveyEntity>> load() async {
     try {
-      final data = await cacheStorage.fetch(key: 'surveys');
+      final data = await cacheStorage.fetch('surveys');
 
       if (data?.isEmpty != false) {
         throw Exception();
@@ -28,10 +28,10 @@ class LocalLoadSurveys implements LoadSurveys {
 
   Future<void> validate() async {
     try {
-      final data = await cacheStorage.fetch(key: 'surveys');
+      final data = await cacheStorage.fetch('surveys');
       return _castDynamicToListSurveys(data);
     } catch (error) {
-      await cacheStorage.delete(key: 'surveys');
+      await cacheStorage.delete('surveys');
     }
   }
 

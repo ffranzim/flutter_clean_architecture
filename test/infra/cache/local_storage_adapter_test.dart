@@ -47,7 +47,7 @@ void main() {
 
   group('delete', () {
     test('Should call localStorage with correct values', () async {
-      await sut.delete(key: key);
+      await sut.delete(key);
 
       verify(localStorage.deleteItem(key)).called(1);
     });
@@ -55,14 +55,14 @@ void main() {
     test('Should throw if deleteItem throws', () async {
       mockDeleteError();
 
-      final future = sut.delete(key: key);
+      final future = sut.delete(key);
 
       expect(future, throwsA(const TypeMatcher<Exception>()));
     });
   });
 
   group('fetch', () {
-    String resultFetch = faker.lorem.sentence();
+    final resultFetch = faker.lorem.sentence();
 
     PostExpectation<dynamic> mockFetchCall() => when(localStorage.getItem(key));
 
@@ -74,13 +74,13 @@ void main() {
     });
 
     test('Should call localStorage with correct values', () async {
-      await sut.fetch(key: key);
+      await sut.fetch(key);
 
       verify(localStorage.getItem(key)).called(1);
     });
 
     test('Should return same value as localStorage', () async {
-      final data = await sut.fetch(key: key);
+      final data = await sut.fetch(key);
 
       expect(data, resultFetch);
     });
@@ -88,7 +88,7 @@ void main() {
     test('Should throw if getItem throws', () async {
       mockFetchError();
 
-      final future = sut.fetch(key: key);
+      final future = sut.fetch(key);
 
       expect(future, throwsA(const TypeMatcher<Exception>()));
     });
