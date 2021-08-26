@@ -44,4 +44,26 @@ void main() {
       expect(future, throwsA(const TypeMatcher<Exception>()));
     });
   });
+
+  group(('delete'), () {
+    test('Should call localStorage with correct values', () async {
+      await sut.delete(key: key);
+
+      verify(localStorage.deleteItem(key)).called(1);
+     });
+
+    // test('Should throw if deleteItem throws', () async {
+    //   mockDeleteError();
+    //   final future = sut.save(key: key, value: value);
+    //
+    //   expect(future, throwsA(const TypeMatcher<Exception>()));
+    // });
+    //
+    // test('Should throw if setItem throws', () async {
+    //   mockSaveError();
+    //   final future = sut.save(key: key, value: value);
+    //
+    //   expect(future, throwsA(const TypeMatcher<Exception>()));
+    // });
+  });
 }
