@@ -64,7 +64,10 @@ void main() {
   group('fetch', () {
     String resultFetch = faker.lorem.sentence();
 
-    void mockFetch() => when(localStorage.getItem(key)).thenAnswer((_) async => resultFetch);
+    PostExpectation<dynamic> mockFetchCall() => when(localStorage.getItem(key));
+
+    void mockFetch() => mockFetchCall().thenAnswer((_) async => resultFetch);
+    void mockFetchError() => mockFetchCall().thenThrow(Exception());
 
     setUp(() {
       mockFetch();
@@ -82,12 +85,12 @@ void main() {
       expect(data, resultFetch);
     });
 
-    // test('Should throw if deleteItem throws', () async {
-    //   mockDeleteError();
-    //
-    //   final future = sut.delete(key: key);
-    //
-    //   expect(future, throwsA(const TypeMatcher<Exception>()));
-    // });
+    test('Should throw if getItem throws', () async {
+      mockFetchError();
+
+      final future = sut.fetch(key: key);
+
+      expect(future, throwsA(const TypeMatcher<Exception>()));
+    });
   });
 }
