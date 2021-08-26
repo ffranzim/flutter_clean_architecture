@@ -22,24 +22,26 @@ void main() {
     value = faker.randomGenerator.string(50);
   });
 
-  test('Should call localStorage with correct values', () async {
-    await sut.save(key: key, value: value);
+  group(('save'), () {
+    test('Should call localStorage with correct values', () async {
+      await sut.save(key: key, value: value);
 
-    verify(localStorage.deleteItem(key)).called(1);
-    verify(localStorage.setItem(key, value)).called(1);
-  });
+      verify(localStorage.deleteItem(key)).called(1);
+      verify(localStorage.setItem(key, value)).called(1);
+    });
 
-  test('Should throw if deleteItem throws', () async {
-    mockDeleteError();
-    final future = sut.save(key: key, value: value);
+    test('Should throw if deleteItem throws', () async {
+      mockDeleteError();
+      final future = sut.save(key: key, value: value);
 
-    expect(future, throwsA(const TypeMatcher<Exception>()));
-  });
+      expect(future, throwsA(const TypeMatcher<Exception>()));
+    });
 
-  test('Should throw if setItem throws', () async {
-    mockSaveError();
-    final future = sut.save(key: key, value: value);
+    test('Should throw if setItem throws', () async {
+      mockSaveError();
+      final future = sut.save(key: key, value: value);
 
-    expect(future, throwsA(const TypeMatcher<Exception>()));
+      expect(future, throwsA(const TypeMatcher<Exception>()));
+    });
   });
 }
