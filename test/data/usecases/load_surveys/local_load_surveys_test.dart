@@ -32,7 +32,7 @@ void main() {
           }
         ];
 
-    PostExpectation<Future<dynamic>> mockFetchCall(CacheStorage cache) => when(cache.fetch(any));
+    PostExpectation<Future<dynamic>> mockFetchCall(CacheStorage cache) => when(cache.fetch(key: anyNamed('key')));
 
     void mockFetch(List<Map> list) {
       data = list;
@@ -50,7 +50,7 @@ void main() {
     test('Should call FetchCacheStorage with correct key', () async {
       await sut.load();
 
-      verify(cacheStorage.fetch('surveys')).called(1);
+      verify(cacheStorage.fetch(key: 'surveys')).called(1);
     });
 
     test('Should return a list of surveys on success', () async {
@@ -145,7 +145,7 @@ void main() {
           }
         ];
 
-    PostExpectation<Future<dynamic>> mockFetchCall(CacheStorage cache) => when(cache.fetch(any));
+    PostExpectation<Future<dynamic>> mockFetchCall(CacheStorage cache) => when(cache.fetch(key: any));
 
     void mockFetch(List<Map> list) {
       data = list;
@@ -163,7 +163,7 @@ void main() {
     test('Should call cacheStorage with correct key', () async {
       await sut.validate();
 
-      verify(cacheStorage.fetch('surveys')).called(1);
+      verify(cacheStorage.fetch(key: 'surveys')).called(1);
     });
 
     test('Should delete cache if it is invalid', () async {
@@ -177,14 +177,14 @@ void main() {
       ]);
 
       await sut.validate();
-      verify(cacheStorage.delete('surveys')).called(1);
+      verify(cacheStorage.delete(key: 'surveys')).called(1);
     });
 
     test('Should delete cache if it is incomplete', () async {
       mockFetchError();
 
       await sut.validate();
-      verify(cacheStorage.delete('surveys')).called(1);
+      verify(cacheStorage.delete(key: 'surveys')).called(1);
     });
   });
   group('save', () {

@@ -22,7 +22,7 @@ void main() {
     value = faker.randomGenerator.string(50);
   });
 
-  group(('save'), () {
+  group('save', () {
     test('Should call localStorage with correct values', () async {
       await sut.save(key: key, value: value);
 
@@ -45,7 +45,7 @@ void main() {
     });
   });
 
-  group(('delete'), () {
+  group('delete', () {
     test('Should call localStorage with correct values', () async {
       await sut.delete(key: key);
 
@@ -59,5 +59,21 @@ void main() {
 
       expect(future, throwsA(const TypeMatcher<Exception>()));
     });
+  });
+
+  group('fetch', () {
+    test('Should call localStorage with correct values', () async {
+      await sut.fetch(key: key);
+
+      verify(localStorage.getItem(key)).called(1);
+     });
+
+    // test('Should throw if deleteItem throws', () async {
+    //   mockDeleteError();
+    //
+    //   final future = sut.delete(key: key);
+    //
+    //   expect(future, throwsA(const TypeMatcher<Exception>()));
+    // });
   });
 }
