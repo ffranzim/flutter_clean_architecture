@@ -17,17 +17,19 @@ class RemoteLoadSurveysWithLocalFallback implements LoadSurveys {
 }
 
 class RemoteLoadSurveysSpy extends Mock implements RemoteLoadSurveys {}
+
+void main() {
   RemoteLoadSurveys remote;
   RemoteLoadSurveysWithLocalFallback sut;
 
-void main() {
-  test('Should call remote load', () async {
+  setUp(() {
     remote = RemoteLoadSurveysSpy();
     sut = RemoteLoadSurveysWithLocalFallback(remote: remote);
+  });
 
+  test('Should call remote load', () async {
     sut.load();
 
     verify(remote.load()).called(1);
-
   });
 }
