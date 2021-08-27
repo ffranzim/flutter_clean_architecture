@@ -1,6 +1,6 @@
 import 'package:clean_architecture/app/presentation/protocols/protocols.dart';
 import 'package:clean_architecture/app/validation/protocols/protocols.dart';
-import 'package:clean_architecture/app/validation/validators/validators.dart';
+import 'package:clean_architecture/app/main/composites/composites.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

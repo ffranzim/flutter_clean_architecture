@@ -1,5 +1,5 @@
 import 'package:clean_architecture/app/presentation/protocols/protocols.dart';
-import 'package:clean_architecture/app/validation/validators/required_field_validation.dart';
+import 'package:clean_architecture/app/validation/validators/validators.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
