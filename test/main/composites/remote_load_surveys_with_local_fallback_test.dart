@@ -29,7 +29,7 @@ void main() {
   RemoteLoadSurveys remote;
   LocalLoadSurveys local;
   RemoteLoadSurveysWithLocalFallback sut;
-  List<SurveyEntity> surveys;
+  List<SurveyEntity> remoteSurveys;
 
   List<SurveyEntity> mockSurveys() => [
         SurveyEntity(
@@ -40,8 +40,8 @@ void main() {
       ];
 
   void mockRemoteLoad() {
-    surveys = mockSurveys();
-    when(remote.load()).thenAnswer((_) async => surveys);
+    remoteSurveys = mockSurveys();
+    when(remote.load()).thenAnswer((_) async => remoteSurveys);
   }
 
   setUp(() {
@@ -58,6 +58,12 @@ void main() {
 
   test('Should call local save with remote data', () async {
     await sut.load();
-    verify(local.save(surveys)).called(1);
+    verify(local.save(remoteSurveys)).called(1);
+  });
+
+  test('Should return remote data', () async {
+    final surveys = await sut.load();
+
+    expect(surveys, remoteSurveys);
   });
 }
