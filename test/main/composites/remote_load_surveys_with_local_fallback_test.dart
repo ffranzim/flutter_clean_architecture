@@ -11,8 +11,7 @@ class RemoteLoadSurveysWithLocalFallback implements LoadSurveys {
   final RemoteLoadSurveys remote;
   final LocalLoadSurveys local;
 
-  RemoteLoadSurveysWithLocalFallback(
-      {@required this.remote, @required this.local});
+  RemoteLoadSurveysWithLocalFallback({@required this.remote, @required this.local});
 
   @override
   Future<List<SurveyEntity>> load() async {
@@ -27,7 +26,6 @@ class RemoteLoadSurveysWithLocalFallback implements LoadSurveys {
       await local.validate();
       return local.load();
     }
-
   }
 }
 
@@ -50,7 +48,7 @@ void main() {
             didAnswer: faker.randomGenerator.boolean()),
       ];
 
-  PostExpectation  mockRemoteLoadCall() => when(remote.load());
+  PostExpectation mockRemoteLoadCall() => when(remote.load());
 
   void mockRemoteLoad() {
     remoteSurveys = mockSurveys();
@@ -61,11 +59,15 @@ void main() {
     mockRemoteLoadCall().thenThrow(error);
   }
 
-  PostExpectation  mockLoadLoadCall() => when(local.load());
+  PostExpectation mockLocalLoadCall() => when(local.load());
 
   void mockLocalLoad() {
     localSurveys = mockSurveys();
-    mockLoadLoadCall().thenAnswer((_) async => localSurveys);
+    mockLocalLoadCall().thenAnswer((_) async => localSurveys);
+  }
+
+  void mockRemoteLocalError() {
+    mockLocalLoadCall().thenThrow(DomainError.unexpected);
   }
 
   setUp(() {
@@ -116,6 +118,13 @@ void main() {
 
     expect(surveys, localSurveys);
   });
+
+  test('Should throw UnexpectedError if remote and local throws', () async {
+    mockRemoteLoadError(DomainError.unexpected);
+    mockRemoteLocalError();
+
+    final future = sut.load();
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
 }
-
-
