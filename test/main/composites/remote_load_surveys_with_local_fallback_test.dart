@@ -1,33 +1,10 @@
 import 'package:clean_architecture/app/data/usecases/usecases.dart';
 import 'package:clean_architecture/app/domain/entities/entities.dart';
 import 'package:clean_architecture/app/domain/helpers/domain_error.dart';
-import 'package:clean_architecture/app/domain/usecases/usecases.dart';
+import 'package:clean_architecture/app/main/composites/composites.dart';
 import 'package:faker/faker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-
-class RemoteLoadSurveysWithLocalFallback implements LoadSurveys {
-  final RemoteLoadSurveys remote;
-  final LocalLoadSurveys local;
-
-  RemoteLoadSurveysWithLocalFallback({@required this.remote, @required this.local});
-
-  @override
-  Future<List<SurveyEntity>> load() async {
-    try {
-      final surveys = await remote.load();
-      await local.save(surveys);
-      return surveys;
-    } catch (error) {
-      if (error == DomainError.accessDenied) {
-        rethrow;
-      }
-      await local.validate();
-      return local.load();
-    }
-  }
-}
 
 class RemoteLoadSurveysSpy extends Mock implements RemoteLoadSurveys {}
 
