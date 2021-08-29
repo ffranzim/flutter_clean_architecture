@@ -21,13 +21,13 @@ void main() {
           {
             'id': faker.guid.guid(),
             'question': faker.lorem.random.string(10),
-            'date': faker.date.dateTime(),
+            'date': faker.date.dateTime().toIso8601String(),
             'didAnswer': false,
           },
           {
             'id': faker.guid.guid(),
             'question': faker.lorem.random.string(10),
-            'date': faker.date.dateTime(),
+            'date': faker.date.dateTime().toIso8601String(),
             'didAnswer': false,
           }
         ];
@@ -60,12 +60,12 @@ void main() {
         SurveyEntity(
             id: data[0]['id'] as String,
             question: data[0]['question'] as String,
-            date: data[0]['date'] as DateTime,
+            date: DateTime.parse(data[0]['date'] as String),
             didAnswer: data[0]['didAnswer'] as bool),
         SurveyEntity(
             id: data[1]['id'] as String,
             question: data[1]['question'] as String,
-            date: data[1]['date'] as DateTime,
+            date: DateTime.parse(data[1]['date'] as String),
             didAnswer: data[1]['didAnswer'] as bool),
       ]);
     });
@@ -221,13 +221,13 @@ void main() {
         {
           'id': _surveys[0].id,
           'question': _surveys[0].question,
-          'date': _surveys[0].date,
+          'date': _surveys[0].date.toIso8601String(),
           'didAnswer': _surveys[0].didAnswer,
         },
         {
           'id': _surveys[1].id,
           'question': _surveys[1].question,
-          'date': _surveys[1].date,
+          'date': _surveys[1].date.toIso8601String(),
           'didAnswer': _surveys[1].didAnswer,
         }
       ];

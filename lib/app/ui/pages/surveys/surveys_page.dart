@@ -10,7 +10,7 @@ import 'surveys_presenter.dart';
 
 // class SurveysPage extends GetView<GetxSurveysPresenter> {
 class SurveysPage extends StatelessWidget {
-  final SurveysPresenter presenter;
+    final SurveysPresenter presenter;
 
   const SurveysPage({@required this.presenter});
 
@@ -24,57 +24,55 @@ class SurveysPage extends StatelessWidget {
       //? Tive que colocar nos testes, mas não precisou mais. Deixei por precaucao
       // body: SingleChildScrollView(
       //   child: Builder(
-         body: Builder(
-          builder: (context) {
+      body: Builder(
+        builder: (context) {
+          presenter.isLoadingStream.listen((isLoading) {
+            if (isLoading == true) {
+              showLoading(context: context);
+            } else {
+              hideLoading(context: context);
+            }
+          });
 
+          return StreamBuilder<List<SurveyViewModel>>(
+              stream: presenter.surveysStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  final String message = snapshot.error.toString();
+                  return errorScreenReload(message);
+                }
 
-            presenter.isLoadingStream.listen((isLoading) {
-              if (isLoading == true) {
-                showLoading(context: context);
-              } else {
-                hideLoading(context: context);
-              }
-            });
+                if (!snapshot.hasData || snapshot.data.isEmpty) {
+                  final String message = UIError.unexpected.description;
+                  return errorScreenReload(message);
+                }
 
-            return StreamBuilder<List<SurveyViewModel>>(
-                stream: presenter.surveysStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    final String message = snapshot.error.toString();
-                    return errorScreenReload(message);
-                  }
-
-                  if (!snapshot.hasData || snapshot.data.isEmpty) {
-                    final String message = UIError.unexpected.description;
-                    return errorScreenReload(message);
-                  }
-
-                  if (snapshot.hasData) {
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20),
-                          child: CarouselSlider(
-                            options: CarouselOptions(
-                              enlargeCenterPage: true,
-                              aspectRatio: 1,
-                              // enableInfiniteScroll: false,
-                            ),
-                            items: snapshot.data
-                                .map((viewModel) => SurveyItem(surveyViewModel: viewModel))
-                                .toList(),
+                if (snapshot.hasData) {
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: CarouselSlider(
+                          options: CarouselOptions(
+                            enlargeCenterPage: true,
+                            aspectRatio: 1,
+                            // enableInfiniteScroll: false,
                           ),
+                          items: snapshot.data
+                              .map((viewModel) => SurveyItem(surveyViewModel: viewModel))
+                              .toList(),
                         ),
-                        // ElevatedButton(onPressed: presenter.loadData, child: Text(R.strings.reload))
-                      ],
-                    );
-                  }
+                      ),
+                      // ElevatedButton(onPressed: presenter.loadData, child: Text(R.strings.reload))
+                    ],
+                  );
+                }
 
-                  presenter.loadData();
-                  return const SizedBox(height: 0);
-                });
-          },
-        ),
+                presenter.loadData();
+                return const SizedBox(height: 0);
+              });
+        },
+      ),
       // ),
     );
   }
@@ -85,8 +83,7 @@ class SurveysPage extends StatelessWidget {
       children: [
         SizedBox(
           width: double.infinity,
-          child: Text(message, style: const TextStyle(fontSize: 16),
-              textAlign: TextAlign.center),
+          child: Text(message, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
         ),
         const SizedBox(height: 8),
         ElevatedButton(onPressed: presenter.loadData, child: Text(R.strings.reload))

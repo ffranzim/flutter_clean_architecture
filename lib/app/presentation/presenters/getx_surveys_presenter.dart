@@ -40,6 +40,7 @@ class GetxSurveysPresenter extends GetxController implements SurveysPresenter {
 
     } on DomainError {
 
+      // ?? Dá erro em produção e no teste não
       _surveys.subject.addError(UIError.unexpected.description);
       // _surveys.addError(UIError.unexpected.description);
       // change([], status: RxStatus.error('message'));
