@@ -9,8 +9,6 @@ import '../../models/models.dart';
 class LocalLoadSurveys implements LoadSurveys {
   final CacheStorage cacheStorage;
 
-  LocalLoadSurveys({@required this.cacheStorage});
-
   @override
   Future<List<SurveyEntity>> load() async {
     try {
@@ -25,6 +23,8 @@ class LocalLoadSurveys implements LoadSurveys {
       throw DomainError.unexpected;
     }
   }
+
+  LocalLoadSurveys({@required this.cacheStorage});
 
   Future<void> validate() async {
     try {
