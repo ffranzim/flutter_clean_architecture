@@ -18,11 +18,6 @@ class RemoteLoadSurveys implements LoadSurveys {
     try {
       final httpResponse = await httpClient.request(url: url, method: 'get');
 
-      // ignore: argument_type_not_assignable
-      // return httpResponse
-      //     .map((json) => RemoteSurveyModel.fromJson(json).toEntity())
-      //     .toList();
-
       final surveysDynamic = httpResponse
           // ignore: argument_type_not_assignable
           .map((json) => RemoteSurveyModel.fromJson(json).toEntity())
