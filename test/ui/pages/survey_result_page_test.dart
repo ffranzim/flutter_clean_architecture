@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:clean_architecture/app/ui/pages/pages.dart';
 import 'package:clean_architecture/app/ui/pages/survey_result/survey_result.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:mockito/mockito.dart';
@@ -12,15 +13,20 @@ class SurveyResultPresenterSpy extends Mock implements SurveyResultPresenter {}
 
 void main() {
   SurveyResultPresenter presenter;
+  StreamController<bool> isLoadingController;
 
 
   void initStreams() {
+    isLoadingController = StreamController<bool>();
   }
 
   void mockStreams() {
+    when(presenter.isLoadingStream)
+        .thenAnswer((_) => isLoadingController.stream);
   }
 
   void closeStreams() {
+    isLoadingController.close();
   }
 
   setUp(() {
@@ -39,7 +45,7 @@ void main() {
     );
 
 
-      mockNetworkImagesFor(() async => tester.pumpWidget(surveysPage));
+      await mockNetworkImagesFor(() async => tester.pumpWidget(surveysPage));
 
     // await tester.pumpWidget(surveysPage);
   }
@@ -53,6 +59,34 @@ void main() {
     await loadPage(tester);
 
     verify(presenter.loadData()).called(1);
+  });
+
+  testWidgets('Should handle loading correctly', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    //? true case
+    isLoadingController.add(true);
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    //? false case
+    isLoadingController.add(false);
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+
+    //? true case
+    isLoadingController.add(true);
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    //? null case
+    isLoadingController.add(null);
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 
 

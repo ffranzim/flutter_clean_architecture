@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../components/components.dart';
 import '../../helpers/helpers.dart';
 import 'survey_result_presenter.dart';
 
@@ -16,6 +17,16 @@ class SurveyResultPage extends StatelessWidget {
         ),
         body: Builder(
           builder: (context) {
+
+
+            presenter.isLoadingStream.listen((isLoading) {
+              if (isLoading == true) {
+                showLoading(context: context);
+              } else {
+                hideLoading(context: context);
+              }
+            });
+
             presenter.loadData();
 
             return ListView.builder(
