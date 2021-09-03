@@ -20,7 +20,8 @@ class App extends StatelessWidget {
       title: 'Clean Architecture',
       debugShowCheckedModeBanner: false,
       theme: makeAppTheme(),
-      initialRoute: '/survey_result/3',
+      initialRoute: '/',
+      // initialRoute: '/survey_result/3',
       getPages: [
         GetPage(name: '/', page: makeSplashPage, transition: Transition.fade),
         GetPage(name: '/login', page: makeLoginPage, transition: Transition.fadeIn),

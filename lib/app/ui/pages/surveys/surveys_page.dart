@@ -48,24 +48,7 @@ class SurveysPage extends StatelessWidget {
                 }
 
                 if (snapshot.hasData) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                            enlargeCenterPage: true,
-                            aspectRatio: 1,
-                            // enableInfiniteScroll: false,
-                          ),
-                          items: snapshot.data
-                              .map((viewModel) => SurveyItem(surveyViewModel: viewModel))
-                              .toList(),
-                        ),
-                      ),
-                      // ElevatedButton(onPressed: presenter.loadData, child: Text(R.strings.reload))
-                    ],
-                  );
+                  return SurveyItems(viewModels: snapshot.data);
                 }
 
                 presenter.loadData();
