@@ -10,7 +10,7 @@ import 'surveys_presenter.dart';
 
 // class SurveysPage extends GetView<GetxSurveysPresenter> {
 class SurveysPage extends StatelessWidget {
-    final SurveysPresenter presenter;
+  final SurveysPresenter presenter;
 
   const SurveysPage({@required this.presenter});
 
@@ -39,12 +39,12 @@ class SurveysPage extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   final String message = snapshot.error.toString();
-                  return errorScreenReload(message);
+                  return ReloadScreen(message: message, reload: presenter.loadData);
                 }
 
                 if (!snapshot.hasData || snapshot.data.isEmpty) {
                   final String message = UIError.unexpected.description;
-                  return errorScreenReload(message);
+                  return ReloadScreen(message: message, reload: presenter.loadData);
                 }
 
                 if (snapshot.hasData) {
@@ -74,20 +74,6 @@ class SurveysPage extends StatelessWidget {
         },
       ),
       // ),
-    );
-  }
-
-  Widget errorScreenReload(String message) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: Text(message, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
-        ),
-        const SizedBox(height: 8),
-        ElevatedButton(onPressed: presenter.loadData, child: Text(R.strings.reload))
-      ],
     );
   }
 }
