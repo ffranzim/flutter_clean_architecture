@@ -29,7 +29,7 @@ void main() {
 
   void closeStreams() {
     isLoadingController.close();
-    surveysController.close();
+
   }
 
   setUp(() {
@@ -131,7 +131,7 @@ void main() {
   //   expect(find.text('Date 2'), findsWidgets);
   // });
 
-  testWidgets('Should call Load Surveys on reload button click',
+  testWidgets('Should call Load Survey on reload button click',
       (WidgetTester tester) async {
     await loadPage(tester);
 
