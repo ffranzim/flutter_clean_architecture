@@ -56,7 +56,7 @@ void main() {
     closeStreams();
   });
 
-  SurveyResultViewModel makeSurveyResult() => SurveyResultViewModel(
+  SurveyResultViewModel makeSurveyResult() => const SurveyResultViewModel(
     surveyId: 'Any id',
     question: 'Question',
     answers: [

@@ -31,7 +31,7 @@ class SurveyAnwser extends StatelessWidget {
   }
 
   List<Widget> _buildItems(BuildContext context) {
-    List<Widget> children = [
+    final List<Widget> children = [
       Expanded(
           child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
