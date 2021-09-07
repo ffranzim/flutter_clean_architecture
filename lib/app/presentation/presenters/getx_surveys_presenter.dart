@@ -21,7 +21,7 @@ class GetxSurveysPresenter extends GetxController implements SurveysPresenter {
   Stream<List<SurveyViewModel>> get surveysStream => _surveys.stream;
 
   @override
-  Stream<String> get navigateToStream => throw UnimplementedError();
+  Stream<String> get navigateToStream => _navigateTo.stream;
 
   GetxSurveysPresenter({@required this.loadSurveys});
 
