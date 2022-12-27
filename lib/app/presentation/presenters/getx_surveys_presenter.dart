@@ -23,8 +23,8 @@ class GetxSurveysPresenter extends GetxController implements SurveysPresenter {
   @override
   Stream<String> get navigateToStream => _navigateTo.stream;
 
-  GetxSurveysPresenter({@required this.loadSurveys});
 
+  GetxSurveysPresenter({@required this.loadSurveys});
   @override
   Future<void> loadData() async {
     try {
